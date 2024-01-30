@@ -1,4 +1,3 @@
-#P2P - Chatting App 
 #Features: 
 1. Nhắn tin gửi ( hình ảnh, tin nhắn, âm thanh, video, Emoji và Sticker):
    Người dùng có thể trò chuyện với nhau bằng cách nhắn tin, chia sẻ hình ảnh, âm thanh và video.
@@ -34,3 +33,4 @@
     Cho phép người dùng đổi màu nền của khung chat theo sở thích.
 17. Chức năng thay đổi ngôn ngữ:
     Ứng dụng cho phép thay đổi ngôn ngữ phù hợp với người dùng.
+    
