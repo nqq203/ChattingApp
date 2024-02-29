@@ -3,7 +3,7 @@ package com.matchmingle.MatchMingle.Model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
+@Document(collection = "Users")
 public class User {
     @Id
     private String id;
