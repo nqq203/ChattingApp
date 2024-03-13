@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+//import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.main.entities.MessageItem;
 
@@ -64,10 +64,10 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         if(item.getCount() <= 0){
             holder.viewIndicator.setVisibility(View.INVISIBLE);
         }
-
+        /*
         Glide.with(context)
                 .load(item.getPicture())
-                .into(holder.thumbnail);
+                .into(holder.thumbnail);*/
     }
 
     @Override

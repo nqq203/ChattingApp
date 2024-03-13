@@ -44,10 +44,10 @@ public class GridAdapter extends BaseAdapter {
         /*if(convertView==null)
         {
             convertView=inflater.inflate(R.layout.grid_pic,root: null);
-        }*/
+        }
         ImageButton imagebutton=convertView.findViewById(R.id.grid_image);
         Button buttonDel=convertView.findViewById(R.id.grid_ButDelete);
-        Button buttonChat=convertView.findViewById(R.id.grid_ButChat);
+        Button buttonChat=convertView.findViewById(R.id.grid_ButChat);*/
 
         return null;
     }

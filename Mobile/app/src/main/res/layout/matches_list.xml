@@ -4,258 +4,48 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-<TableLayout
-    android:id="@+id/myTableLayout"
-    android:layout_width="wrap_content"
+<LinearLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
-     android:orientation="vertical" >
-<TableRow>
+     android:orientation="horizontal" >
+
     <TextView
         android:id="@+id/MatchesTitle"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="60dp"
         android:text="Matches"
         android:textSize="40dp"
         android:textStyle="bold"
         />
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/button4"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
+        android:layout_marginLeft="50dp"
         app:icon="@drawable/baseline_filter_list_alt_24"
         app:iconSize="26dp"
         app:iconGravity="textStart"
+
         app:iconPadding="0dp"
+
+        android:contentDescription="Filter"
          />
-</TableRow>
-    <TableRow>
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:text="This is a list of people you have \nmatched."
-            android:textSize="18dp" />
-    </TableRow>
-    </TableLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="12dp"
-            android:background="#E8E6EA" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:background="@color/white"
-            android:layout_centerHorizontal="true"
-            android:text="Today" />
-    </RelativeLayout>
-    <TableLayout
-        android:layout_marginTop="5dp"
+    </LinearLayout>
+    <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
-    <TableRow android:layout_marginLeft="30dp">
-        <FrameLayout>
-            <ImageButton
+        android:layout_marginStart="30dp"
+        android:text="This is a list of people you have \nmatched."
+        android:textSize="18dp" />
+    <GridView
+        android:id="@+id/matchesGrid"
+        android:layout_marginStart="30dp"
 
-                android:layout_width="150dp"
-                android:layout_height="220dp"
-                android:scaleType="centerCrop"
-                android:background="@drawable/jisoo"
-
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:textSize="24dp"
-                android:layout_marginTop="180dp"
-                android:layout_marginLeft="10dp"
-                android:text="Chi sô, 21" />
-        </FrameLayout>
-
-        <FrameLayout android:layout_marginLeft="30dp">
-            <ImageButton
-
-                android:layout_width="150dp"
-                android:layout_height="220dp"
-                android:scaleType="centerCrop"
-                android:background="@drawable/lisa"
-
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:textSize="24dp"
-                android:layout_marginTop="180dp"
-                android:layout_marginLeft="10dp"
-                android:text="Li sa, 20" />
-        </FrameLayout>
-    </TableRow>
-    </TableLayout>
-
-    <TableLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-        <TableRow android:orientation="horizontal">
-            <com.google.android.material.button.MaterialButton
-                android:layout_marginLeft="30dp"
-                android:layout_width="70dp"
-                android:layout_height="50dp"
-                app:icon="@drawable/baseline_close_24"
-                app:iconSize="28dp"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                />
-
-            <com.google.android.material.button.MaterialButton
-                android:layout_marginLeft="10dp"
-                android:layout_width="70dp"
-                android:layout_height="50dp"
-                app:icon="@drawable/baseline_chat_bubble_24"
-                app:iconSize="25dp"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                />
-
-            <com.google.android.material.button.MaterialButton
-                android:layout_marginLeft="30dp"
-                android:layout_width="70dp"
-                android:layout_height="50dp"
-                app:icon="@drawable/baseline_close_24"
-                app:iconSize="28dp"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"/>
-
-
-
-
-            <com.google.android.material.button.MaterialButton
-                android:layout_marginLeft="10dp"
-                android:layout_width="70dp"
-                android:layout_height="50dp"
-                app:icon="@drawable/baseline_chat_bubble_24"
-                app:iconSize="25dp"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                />
-        </TableRow>
-    </TableLayout>
-
-    <TableLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-        <TableRow android:layout_marginLeft="30dp">
-            <FrameLayout>
-                <ImageButton
-
-                    android:layout_width="150dp"
-                    android:layout_height="220dp"
-                    android:scaleType="centerCrop"
-                    android:background="@drawable/nini"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:textSize="24dp"
-                    android:layout_marginTop="180dp"
-                    android:layout_marginLeft="10dp"
-                    android:text="Ren Ni, 21" />
-            </FrameLayout>
-
-            <FrameLayout android:layout_marginLeft="30dp">
-                <ImageButton
-
-                    android:layout_width="150dp"
-                    android:layout_height="220dp"
-                    android:scaleType="centerCrop"
-                    android:background="@drawable/rose"
-
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:textSize="23dp"
-                    android:layout_marginTop="180dp"
-                    android:layout_marginLeft="10dp"
-                    android:text="Hoa Hồng,19" />
-            </FrameLayout>
-        </TableRow>
-    </TableLayout>
-
-    <TableLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-        <TableRow android:orientation="horizontal">
-            <com.google.android.material.button.MaterialButton
-                android:layout_marginLeft="30dp"
-                android:layout_width="70dp"
-                android:layout_height="50dp"
-                app:icon="@drawable/baseline_close_24"
-                app:iconSize="28dp"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                />
-
-            <com.google.android.material.button.MaterialButton
-                android:layout_marginLeft="10dp"
-                android:layout_width="70dp"
-                android:layout_height="50dp"
-                app:icon="@drawable/baseline_chat_bubble_24"
-                app:iconSize="25dp"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                />
-
-            <com.google.android.material.button.MaterialButton
-                android:layout_marginLeft="30dp"
-                android:layout_width="70dp"
-                android:layout_height="50dp"
-                app:icon="@drawable/baseline_close_24"
-                app:iconSize="28dp"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"/>
-
-
-
-
-            <com.google.android.material.button.MaterialButton
-                android:layout_marginLeft="10dp"
-                android:layout_width="70dp"
-                android:layout_height="50dp"
-                app:icon="@drawable/baseline_chat_bubble_24"
-                app:iconSize="25dp"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                />
-        </TableRow>
-    </TableLayout>
-
+        android:numColumns="2"/>
 
 </LinearLayout>
