@@ -9,4 +9,5 @@
     <string name="info_ic">\uf129</string>
     <string name="heart_ic">\uf004</string>
     <string name="profile_ic">\uf007</string>
+    <string name="close_ic">\uf00d</string>
 </resources>

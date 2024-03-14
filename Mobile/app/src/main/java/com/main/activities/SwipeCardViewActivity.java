@@ -3,6 +3,7 @@ package com.main.activities;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toolbar;
 
@@ -22,8 +23,8 @@ public class SwipeCardViewActivity extends AppCompatActivity {
         setContentView(R.layout.swipe_cardview_activity);
 
 
-        ImageView matchButton = findViewById(R.id.match_button);
-        ImageView noMatchButton = findViewById(R.id.no_match_button);
+        Button matchButton = findViewById(R.id.match_button);
+        Button noMatchButton = findViewById(R.id.no_match_button);
 
         matchButton.setOnClickListener(v -> swipeCardFragment.simulateSwipeRight());
         noMatchButton.setOnClickListener(v -> swipeCardFragment.simulateSwipeLeft());

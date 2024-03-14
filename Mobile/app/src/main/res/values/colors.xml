@@ -23,5 +23,6 @@
     <color name="blue_1">#247DCF</color>
     <color name="blue_2">#0300A1</color>
     <color name="light_blue">#898EFF</color>
-    <color name="red">#C02929</color>
+    <color name="red_1">#FF2D2D</color>
+    <color name="red_2">#C02929</color>
 </resources>
