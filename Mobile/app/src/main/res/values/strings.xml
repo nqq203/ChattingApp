@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Match Mingle</string>
+    <string name="home">Home</string>
+    <string name="favorite">Favorite</string>
+    <string name="chat">Chat</string>
+    <string name="profile">Profile</string>
+    <string name="home_ic">\uf015</string>
+    <string name="chat_ic">\uf086</string>
+    <string name="info_ic">\uf129</string>
+    <string name="heart_ic">\uf004</string>
+    <string name="profile_ic">\uf007</string>
 </resources>

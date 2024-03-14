@@ -8,13 +8,12 @@ public class SignUpAdapter {
         void onError(String message);
     }
 
-    public void signupUser(String fullname, String gender, String birthDate, String phoneNumber, SignupCallback callback) {
-        if (fullname.isEmpty() || gender.isEmpty() || birthDate.isEmpty() || birthDate.isEmpty() || phoneNumber.isEmpty()) {
+    public void signupUser(String fullname, String gender, String birthDate, String phoneNumber, String password, SignupCallback callback) {
+        if (fullname.isEmpty() || gender.isEmpty() || birthDate.isEmpty() || phoneNumber.isEmpty() || password.isEmpty()) {
             callback.onError("All fields are required.");
-            return;
         }
         else {
-            User newUser = new User(fullname, gender, birthDate, phoneNumber);
+            User newUser = new User(fullname, gender, birthDate, phoneNumber, password);
             callback.onSuccess(newUser);
         }
     }

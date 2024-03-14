@@ -2,61 +2,61 @@ package com.main.entities;
 
 public class MessageItem {
 
-    private int id;
-    private String name;
+    private String id;
+    private String senderName;
     private String content;
-    private int count;
-    private int picture;
+    private String imageUrl;
+    private long timestamp;
 
 
     public MessageItem() {
     }
 
-    public MessageItem(int id, String name, String content, int count, int picture) {
+    public MessageItem(String id, String senderName, String content, String imageUrl, long timestamp) {
         this.id = id;
-        this.name = name;
+        this.senderName = senderName;
         this.content = content;
-        this.count = count;
-        this.picture = picture;
+        this.imageUrl = imageUrl;
+        this.timestamp = timestamp;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getSenderName() {
+        return senderName;
     }
 
     public String getContent() {
         return content;
     }
 
-    public int getCount() {
-        return count;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public int getPicture() {
-        return picture;
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 
     public void setContent(String content) {
         this.content = content;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public void setPicture(int id) {
-        this.id = id;
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }
