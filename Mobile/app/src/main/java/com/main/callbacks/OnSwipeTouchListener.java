@@ -9,8 +9,6 @@ import android.view.ViewConfiguration;
 public abstract class OnSwipeTouchListener implements View.OnTouchListener {
     private final GestureDetector gestureDetector;
     private float downRawX, downRawY;
-    private float dX;
-    private boolean isBeyondThreshold = false;
     private boolean isDragging;
     private float touchSlop;
     private float THRESHOLD = 150;
@@ -76,8 +74,6 @@ public abstract class OnSwipeTouchListener implements View.OnTouchListener {
     public abstract void onSwipeRight();
 
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
-        private static final int SWIPE_THRESHOLD = 100;
-        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
         @Override
         public boolean onDown(MotionEvent e) {

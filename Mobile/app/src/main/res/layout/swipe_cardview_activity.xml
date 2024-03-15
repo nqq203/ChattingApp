@@ -9,16 +9,14 @@
         android:layout_height="100dp"
         android:src="@drawable/filter"
         android:layout_marginRight="20dp"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:id="@+id/icon_filter"/>
 
     <FrameLayout
         android:id="@+id/swipe_card_container"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
-
-        android:layout_marginTop="100dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"/>
+        android:layout_height="470dp"
+        android:layout_marginTop="100dp"/>
     <Button
         android:id="@+id/no_match_button"
         android:layout_width="wrap_content"

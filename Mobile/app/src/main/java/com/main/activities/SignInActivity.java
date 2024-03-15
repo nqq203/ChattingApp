@@ -36,6 +36,24 @@ public class SignInActivity extends AppCompatActivity {
             loginPhone.setCompoundDrawables(loginPhoneDrawables[0], null, null, null);
         }
 
+        loginGoogle.setOnClickListener(view -> {
+            Intent intentHomePage = new Intent(SignInActivity.this, SwipeCardViewActivity.class);
+            startActivity(intentHomePage);
+            finish();
+        });
+
+        loginFacebook.setOnClickListener(view -> {
+            Intent intentHomePage = new Intent(SignInActivity.this, SwipeCardViewActivity.class);
+            startActivity(intentHomePage);
+            finish();
+        });
+
+        loginPhone.setOnClickListener(view -> {
+            Intent intentHomePage = new Intent(SignInActivity.this, SwipeCardViewActivity.class);
+            startActivity(intentHomePage);
+            finish();
+        });
+
         signupLogin.setOnClickListener(view -> {
             Intent intentSignUp = new Intent(SignInActivity.this, SignUpActivity.class);
             startActivity(intentSignUp);

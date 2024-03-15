@@ -5,16 +5,27 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
 import com.main.callbacks.OnSwipeTouchListener;
+import com.main.entities.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SwipeCardFragment extends Fragment {
-
     private CardView cardView;
+    private TextView userName;
+    private TextView userAge;
+    private TextView distance;
+    private ImageView userProfileImage;
+    private List<User> users = new ArrayList<>();
+    private int currentUserIndex = 0;
 
     @Override
     public void onAttach(Context context) {
@@ -30,8 +41,27 @@ public class SwipeCardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.swipe_cardview_fragment, container, false);
         cardView = view.findViewById(R.id.card_view);
+        userName = cardView.findViewById(R.id.card_name);
+        userAge = cardView.findViewById(R.id.card_age);
+        distance = cardView.findViewById(R.id.card_distance);
+        userProfileImage = cardView.findViewById(R.id.card_image);
+
+//        Initialize list of users here
+        users.add( new User("Jisoo", "female", "23/12/2000", "0912345678", "abc1234"));
+        users.add( new User("Lisa", "female", "23/12/1999", "0912345678", "abc1234"));
+        users.add( new User("Jennie", "female", "23/12/1998", "0912345678", "abc1234"));
+        users.add( new User("Rose", "female", "23/12/1997", "0912345678", "abc1234"));
+
+        displayUser(users.get(currentUserIndex));
         setupCardSwipe();
         return view;
+    }
+
+    private void displayUser(User user) {
+        userName.setText(user.getFullname());
+        userAge.setText(user.getDate());
+        distance.setText("345 miles");
+//       set image and distance
     }
 
     private void setupCardSwipe() {
@@ -59,6 +89,7 @@ public class SwipeCardFragment extends Fragment {
                     cardView.setAlpha(1);
                     cardView.setRotation(0);
                 });
+        showNextUser();
     }
 
 
@@ -75,5 +106,14 @@ public class SwipeCardFragment extends Fragment {
                     cardView.setAlpha(1);
                     cardView.setRotation(0);
                 });
+        showNextUser();
+    }
+
+    private void showNextUser() {
+        currentUserIndex++;
+        if (currentUserIndex >= users.size()) {
+            currentUserIndex = 0;
+        }
+        displayUser(users.get(currentUserIndex));
     }
 }

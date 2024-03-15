@@ -13,23 +13,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        TextView textView = (TextView) findViewById(R.id.your_text_view);
-//        textView.setTypeface(FontManager.getTypeface(this, FontManager.FONTAWESOME));
-////        textView.setText("\uf015");
+
         Intent signinIntent = new Intent(MainActivity.this, SignInActivity.class);
         startActivity(signinIntent);
-
-
-        //        findViewById(R.id.navigate_message).setOnClickListener(view -> {
-//            // Create an Intent to navigate to the message_activity
-//            Intent intent = new Intent(MainActivity.this, MessageActivity.class);
-//            startActivity(intent);
-//        });
-//        findViewById(R.id.navigate_signup).setOnClickListener(view -> {
-//            // Create an Intent to navigate to the message_activity
-//            Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
-//            startActivity(intent);
-//        });
     }
 
     @Override
