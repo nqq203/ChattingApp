@@ -15,9 +15,8 @@
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/circle" />
-
         <activity
-            android:name="com.main.activities.MainActivity"
+            android:name="com.main.activities.ProfileMainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
