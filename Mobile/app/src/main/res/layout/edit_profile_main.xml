@@ -46,6 +46,22 @@
                 app:iconGravity="textStart"
                 app:iconPadding="0dp"
                 app:icon='@drawable/edit_icon'/>
+            <ImageView
+                android:id="@+id/back_arrow"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/back"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="15dp"
+                android:contentDescription="back" />
+            <TextView android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="160dp"
+                android:text="Profile"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginTop="10dp"/>
         </FrameLayout>
 
         <LinearLayout

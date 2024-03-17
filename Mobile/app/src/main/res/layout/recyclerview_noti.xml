@@ -3,11 +3,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <!--
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/message_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:elevation="4dp">
+
+        <!-- Back Arrow (Assuming you have a drawable named ic_arrow_back) -->
+        <ImageView
+            android:id="@+id/back_arrow"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/ic_launcher_back_arrow"
+            android:contentDescription="back" />
+
+        <!-- Screen Title "Messages" -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Notifications"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:textAppearance="?attr/textAppearanceHeadlineLarge"
+            android:gravity="center_vertical" />
+        <ImageView
+            android:id="@+id/Settings"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:src="@drawable/settings"
+            android:contentDescription=""
+            android:layout_gravity="end"
+            android:layout_marginEnd="25dp"/>
+
+    </androidx.appcompat.widget.Toolbar>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_height="match_parent"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="70dp"
+        android:layout_width="match_parent"
+        android:layout_marginTop="15dp"
         android:id="@+id/noti_list"/>
-        -->
+
 </LinearLayout>

@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Sharing Hobbies"
+            android:text="Manage Subscription"
             android:textSize="25dp"
             android:textStyle="bold"
             android:layout_gravity="center"
@@ -30,25 +30,33 @@
             android:gravity="center_vertical" />
 
     </androidx.appcompat.widget.Toolbar>
+    <FrameLayout android:layout_width="match_parent" android:layout_height="600dp">
     <FrameLayout android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <EditText android:layout_width="350dp"
-        android:layout_height="30dp"
-        android:background="@drawable/border"
-        android:layout_marginTop="35dp"
-        android:layout_marginStart="25dp"
-        android:id="@+id/SearchBar"/>
-    <View android:background="@drawable/baseline_search_24"
-        android:layout_height="25dp"
-        android:layout_width="25dp"
-        android:layout_marginTop="38dp"
-        android:layout_marginStart="340dp"/>
+        <EditText android:layout_width="350dp"
+            android:layout_height="30dp"
+            android:background="@drawable/border"
+            android:layout_marginTop="35dp"
+            android:layout_marginStart="25dp"
+            android:id="@+id/SearchBar"/>
+        <View android:background="@drawable/baseline_search_24"
+            android:layout_height="25dp"
+            android:layout_width="25dp"
+            android:layout_marginTop="38dp"
+            android:layout_marginStart="340dp"/>
     </FrameLayout>
-    <GridView android:layout_width="wrap_content"
+    <ListView android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:numColumns="4"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp"
-        android:id="@+id/grid_hobbies">
-    </GridView>
+        android:layout_marginTop="90dp"
+        android:layout_marginStart="28dp"
+        android:id="@+id/grid_sub"
+        />
+    </FrameLayout>
+    <Button android:layout_height="50dp"
+        android:layout_width="100dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="280dp"
+        android:text="Add"
+        android:id="@+id/addSub"
+        />
 </LinearLayout>

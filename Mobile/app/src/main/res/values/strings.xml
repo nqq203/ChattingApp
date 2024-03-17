@@ -2,10 +2,10 @@
     <string name="app_name">My Application</string>
 
 
-        <array name="AgeRangeSlider">
-            <item>25</item>
-            <item>70</item>
-        </array>
+    <array name="AgeRangeSlider">
+        <item>25</item>
+        <item>70</item>
+    </array>
 
     <array name="HeightRangeSlider">
         <item>145</item>
