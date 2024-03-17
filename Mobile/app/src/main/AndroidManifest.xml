@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -26,6 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.main.activities.MessageActivity"
+            android:theme="@style/AppTheme"
             android:exported="true"/>
         <activity android:name="com.main.activities.SignUpActivity"
             android:exported="true"/>
@@ -33,8 +34,9 @@
             android:exported="true"/>
         <activity android:name="com.main.activities.SwipeCardViewActivity"
             android:exported="true"/>
-<!--        <activity android:name="com.main.activities.FilterActivity"-->
-<!--            android:exported="true"/>-->
+        <activity android:name="com.main.activities.FilterActivity"
+            android:exported="true"
+            android:theme="@style/Theme.App.Dialog"/>
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

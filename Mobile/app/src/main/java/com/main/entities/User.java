@@ -8,13 +8,23 @@ public class User {
     private String date;
     private String phoneNumber;
     private String password;
+    private String imageUrl;
 
-    public User(String fullname, String gender, String date, String phoneNumber, String password) {
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public User(String fullname, String gender, String date, String phoneNumber, String password, String imageUrl) {
         this.fullname = fullname;
         this.gender = gender;
         this.date = date;
         this.phoneNumber = phoneNumber;
         this.password = password;
+        this.imageUrl = imageUrl;
     }
 
     public String getPassword() { return password; }

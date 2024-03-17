@@ -13,7 +13,7 @@ public class SignUpAdapter {
             callback.onError("All fields are required.");
         }
         else {
-            User newUser = new User(fullname, gender, birthDate, phoneNumber, password);
+            User newUser = new User(fullname, gender, birthDate, phoneNumber, password, null);
             callback.onSuccess(newUser);
         }
     }

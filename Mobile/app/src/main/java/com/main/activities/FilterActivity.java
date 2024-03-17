@@ -1,57 +1,44 @@
-//package com.main.activities;
-//
-//import android.graphics.Bitmap;
-//import android.graphics.drawable.BitmapDrawable;
-//import android.os.Bundle;
-//import android.renderscript.Allocation;
-//import android.renderscript.Element;
-//import android.renderscript.RenderScript;
-//import android.renderscript.ScriptIntrinsicBlur;
-//import android.view.View;
-//
-//import androidx.appcompat.app.AppCompatActivity;
-//
-//import com.example.myapplication.R;
-//import com.main.callbacks.FilterCallback;
-//
-//public class FilterActivity extends AppCompatActivity implements FilterCallback {
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.filter_activity);
-//
-//        Bitmap screenshot = getIntent().getParcelableExtra("screenshot");
-//        if (screenshot != null) {
-//            Bitmap blurredScreenshot = blurBitmap(screenshot);
-//            getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(), blurredScreenshot));
-//        }
-//    }
-//
-//    public void blurBackground() {
-//        Bitmap screenshot = takeScreenshot();
-//    }
-//
-//    public void finishFilterLayout() {
-//        finish();
-//    }
-//
-//    public Bitmap takeScreenshot() {
-//        View rootView = getWindow().getDecorView().getRootView();
-//        rootView.setDrawingCacheEnabled(true);
-//        Bitmap screenshot = Bitmap.createBitmap(rootView.getDrawingCache());
-//        rootView.setDrawingCacheEnabled(false);
-//        return screenshot;
-//    }
-//
-//    public Bitmap blurBitmap(Bitmap bitmap) {
-//        RenderScript rs = RenderScript.create(this);
-//        Allocation input = Allocation.createFromBitmap(rs, bitmap);
-//        Allocation output = Allocation.createTyped(rs, input.getType());
-//        ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
-//        script.setRadius(25f); // Adjust the blur intensity as needed
-//        script.setInput(input);
-//        script.forEach(output);
-//        output.copyTo(bitmap);
-//        return bitmap;
-//    }
-//}
+package com.main.activities;
+
+import android.os.Bundle;
+import android.view.Gravity;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.myapplication.R;
+
+public class FilterActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.filter_activity);
+        // Thiết lập vị trí của window
+        Window window = getWindow();
+        WindowManager.LayoutParams params = window.getAttributes();
+        // Ví dụ: đặt activity ở trung tâm màn hình
+        params.gravity = Gravity.TOP;
+        // Áp dụng các thay đổi về thuộc tính
+        window.setAttributes(params);
+
+        ImageView backBtn = findViewById(R.id.icon_back);
+        TextView checkBtn = findViewById(R.id.icon_check);
+        Spinner distanceSpinner = (Spinner) findViewById(R.id.distance_spinner);
+        ArrayAdapter<CharSequence> distanceChoicesAdapter = ArrayAdapter.createFromResource(this, R.array.distance_spinner_items, android.R.layout.simple_spinner_item);
+        distanceChoicesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        distanceSpinner.setAdapter(distanceChoicesAdapter);
+
+        backBtn.setOnClickListener(v -> {
+            finish();
+        });
+
+        checkBtn.setOnClickListener(v -> {
+            finish();
+        });
+    }
+}
