@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@drawable/gradient_background">
+    <ImageView
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:src="@drawable/matchmingle_icon"
+        android:layout_gravity="center"
+        android:layout_marginTop="150dp"/>
+
+    <Button
+        android:id="@+id/login_goolge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="125dp"
+        android:backgroundTint="@color/white"
+        android:padding="10dp"
+        android:drawableLeft="@mipmap/google_logo_foreground"
+        android:text="LOGIN WITH GOOGLE"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+    <Button
+        android:id="@+id/login_facebook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:backgroundTint="@color/white"
+        android:layout_marginTop="15dp"
+        android:text="LOGIN WITH FACEBOOK"
+        android:drawableLeft="@mipmap/facebook_logo_foreground"
+        android:textStyle="bold"
+        android:textColor="@color/black"/>
+
+    <Button
+        android:id="@+id/login_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:backgroundTint="@color/white"
+        android:layout_marginTop="15dp"
+        android:text="LOGIN WITH PHONE"
+        android:drawableLeft="@mipmap/phone_logo_foreground"
+        android:textStyle="bold"
+        android:textColor="@color/black"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Don't have an account? "
+            android:textSize="15dp"
+            android:textStyle="normal"
+            android:textColor="@color/white"/>
+        <TextView
+            android:id="@+id/sign_up_in_login"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Signup"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+
+</LinearLayout>

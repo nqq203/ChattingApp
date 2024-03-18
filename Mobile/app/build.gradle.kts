@@ -49,4 +49,8 @@ dependencies {
 
 //    Shape dependency
     implementation("de.hdodenhof:circleimageview:3.1.0")
+
+//    recycler view
+    implementation ("androidx.recyclerview:recyclerview:1.2.1")
+
 }
