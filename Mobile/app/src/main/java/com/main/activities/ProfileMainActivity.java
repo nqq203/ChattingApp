@@ -1,9 +1,11 @@
 package com.main.activities;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +16,8 @@ public class ProfileMainActivity  extends AppCompatActivity {
 
     TextView btnRateApp, btnComApp;
     Dialog RateAppDialog, ComAppDialog;
+    ImageView backBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +28,46 @@ public class ProfileMainActivity  extends AppCompatActivity {
 
         btnRateApp = (TextView) findViewById(R.id.rateapp_profile);
         btnComApp = (TextView) findViewById(R.id.next_improvement_profile);
+        backBtn = (ImageView) findViewById(R.id.back_arrow);
+
+        Button iconHome = findViewById(R.id.icon_home);
+        Button iconFavourite = findViewById(R.id.icon_favorite);
+        Button iconChat = findViewById(R.id.icon_chat);
+        Button iconProfile = findViewById(R.id.icon_profile);
+
+        iconHome.setTextColor(getResources().getColor(R.color.black));
+        iconFavourite.setTextColor(getResources().getColor(R.color.black));
+        iconChat.setTextColor(getResources().getColor(R.color.black));
+        iconProfile.setTextColor(getResources().getColor(R.color.purple_2));
+
+        iconChat.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileMainActivity.this, MessageActivity.class);
+            startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        });
+
+        iconHome.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileMainActivity.this, SwipeCardViewActivity.class);
+            startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        });
+
+        iconFavourite.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileMainActivity.this, MatchesActivity.class);
+            startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        });
+
+        backBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileMainActivity.this, SwipeCardViewActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
+
 
         btnRateApp.setOnClickListener(new View.OnClickListener() {
             @Override

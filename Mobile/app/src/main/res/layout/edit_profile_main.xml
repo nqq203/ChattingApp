@@ -1,34 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:weightSum="4">
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_weight="3">
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-
-            <View
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:background="@drawable/bg_view" />
+                android:layout_height="300dp">
 
-            <TextView
-                android:id="@+id/Profile_Name_Age"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="85dp"
-                android:text="Ngân, 21"
-                android:textColor="@color/white"
-                android:textSize="20dp"
-                android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:background="@drawable/bg_view" />
+
+                <TextView
+                    android:id="@+id/Profile_Name_Age"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="85dp"
+                    android:text="Ngân, 21"
+                    android:textColor="@color/white"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_gravity="center"
                     android:id="@+id/Profile_Pic"
@@ -36,671 +44,680 @@
                     android:layout_height="130dp"
                     android:src="@drawable/jisoo"
                     app:cardCornerRadius="80dp"/>
-            <Button
-                android:id="@+id/EditPic_Profile"
-                android:layout_width="50dp"
+                <Button
+                    android:id="@+id/EditPic_Profile"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="220dp"
+                    android:layout_marginTop="75dp"
+                    app:iconSize="25dp"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    app:icon='@drawable/edit_icon'/>
+                <ImageView
+                    android:id="@+id/back_arrow"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/back"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="15dp"
+                    android:contentDescription="back" />
+                <TextView android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_marginStart="160dp"
+                    android:text="Profile"
+                    android:textSize="30dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="10dp"/>
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="220dp"
-                android:layout_marginTop="75dp"
-                app:iconSize="25dp"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                app:icon='@drawable/edit_icon'/>
-            <ImageView
-                android:id="@+id/back_arrow"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:src="@drawable/back"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="35dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Account Settings"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="145dp"
+                    android:layout_marginTop="20dp"
+                    android:clickable="true"
+                    android:onClick="onClick"
+                    android:text="Edit"
+                    android:textColor="@color/blue"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- ACCOUNT SETTINGS-->
+            <FrameLayout
+                android:layout_width="400dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
+                <!-- Name-->
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="25dp"
+                    android:background="@drawable/border" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="12dp"
+                    android:text="Name"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/name_profile"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="285dp"
+                    android:layout_marginTop="12dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Jenny"
+                    android:textColor="@color/gray"
+                    android:textSize="17dp" />
+                <!-- Phone Number-->
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="60dp"
+                    android:background="@drawable/border" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="72dp"
+                    android:text="Phone Number"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/phonenumber_profile"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="222dp"
+                    android:layout_marginTop="72dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="+91 987 6543 2310"
+                    android:textColor="@color/gray"
+                    android:textSize="16dp" />
+                <!-- Date of birth -->
+
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="120dp"
+                    android:background="@drawable/border" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="132dp"
+                    android:text="Date of birth"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/datebirth_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="280dp"
+                    android:layout_marginTop="132dp"
+                    android:text="01/01/1997"
+                    android:textColor="@color/gray"
+                    android:textSize="16dp" />
+
+                <!-- Email-->
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="180dp"
+                    android:background="@drawable/border" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="192dp"
+                    android:text="Email"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/email_profile"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="220dp"
+                    android:layout_marginTop="192dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="abcere@gmail.com"
+                    android:textColor="@color/gray"
+                    android:textSize="16dp" />
+            </FrameLayout>
+
+            <!-- ABOUT ME-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:layout_marginTop="20dp"
+                    android:text="About me"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="200dp"
+                    android:layout_marginTop="20dp"
+                    android:clickable="true"
+                    android:onClick="onClick"
+                    android:text="Edit"
+                    android:textColor="@color/blue"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+
+            <FrameLayout
+                android:layout_width="400dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
+                <!-- LOCATION-->
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="25dp"
+                    android:background="@drawable/border" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="12dp"
+                    android:text="Location"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/address_profile"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="160dp"
+                    android:layout_marginTop="12dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="153, Điện Biên Phủ,Quận 3"
+                    android:textColor="@color/gray"
+                    android:textSize="17dp" />
+                <!-- HEIGHT-->
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="60dp"
+                    android:background="@drawable/border" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="72dp"
+                    android:text="Height"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/height_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="310dp"
+                    android:layout_marginTop="72dp"
+                    android:text="1m65"
+                    android:textColor="@color/gray"
+                    android:textSize="16dp" />
+            </FrameLayout>
+
+            <!-- PLAN SETTINGS-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Plan Settings"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="170dp"
+                    android:layout_marginTop="20dp"
+                    android:clickable="true"
+                    android:onClick="onClick"
+                    android:text="Edit"
+                    android:textColor="@color/blue"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+
+            <FrameLayout
+                android:layout_width="400dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
+                <!-- Current Plan-->
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="25dp"
+                    android:background="@drawable/border" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="12dp"
+                    android:text="Current Dating Plan"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/DatingPlan_Profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="335dp"
+                    android:layout_marginTop="12dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="1"
+                    android:textColor="@color/gray"
+                    android:textSize="17dp" />
+            </FrameLayout>
+
+
+            <!-- Preferred and Language -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Preferred and Language"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="70dp"
+                    android:layout_marginTop="20dp"
+                    android:clickable="true"
+                    android:onClick="onClick"
+                    android:text="Edit"
+                    android:textColor="@color/blue"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="400dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
+                <!-- Show me-->
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="25dp"
+                    android:background="@drawable/border" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="12dp"
+                    android:text="Show me"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/gender_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="315dp"
+                    android:layout_marginTop="12dp"
+                    android:text="Men"
+
+                    android:textColor="@color/gray"
+                    android:textSize="17dp" />
+                <!-- Language
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="60dp"
+                    android:background="@drawable/border" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="72dp"
+                    android:text="Language"
+                    android:textSize="18dp" />
+
+                <TextView
+
+                    android:layout_marginTop="72dp"
+                    android:layout_marginStart="300dp"
+                    android:id="@+id/language_profile"
+                    android:layout_width="65dp"
+                    android:layout_height="match_parent"
+
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="English"
+                    android:textColor="@color/gray"
+                    android:textSize="16dp" /> -->
+
+                <!-- AGE RANK -->
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="80dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="60dp"
+                    android:background="@drawable/border" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="72dp"
+                    android:text="Age range"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/agerange_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="300dp"
+                    android:layout_marginTop="72dp"
+                    android:text="24-34"
+                    android:textColor="@color/gray"
+                    android:textSize="16dp" />
+
+                            <com.google.android.material.slider.RangeSlider
+                                android:id="@+id/SliderAgeRank_profile"
+                                android:layout_width="330dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="35dp"
+                                android:layout_marginTop="90dp"
+                                android:stepSize="1"
+                                android:valueFrom="18"
+                                android:valueTo="80"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/normalContinuousSlider"
+                                app:values="@array/AgeRangeSlider"
+                                android:theme="@style/Theme.MaterialComponents.Light"/>
+
+
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="80dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="150dp"
+                    android:background="@drawable/border" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="165dp"
+                    android:text="Height range (in cm)"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/PreHeight_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="290dp"
+                    android:layout_marginTop="165dp"
+                    android:text=" 160-175"
+                    android:textColor="@color/gray"
+                    android:textSize="16dp" />
+
+                            <com.google.android.material.slider.RangeSlider
+                                android:id="@+id/SliderHeight_profile"
+                                android:layout_width="335dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="35dp"
+                                android:layout_marginTop="180dp"
+                                android:stepSize="1"
+                                android:valueFrom="65"
+                                android:valueTo="252"
+                                app:values="@array/HeightRangeSlider"
+                                android:theme="@style/Theme.MaterialComponents.Light"/>
+            </FrameLayout>
+
+
+            <!-- PLAN SETTINGS-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Languages"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="170dp"
+                    android:layout_marginTop="20dp"
+                    android:clickable="true"
+                    android:onClick="onClick"
+                    android:text="Edit"
+                    android:textColor="@color/blue"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+
+            <FrameLayout
+                android:layout_width="400dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
+                <!-- Current Plan-->
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="25dp"
+                    android:background="@drawable/border" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="12dp"
+                    android:text="Language"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:layout_marginTop="12dp"
+                    android:layout_marginStart="300dp"
+                    android:id="@+id/language_profile"
+                    android:layout_width="65dp"
+                    android:layout_height="match_parent"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="English"
+                    android:textColor="@color/gray"
+                    android:textSize="16dp"
+                    />
+            </FrameLayout>
+
+            <!-- FEEDBACK-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Feedback"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+            <FrameLayout
+                android:layout_width="400dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
+                <!-- LOCATION-->
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="25dp"
+                    android:background="@drawable/border" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="12dp"
+                    android:text="Rate our app"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/rateapp_profile"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="240dp"
+                    android:layout_marginTop="12dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Tap here to rate"
+                    android:textColor="@color/blue"
+                    android:textSize="16dp"
+                    android:clickable="true"
+                    android:onClick="onClick"
+                    android:textStyle="bold"/>
+                <!-- HEIGHT-->
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="60dp"
+                    android:background="@drawable/border" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="72dp"
+                    android:text="Next improvement"
+
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/next_improvement_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="205dp"
+                    android:layout_marginTop="72dp"
+                    android:text="Tap here to comments"
+                    android:textColor="@color/blue"
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:onClick="onClick"
+                    android:textSize="16dp" />
+            </FrameLayout>
+
+
+            <View
+                android:layout_width="280dp"
+                android:layout_height="1dp"
+                android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="15dp"
-                android:contentDescription="back" />
-            <TextView android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_marginStart="160dp"
-                android:text="Profile"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:layout_marginTop="10dp"/>
-        </FrameLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                android:background="@android:color/darker_gray" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="20dp"
-                android:text="Account Settings"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="145dp"
-                android:layout_marginTop="20dp"
+                android:layout_width="340dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/button_border"
                 android:clickable="true"
                 android:onClick="onClick"
-                android:text="Edit"
-                android:textColor="@color/blue"
-                android:textSize="16dp"
-                android:textStyle="bold" />
-        </LinearLayout>
 
-        <!-- ACCOUNT SETTINGS-->
-        <FrameLayout
-            android:layout_width="400dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp">
-            <!-- Name-->
-            <View
-                android:layout_width="350dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="25dp"
-                android:background="@drawable/border" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="12dp"
-                android:text="Name"
-                android:textSize="18dp" />
-
-            <TextView
-                android:id="@+id/name_profile"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="285dp"
-                android:layout_marginTop="12dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Jenny"
-                android:textColor="@color/gray"
-                android:textSize="17dp" />
-            <!-- Phone Number-->
-            <View
-                android:layout_width="350dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="60dp"
-                android:background="@drawable/border" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="72dp"
-                android:text="Phone Number"
-                android:textSize="18dp" />
-
-            <TextView
-                android:id="@+id/phonenumber_profile"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="222dp"
-                android:layout_marginTop="72dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="+91 987 6543 2310"
-                android:textColor="@color/gray"
-                android:textSize="16dp" />
-            <!-- Date of birth -->
-
-            <View
-                android:layout_width="350dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="120dp"
-                android:background="@drawable/border" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="132dp"
-                android:text="Date of birth"
-                android:textSize="18dp" />
-
-            <TextView
-                android:id="@+id/datebirth_profile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="280dp"
-                android:layout_marginTop="132dp"
-                android:text="01/01/1997"
-                android:textColor="@color/gray"
-                android:textSize="16dp" />
-
-            <!-- Email-->
-            <View
-                android:layout_width="350dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="180dp"
-                android:background="@drawable/border" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="192dp"
-                android:text="Email"
-                android:textSize="18dp" />
-
-            <TextView
-                android:id="@+id/email_profile"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="220dp"
-                android:layout_marginTop="192dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="abcere@gmail.com"
-                android:textColor="@color/gray"
-                android:textSize="16dp" />
-        </FrameLayout>
-
-        <!-- ABOUT ME-->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="45dp"
-                android:layout_marginTop="20dp"
-                android:text="About me"
-                android:textSize="20dp"
+                android:text="Log Out"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18dp"
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="200dp"
-                android:layout_marginTop="20dp"
+                android:layout_width="340dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="30dp"
+                android:background="@drawable/button_border"
                 android:clickable="true"
                 android:onClick="onClick"
-                android:text="Edit"
-                android:textColor="@color/blue"
-                android:textSize="16dp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-
-        <FrameLayout
-            android:layout_width="400dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp">
-            <!-- LOCATION-->
-            <View
-                android:layout_width="350dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="25dp"
-                android:background="@drawable/border" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="12dp"
-                android:text="Location"
-                android:textSize="18dp" />
-
-            <TextView
-                android:id="@+id/address_profile"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="160dp"
-                android:layout_marginTop="12dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="153, Điện Biên Phủ,Quận 3"
-                android:textColor="@color/gray"
-                android:textSize="17dp" />
-            <!-- HEIGHT-->
-            <View
-                android:layout_width="350dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="60dp"
-                android:background="@drawable/border" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="72dp"
-                android:text="Height"
-                android:textSize="18dp" />
-
-            <TextView
-                android:id="@+id/height_profile"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="310dp"
-                android:layout_marginTop="72dp"
-                android:text="1m65"
-                android:textColor="@color/gray"
-                android:textSize="16dp" />
-        </FrameLayout>
-
-        <!-- PLAN SETTINGS-->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="45dp"
-                android:layout_marginTop="20dp"
-                android:text="Plan Settings"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="170dp"
-                android:layout_marginTop="20dp"
-                android:clickable="true"
-                android:onClick="onClick"
-                android:text="Edit"
-                android:textColor="@color/blue"
-                android:textSize="16dp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-
-        <FrameLayout
-            android:layout_width="400dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp">
-            <!-- Current Plan-->
-            <View
-                android:layout_width="350dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="25dp"
-                android:background="@drawable/border" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="12dp"
-                android:text="Current Dating Plan"
-                android:textSize="18dp" />
-
-            <TextView
-                android:id="@+id/DatingPlan_Profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="335dp"
-                android:layout_marginTop="12dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="1"
-                android:textColor="@color/gray"
-                android:textSize="17dp" />
-        </FrameLayout>
-
-
-        <!-- Preferred and Language -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="45dp"
-                android:layout_marginTop="20dp"
-                android:text="Preferred and Language"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="70dp"
-                android:layout_marginTop="20dp"
-                android:clickable="true"
-                android:onClick="onClick"
-                android:text="Edit"
-                android:textColor="@color/blue"
-                android:textSize="16dp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <FrameLayout
-            android:layout_width="400dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp">
-            <!-- Show me-->
-            <View
-                android:layout_width="350dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="25dp"
-                android:background="@drawable/border" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="12dp"
-                android:text="Show me"
-                android:textSize="18dp" />
-
-            <TextView
-                android:id="@+id/gender_profile"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="315dp"
-                android:layout_marginTop="12dp"
-                android:text="Men"
-
-                android:textColor="@color/gray"
-                android:textSize="17dp" />
-            <!-- Language
-            <View
-                android:layout_width="350dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="60dp"
-                android:background="@drawable/border" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="72dp"
-                android:text="Language"
-                android:textSize="18dp" />
-
-            <TextView
-
-                android:layout_marginTop="72dp"
-                android:layout_marginStart="300dp"
-                android:id="@+id/language_profile"
-                android:layout_width="65dp"
-                android:layout_height="match_parent"
-
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="English"
-                android:textColor="@color/gray"
-                android:textSize="16dp" /> -->
-
-            <!-- AGE RANK -->
-            <View
-                android:layout_width="350dp"
-                android:layout_height="80dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="60dp"
-                android:background="@drawable/border" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="72dp"
-                android:text="Age range"
-                android:textSize="18dp" />
-
-            <TextView
-                android:id="@+id/agerange_profile"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="300dp"
-                android:layout_marginTop="72dp"
-                android:text="24-34"
-                android:textColor="@color/gray"
-                android:textSize="16dp" />
-
-            <com.google.android.material.slider.RangeSlider
-                android:id="@+id/SliderAgeRank_profile"
-                android:layout_width="330dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="90dp"
-                android:stepSize="1"
-                android:valueFrom="18"
-                android:valueTo="80"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/normalContinuousSlider"
-                app:values="@array/AgeRangeSlider" />
-
-
-            <View
-                android:layout_width="350dp"
-                android:layout_height="80dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="150dp"
-                android:background="@drawable/border" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="165dp"
-                android:text="Height range (in cm)"
-                android:textSize="18dp" />
-
-            <TextView
-                android:id="@+id/PreHeight_profile"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="290dp"
-                android:layout_marginTop="165dp"
-                android:text=" 160-175"
-                android:textColor="@color/gray"
-                android:textSize="16dp" />
-
-            <com.google.android.material.slider.RangeSlider
-                android:id="@+id/SliderHeight_profile"
-                android:layout_width="335dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="180dp"
-                android:stepSize="1"
-                android:valueFrom="65"
-                android:valueTo="252"
-                app:values="@array/HeightRangeSlider" />
-        </FrameLayout>
-
-
-        <!-- PLAN SETTINGS-->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="45dp"
-                android:layout_marginTop="20dp"
-                android:text="Languages"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="170dp"
-                android:layout_marginTop="20dp"
-                android:clickable="true"
-                android:onClick="onClick"
-                android:text="Edit"
-                android:textColor="@color/blue"
-                android:textSize="16dp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-
-        <FrameLayout
-            android:layout_width="400dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp">
-            <!-- Current Plan-->
-            <View
-                android:layout_width="350dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="25dp"
-                android:background="@drawable/border" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="12dp"
-                android:text="Language"
-                android:textSize="18dp" />
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_marginStart="300dp"
-                android:id="@+id/language_profile"
-                android:layout_width="65dp"
-                android:layout_height="match_parent"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="English"
-                android:textColor="@color/gray"
-                android:textSize="16dp"
-                />
-        </FrameLayout>
-
-        <!-- FEEDBACK-->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="45dp"
-                android:layout_marginTop="20dp"
-                android:text="Feedback"
-                android:textSize="20dp"
+                android:text="Delete Account"
+                android:textAlignment="center"
+                android:textColor="@color/red"
+                android:textSize="18dp"
                 android:textStyle="bold" />
 
         </LinearLayout>
-
-
-        <FrameLayout
-            android:layout_width="400dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp">
-            <!-- LOCATION-->
-            <View
-                android:layout_width="350dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="25dp"
-                android:background="@drawable/border" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="12dp"
-                android:text="Rate our app"
-                android:textSize="18dp" />
-
-            <TextView
-                android:id="@+id/rateapp_profile"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="240dp"
-                android:layout_marginTop="12dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Tap here to rate"
-                android:textColor="@color/blue"
-                android:textSize="16dp"
-                android:clickable="true"
-                android:onClick="onClick"
-                android:textStyle="bold"/>
-            <!-- HEIGHT-->
-            <View
-                android:layout_width="350dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="60dp"
-                android:background="@drawable/border" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="72dp"
-                android:text="Next improvement"
-
-                android:textSize="18dp" />
-
-            <TextView
-                android:id="@+id/next_improvement_profile"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="205dp"
-                android:layout_marginTop="72dp"
-                android:text="Tap here to comments"
-                android:textColor="@color/blue"
-                android:textStyle="bold"
-                android:clickable="true"
-                android:onClick="onClick"
-                android:textSize="16dp" />
-        </FrameLayout>
-
-
-        <View
-            android:layout_width="280dp"
-            android:layout_height="1dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-
-            android:background="@android:color/darker_gray" />
-
-        <TextView
-            android:layout_width="340dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="14dp"
-            android:background="@drawable/button_border"
-            android:clickable="true"
-            android:onClick="onClick"
-
-            android:text="Log Out"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="18dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="340dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="30dp"
-            android:background="@drawable/button_border"
-            android:clickable="true"
-            android:onClick="onClick"
-            android:text="Delete Account"
-            android:textAlignment="center"
-            android:textColor="@color/red"
-            android:textSize="18dp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/custom_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"/>
+</LinearLayout>

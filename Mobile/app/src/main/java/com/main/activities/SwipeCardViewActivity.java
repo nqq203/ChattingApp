@@ -51,5 +51,11 @@ public class SwipeCardViewActivity extends AppCompatActivity {
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
+        iconFavourite.setOnClickListener(v -> {
+            Intent intent = new Intent(SwipeCardViewActivity.this, MatchesActivity.class);
+            startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
     }
 }

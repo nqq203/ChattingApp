@@ -18,7 +18,7 @@
             android:resource="@xml/circle" />
 
         <activity
-            android:name="com.main.activities.MainActivity"
+            android:name="com.main.activities.UploadStory"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,6 +52,14 @@
             android:exported="true"/>
         <activity android:name="com.main.activities.Subscription_Activity"
             android:exported="true"/>
+        <activity android:name="com.main.activities.ProfileView"
+            android:exported="true"/>
+        <activity android:name="com.main.activities.Story"
+            android:exported="true"/>
+        <activity android:name="com.main.activities.UploadImageType"
+            android:exported="true"/>
+<!--        <activity android:name="com.main.activities.UploadStory"-->
+<!--            android:exported="true"/>-->
 
         <meta-data
             android:name="preloaded_fonts"

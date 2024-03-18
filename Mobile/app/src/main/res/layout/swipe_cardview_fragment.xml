@@ -13,7 +13,19 @@
             android:src="@drawable/filter"
             android:layout_marginRight="20dp"
             android:layout_alignParentRight="true"
-            android:id="@+id/icon_filter"/>
+            android:id="@+id/icon_filter" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:src="@drawable/filter"
+            android:layout_marginLeft="20dp"
+            android:layout_alignParentLeft="true"
+            android:text="@string/noti_ic"
+            android:textSize="30dp"
+            android:fontFamily="@font/fa_solid_900"
+            android:id="@+id/icon_noti"
+            android:gravity="center_vertical"
+            android:textColor="@color/black"/>
         <androidx.cardview.widget.CardView
             android:layout_below="@+id/icon_filter"
             android:layout_width="match_parent"

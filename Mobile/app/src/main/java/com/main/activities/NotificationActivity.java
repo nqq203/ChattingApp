@@ -54,11 +54,14 @@ public class NotificationActivity extends AppCompatActivity {
 
 package com.main.activities;
 
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -96,6 +99,13 @@ public class NotificationActivity extends AppCompatActivity {
 
         // initializing our variables.
         notiRV = findViewById(R.id.noti_list);
+        ImageView backBtn = findViewById(R.id.back_arrow);
+
+        backBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(NotificationActivity.this, SwipeCardViewActivity.class);
+            startActivity(intent);
+            finish();
+        });
 
         // creating new array list.
         notiArrayList = new ArrayList<>();

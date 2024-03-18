@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.main.activities.FilterActivity;
+import com.main.activities.NotificationActivity;
 import com.main.callbacks.OnSwipeTouchListener;
 import com.main.entities.User;
 
@@ -29,6 +30,7 @@ public class SwipeCardFragment extends Fragment {
     private TextView distance;
     private ImageView userProfileImage;
     private ImageView filterIcon;
+    private TextView notiIcon;
     private RelativeLayout cardWrapper;
     private List<User> users = new ArrayList<>();
     private int currentUserIndex = 0;
@@ -48,18 +50,23 @@ public class SwipeCardFragment extends Fragment {
         distance = cardView.findViewById(R.id.card_distance);
         userProfileImage = cardView.findViewById(R.id.card_image);
         filterIcon = cardWrapper.findViewById(R.id.icon_filter);
+        notiIcon = cardWrapper.findViewById(R.id.icon_noti);
 
-//        try {
-            filterIcon.setOnClickListener(v -> {
-                if (getActivity() != null) {
-                    Intent intent = new Intent(getActivity(), FilterActivity.class);
-                    startActivity(intent);
-                }
-            });
-//        }
-//        catch (Exception e) {
-//            Log.d
-//        }
+        filterIcon.setOnClickListener(v -> {
+            if (getActivity() != null) {
+                Intent intent = new Intent(getActivity(), FilterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        notiIcon.setOnClickListener(v -> {
+            if (getActivity() != null) {
+                Intent intent = new Intent(getActivity(), NotificationActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
+
 //        Initialize list of users here
         users.add( new User("Lisa", "female", "23/12/2000", "0912345678", "abc1234", "https://i.pinimg.com/originals/87/e3/68/87e3680db94fa0baa744017596863653.jpg"));
         users.add( new User("Jisoo", "female", "23/12/1999", "0912345678", "abc1234", "https://th.bing.com/th/id/OIP.xNcchNwI9Vtv66fF0dGHbwHaLH?rs=1&pid=ImgDetMain"));
