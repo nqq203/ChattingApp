@@ -17,7 +17,7 @@
             android:resource="@xml/circle" />
 
         <activity
-            android:name="com.main.activities.UploadImageType"
+            android:name="com.main.activities.UploadStory"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
