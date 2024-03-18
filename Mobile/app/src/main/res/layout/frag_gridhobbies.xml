@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/message_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:elevation="4dp">
+
+        <!-- Back Arrow (Assuming you have a drawable named ic_arrow_back) -->
+        <ImageView
+            android:id="@+id/back_arrow"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/arrow_left"
+            android:contentDescription="back" />
+
+        <!-- Screen Title "Messages" -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Sharing Hobbies"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:textAppearance="?attr/textAppearanceHeadlineLarge"
+            android:gravity="center_vertical" />
+
+    </androidx.appcompat.widget.Toolbar>
+    <FrameLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <EditText android:layout_width="350dp"
+        android:layout_height="30dp"
+        android:background="@drawable/border"
+        android:layout_marginTop="35dp"
+        android:layout_marginStart="25dp"
+        android:id="@+id/SearchBar"/>
+    <View android:background="@drawable/baseline_search_24"
+        android:layout_height="25dp"
+        android:layout_width="25dp"
+        android:layout_marginTop="38dp"
+        android:layout_marginStart="340dp"/>
+    </FrameLayout>
+    <GridView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numColumns="4"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:id="@+id/grid_hobbies">
+    </GridView>
+</LinearLayout>

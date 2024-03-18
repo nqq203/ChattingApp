@@ -2,38 +2,33 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-<<<<<<< HEAD
-      <entry key="app">
+      <entry key="NotificationActivity">
         <State>
-          <targetSelectedWithDropDown>
+          <runningDeviceTargetSelectedWithDropDown>
             <Target>
-              <type value="QUICK_BOOT_TARGET" />
+              <type value="RUNNING_DEVICE_TARGET" />
               <deviceKey>
                 <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\Quoc Quy\.android\avd\Pixel_3_API_28.avd" />
+                  <type value="SERIAL_NUMBER" />
+                  <value value="QV7102C227" />
                 </Key>
               </deviceKey>
             </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-03-15T16:07:19.738241400Z" />
+          </runningDeviceTargetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-03-18T10:40:53.827169300Z" />
         </State>
-=======
-      <entry key="All Tests">
+      </entry>
+      <entry key="ProfileMainActivity">
         <State />
       </entry>
-      <entry key="FilterActivity">
+      <entry key="RateActivity">
         <State />
       </entry>
-      <entry key="MainActivity">
+      <entry key="SharingHobbiesActivity">
         <State />
       </entry>
-      <entry key="MessageActivity">
+      <entry key="Subscription_Activity">
         <State />
-      </entry>
-      <entry key="SignInActivity">
-        <State />
->>>>>>> dd0d9856c783bba23b1ef2ff3f05ac4088d8ec22
       </entry>
     </value>
   </component>

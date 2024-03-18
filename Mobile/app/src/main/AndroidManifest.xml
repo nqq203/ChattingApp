@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:targetApi="31">
+
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/circle" />
@@ -37,6 +38,21 @@
         <activity android:name="com.main.activities.FilterActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Dialog"/>
+        <activity android:name="com.main.activities.ProfileMainActivity"
+            android:exported="true"/>
+        <activity android:name="com.main.activities.NotificationActivity"
+            android:exported="true"/>
+        <activity android:name="com.main.activities.RateActivity"
+            android:exported="true" />
+        <activity android:name="com.main.activities.SharingHobbiesActivity"
+            android:exported="true"/>
+        <activity android:name="com.main.activities.AddNewSubActivity"
+            android:exported="true"/>
+        <activity android:name="com.main.activities.CommentsAppActivity"
+            android:exported="true"/>
+        <activity android:name="com.main.activities.Subscription_Activity"
+            android:exported="true"/>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
