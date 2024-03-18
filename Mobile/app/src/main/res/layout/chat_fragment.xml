@@ -10,7 +10,8 @@
     android:paddingBottom="5dp"
     android:background="@color/white"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:id="@+id/chat_layout">
 
         <RelativeLayout
             android:id="@+id/chat_toolbar"
@@ -36,7 +37,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_toEndOf="@id/back_chat"
                 android:layout_centerVertical="true"
-                android:src="@drawable/lisa"/>
+                android:src="@drawable/lisa"
+                android:scaleType="centerCrop"/>
 
             <TextView
                 android:id="@+id/chat_title"
@@ -50,6 +52,16 @@
                 android:layout_marginStart="16dp"
                 android:layout_centerVertical="true"
                 android:gravity="center" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/moreinfo_ic"
+                android:layout_alignParentRight="true"
+                android:fontFamily="@font/fa_solid_900"
+                android:textSize="25dp"
+                android:textColor="@color/black"
+                android:layout_centerVertical="true"
+                android:id="@+id/button_info"/>
         </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -102,7 +114,6 @@
             android:fontFamily="@font/fa_solid_900"
             android:textColor="@color/purple_2"
             android:textSize="25dp"
-            android:layout_marginRight="15dp"
             android:id="@+id/button_send"/>
     </LinearLayout>
 </RelativeLayout>

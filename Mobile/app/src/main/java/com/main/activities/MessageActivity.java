@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -18,11 +19,12 @@ import com.main.adapters.StoryAdapter;
 import com.main.entities.MessageItem;
 import com.main.entities.Story;
 import com.main.fragments.ChatFragment;
+import com.main.fragments.ColorPickerDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageActivity  extends AppCompatActivity {
+public class MessageActivity  extends AppCompatActivity implements ColorPickerDialogFragment.ColorPickerDialogListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,5 +113,11 @@ public class MessageActivity  extends AppCompatActivity {
                     .addToBackStack(null)
                     .commit();
         });
+    }
+
+    @Override
+    public void onColorSelected(int color) {
+        RelativeLayout chatLayout = findViewById(R.id.chat_layout);
+        chatLayout.setBackgroundColor(color);
     }
 }
