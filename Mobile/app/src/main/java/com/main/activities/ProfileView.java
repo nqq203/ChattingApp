@@ -1,6 +1,8 @@
 package com.main.activities;
 
 import android.os.Bundle;
+import android.widget.ImageButton;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +21,9 @@ public class ProfileView extends AppCompatActivity {
         setContentView(R.layout.profile_view);
 
         mRecyclerView = findViewById(R.id.recyclerView);
+        ImageButton backBtn = findViewById(R.id.back_arrow);
 
+        backBtn.setOnClickListener(v -> onBackPressed());
         // Thiết lập GridLayoutManager với số cột tối đa là 3
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         mRecyclerView.setLayoutManager(layoutManager);

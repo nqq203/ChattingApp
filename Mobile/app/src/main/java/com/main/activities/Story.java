@@ -1,5 +1,6 @@
 package com.main.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ProgressBar;
@@ -46,6 +47,10 @@ public class Story extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+            Intent intent = new Intent(Story.this, MessageActivity.class);
+            // After the progress bar animation is complete, post a message to finish the activity
+            mainHandler.postDelayed(() -> startActivity(intent), PROGRESS_INTERVAL);
+            finish();
         }).start();
     }
 
@@ -53,5 +58,4 @@ public class Story extends AppCompatActivity {
         // Update the progress of the ProgressBar
         timeProgressBar.setProgress(progress);
     }
-
 }

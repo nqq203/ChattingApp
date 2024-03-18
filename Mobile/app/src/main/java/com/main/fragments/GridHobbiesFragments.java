@@ -1,5 +1,7 @@
 package com.main.fragments;
 import android.content.Context;
+import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
+import com.main.activities.MessageActivity;
 import com.main.activities.SharingHobbiesActivity;
 import com.main.adapters.HobbiesAdapter;
 import com.main.entities.HobbiesItem;
@@ -31,6 +35,7 @@ public class GridHobbiesFragments extends Fragment{
     private EditText searchHobbies;
     private FrameLayout hobbiesButn;
     String hobbiesEnter;
+    private ImageView backBtn;
 
     public static GridHobbiesFragments newInstance(String strArg) {
         GridHobbiesFragments fragment = new GridHobbiesFragments();
@@ -57,6 +62,12 @@ public class GridHobbiesFragments extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewList= inflater.inflate(R.layout.frag_gridhobbies, container, false);
         searchHobbies=(EditText) viewList.findViewById(R.id.SearchBar);
+        backBtn = (ImageView) viewList.findViewById(R.id.back_arrow);
+
+        backBtn.setOnClickListener(v -> {
+            getActivity().onBackPressed();
+        });
+
         searchHobbies.setHint("Search hobbies...");
 
         gridView=(GridView) viewList.findViewById(R.id.grid_hobbies);

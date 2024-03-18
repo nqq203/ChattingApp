@@ -1,6 +1,7 @@
 package com.main.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.R;
+import com.main.activities.MessageActivity;
 import com.main.entities.Story;
 
 import java.util.List;
@@ -51,6 +53,18 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
             super(itemView);
             storyImage = itemView.findViewById(R.id.story_image);
             storyFullname = itemView.findViewById(R.id.story_fullname);
+
+            storyImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        Context context = view.getContext();
+                        Intent intent = new Intent(context, Story.class);
+                        context.startActivity(intent);
+                    }
+                }
+            });
         }
     }
 }

@@ -70,6 +70,7 @@ public class SharingHobbiesActivity extends FragmentActivity implements MainCall
     FragmentTransaction ft;
     GridHobbiesFragments GridHobbies;
     TextViewHobbiesFragment TextViewHobbies;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

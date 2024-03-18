@@ -64,6 +64,20 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
             finish();
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
+
+        iconFavourite.setOnClickListener(v -> {
+            Intent intent = new Intent(MessageActivity.this, MatchesActivity.class);
+            startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        });
+
+        iconProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(MessageActivity.this, ProfileMainActivity.class);
+            startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
     }
 
     private void populateStories(RecyclerView container) {
@@ -119,5 +133,14 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
     public void onColorSelected(int color) {
         RelativeLayout chatLayout = findViewById(R.id.chat_layout);
         chatLayout.setBackgroundColor(color);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack(); // Quay về Fragment trước đó
+        } else {
+            super.onBackPressed(); // Hành vi mặc định (có thể là đóng Activity)
+        }
     }
 }

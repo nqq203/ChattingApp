@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ public class Subscription_Activity extends AppCompatActivity {
     private ListView listView;
     private Button btn1;
     Dialog mDialog;
+    private ImageView backBtn;
     private List<SubscriptionItem> subscriptionItemList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,13 @@ public class Subscription_Activity extends AppCompatActivity {
         txtsearch=(EditText) findViewById(R.id.SearchBar);
         listView=(ListView) findViewById(R.id.grid_sub);
         btn1=(Button) findViewById(R.id.addSub);
+        backBtn=(ImageView) findViewById(R.id.back_arrow);
+
+        backBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(Subscription_Activity.this, ProfileMainActivity.class);
+            startActivity(intent);
+            finish();
+        });
 
         mDialog=new Dialog(this);
 

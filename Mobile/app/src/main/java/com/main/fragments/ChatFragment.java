@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.R;
 import com.main.activities.MessageActivity;
+import com.main.activities.ProfileView;
 import com.main.adapters.ChatAdapter;
 
 import java.util.ArrayList;
@@ -58,6 +59,11 @@ public class ChatFragment extends DialogFragment {
         editTextMsg = view.findViewById(R.id.edit_text_message);
         infoBtn = view.findViewById(R.id.button_info);
         userImage = view.findViewById(R.id.user_chat_image);
+
+        userImage.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ProfileView.class);
+            startActivity(intent);
+        });
 
         return view;
     }

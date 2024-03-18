@@ -2,6 +2,12 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="MainActivity">
+        <State />
+      </entry>
+      <entry key="MatchesActivity">
+        <State />
+      </entry>
       <entry key="ProfileMainActivity">
         <State />
       </entry>
@@ -9,12 +15,6 @@
         <State />
       </entry>
       <entry key="SwipeCardViewActivity">
-        <State />
-      </entry>
-      <entry key="UploadImageType">
-        <State />
-      </entry>
-      <entry key="UploadStory">
         <State />
       </entry>
     </value>

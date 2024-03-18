@@ -17,6 +17,7 @@ public class ProfileMainActivity  extends AppCompatActivity {
     TextView btnRateApp, btnComApp;
     Dialog RateAppDialog, ComAppDialog;
     ImageView backBtn;
+    TextView editPlanBtn;
 
 
     @Override
@@ -29,6 +30,7 @@ public class ProfileMainActivity  extends AppCompatActivity {
         btnRateApp = (TextView) findViewById(R.id.rateapp_profile);
         btnComApp = (TextView) findViewById(R.id.next_improvement_profile);
         backBtn = (ImageView) findViewById(R.id.back_arrow);
+        editPlanBtn = (TextView) findViewById(R.id.edit_plan_btn);
 
         Button iconHome = findViewById(R.id.icon_home);
         Button iconFavourite = findViewById(R.id.icon_favorite);
@@ -67,8 +69,11 @@ public class ProfileMainActivity  extends AppCompatActivity {
             finish();
         });
 
-
-
+        editPlanBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileMainActivity.this, Subscription_Activity.class);
+            startActivity(intent);
+            finish();
+        });
         btnRateApp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

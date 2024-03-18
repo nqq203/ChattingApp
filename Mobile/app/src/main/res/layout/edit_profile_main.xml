@@ -10,7 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="3">
+        android:layout_weight="4">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -92,7 +92,6 @@
                     android:layout_marginStart="145dp"
                     android:layout_marginTop="20dp"
                     android:clickable="true"
-                    android:onClick="onClick"
                     android:text="Edit"
                     android:textColor="@color/blue"
                     android:textSize="16dp"
@@ -234,7 +233,6 @@
                     android:layout_marginStart="200dp"
                     android:layout_marginTop="20dp"
                     android:clickable="true"
-                    android:onClick="onClick"
                     android:text="Edit"
                     android:textColor="@color/blue"
                     android:textSize="16dp"
@@ -324,7 +322,8 @@
                     android:text="Edit"
                     android:textColor="@color/blue"
                     android:textSize="16dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:id="@+id/edit_plan_btn"/>
             </LinearLayout>
 
 
@@ -333,11 +332,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp">
                 <!-- Current Plan-->
-                <View
-                    android:layout_width="350dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="25dp"
-                    android:background="@drawable/border" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -376,17 +370,11 @@
                     android:textSize="20dp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="70dp"
-                    android:layout_marginTop="20dp"
-                    android:clickable="true"
-                    android:onClick="onClick"
-                    android:text="Edit"
-                    android:textColor="@color/blue"
-                    android:textSize="16dp"
-                    android:textStyle="bold" />
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="25dp"
+                    android:background="@drawable/border" />
             </LinearLayout>
 
             <FrameLayout
@@ -408,7 +396,7 @@
                     android:text="Show me"
                     android:textSize="18dp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/gender_profile"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -719,5 +707,6 @@
         layout="@layout/custom_toolbar"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:layout_weight="1"/>
 </LinearLayout>

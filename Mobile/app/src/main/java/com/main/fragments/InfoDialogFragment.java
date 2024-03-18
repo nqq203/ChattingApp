@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.myapplication.R;
+import com.main.activities.SharingHobbiesActivity;
 
 public class InfoDialogFragment extends DialogFragment {
 
@@ -58,6 +60,8 @@ public class InfoDialogFragment extends DialogFragment {
                         break;
                     case 2:
                         // Sharing Hobbies
+                        Intent intentHobbies = new Intent(getActivity(), SharingHobbiesActivity.class);
+                        startActivity(intentHobbies);
                         break;
                     case 3:
                         dismiss();
