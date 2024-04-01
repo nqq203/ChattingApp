@@ -9,7 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 
 public class ColorPickerDialogFragment extends DialogFragment {
 

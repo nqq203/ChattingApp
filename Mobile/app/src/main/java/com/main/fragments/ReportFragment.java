@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 
 public class ReportFragment extends DialogFragment {
 

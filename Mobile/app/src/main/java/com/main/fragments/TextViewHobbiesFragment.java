@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 import com.main.activities.SharingHobbiesActivity;
 import com.main.callbacks.FragmentCallbacks;
 import com.main.callbacks.MainCallbacks;

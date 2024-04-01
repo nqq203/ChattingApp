@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 import com.main.entities.MessageItem;
 
 import java.util.List;

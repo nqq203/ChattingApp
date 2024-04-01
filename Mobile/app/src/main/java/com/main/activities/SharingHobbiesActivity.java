@@ -13,7 +13,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.view.View;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 import com.main.adapters.HobbiesAdapter;
 import com.main.callbacks.MainCallbacks;
 import com.main.entities.HobbiesItem;

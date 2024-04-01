@@ -15,7 +15,7 @@ import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 import com.main.activities.MessageActivity;
 import com.main.activities.SharingHobbiesActivity;
 import com.main.adapters.HobbiesAdapter;

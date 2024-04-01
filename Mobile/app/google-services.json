@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "866569757829",
+    "project_id": "matchmingle-3065c",
+    "storage_bucket": "matchmingle-3065c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:866569757829:android:9df7507ab1aab2dd7cf5ec",
+        "android_client_info": {
+          "package_name": "com.group4.matchmingle"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCw9ZfOXDp9hgKA6m1erbmxWmB39Xc68fY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

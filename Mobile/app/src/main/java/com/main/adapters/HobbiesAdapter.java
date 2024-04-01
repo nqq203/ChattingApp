@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 import com.main.activities.SharingHobbiesActivity;
 import com.main.entities.HobbiesItem;
 import com.main.entities.MatchesItem;

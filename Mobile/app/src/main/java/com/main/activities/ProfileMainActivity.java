@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 
 public class ProfileMainActivity  extends AppCompatActivity {
 

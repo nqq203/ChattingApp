@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 
 public class SignInActivity extends AppCompatActivity {
     @Override
@@ -49,8 +49,8 @@ public class SignInActivity extends AppCompatActivity {
         });
 
         loginPhone.setOnClickListener(view -> {
-            Intent intentHomePage = new Intent(SignInActivity.this, SwipeCardViewActivity.class);
-            startActivity(intentHomePage);
+            Intent intent = new Intent(SignInActivity.this, VerifyPhoneNumberActivity.class);
+            startActivity(intent);
             finish();
         });
 

@@ -14,7 +14,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 import com.main.activities.FilterActivity;
 import com.main.activities.NotificationActivity;
 import com.main.callbacks.OnSwipeTouchListener;

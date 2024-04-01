@@ -7,7 +7,7 @@ import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 
 public class Story extends AppCompatActivity {
 
@@ -18,7 +18,7 @@ public class Story extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.example.myapplication.R.layout.story);
+        setContentView(R.layout.story);
 
         timeProgressBar = findViewById(R.id.timeProgressBar);
 

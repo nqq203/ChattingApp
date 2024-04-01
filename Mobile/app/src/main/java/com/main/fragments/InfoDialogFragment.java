@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 import com.main.activities.SharingHobbiesActivity;
 
 public class InfoDialogFragment extends DialogFragment {

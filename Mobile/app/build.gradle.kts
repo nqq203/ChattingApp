@@ -1,13 +1,14 @@
 plugins {
     id("com.android.application")
+    id("com.google.gms.google-services")
 }
 
 android {
-    namespace = "com.example.myapplication"
+    namespace = "com.group4.matchmingle"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.myapplication"
+        applicationId = "com.group4.matchmingle"
         minSdk = 28
         targetSdk = 34
         versionCode = 1
@@ -50,4 +51,10 @@ dependencies {
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation ("it.xabaras.android:recyclerview-swipedecorator:1.2.3")
     implementation ("androidx.recyclerview:recyclerview:1.2.1")
+
+//  Firebase config
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+    implementation("com.google.firebase:firebase-analytics")
+
+    implementation("com.google.firebase:firebase-auth")
 }

@@ -2,19 +2,7 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="MainActivity">
-        <State />
-      </entry>
-      <entry key="MatchesActivity">
-        <State />
-      </entry>
-      <entry key="ProfileMainActivity">
-        <State />
-      </entry>
-      <entry key="Story">
-        <State />
-      </entry>
-      <entry key="SwipeCardViewActivity">
+      <entry key="app">
         <State />
       </entry>
     </value>
