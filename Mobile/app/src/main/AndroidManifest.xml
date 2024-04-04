@@ -3,6 +3,7 @@
     package="com.group4.matchmingle"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -19,7 +20,8 @@
             android:resource="@xml/circle" />
 
         <activity
-            android:name="com.main.activities.MainActivity"
+            android:name="com.main.activities.MatchesActivity"
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -61,8 +63,8 @@
             android:exported="true"/>
         <activity android:name="com.main.activities.UploadStory"
             android:exported="true"/>
-        <activity android:name="com.main.activities.MatchesActivity"
-            android:exported="true"/>
+        <!--<activity android:name="com.main.activities.MatchesActivity"
+            android:exported="true"/>-->
         <activity android:name="com.main.activities.SendOTPActivity"
             android:exported="true"/>
         <activity android:name="com.main.activities.VerifyPhoneNumberActivity"
