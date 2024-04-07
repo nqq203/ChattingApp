@@ -16,7 +16,7 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 import com.main.adapters.Subscription_Adapter;
 import com.main.entities.SubscriptionItem;
 

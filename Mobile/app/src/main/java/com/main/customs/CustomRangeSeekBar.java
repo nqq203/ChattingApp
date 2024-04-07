@@ -12,7 +12,7 @@ import android.view.MotionEvent;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 
 public class CustomRangeSeekBar extends View {
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);

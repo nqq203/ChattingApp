@@ -1,6 +1,7 @@
 
 package com.main.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -10,7 +11,8 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.TextView;
 
-import com.example.myapplication.R;
+
+import com.group4.matchmingle.R;
 import com.main.entities.Story;
 
 import jp.shts.android.storiesprogressview.StoriesProgressView;
@@ -100,6 +102,9 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
             loadImageFromUrl(stories[++counter].getImageUrl());
             storiesProgressView.setStoryDuration(stories[counter].getDuration());
         } else {
+            Intent intent = new Intent(StoryActivity.this, MessageActivity.class);
+            // After the progress bar animation is complete, post a message to finish the activity
+            startActivity(intent);
             finish();
         }
     }

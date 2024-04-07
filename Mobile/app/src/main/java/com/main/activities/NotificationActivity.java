@@ -68,8 +68,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.main.adapters.NotificationAdapter;
-import com.example.myapplication.R;
-import com.example.myapplication.databinding.ActivityMainBinding;
+import com.group4.matchmingle.R;
+import com.group4.matchmingle.databinding.ActivityMainBinding;
 import com.main.adapters.MatchesAdapter;
 import com.main.entities.MatchesItem;
 import com.main.entities.NotificationItem;

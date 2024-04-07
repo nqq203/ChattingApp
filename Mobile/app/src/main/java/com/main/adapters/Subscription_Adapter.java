@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 import com.main.entities.SubscriptionItem;
 
 import java.util.List;

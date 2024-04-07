@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 
 public class RateActivity extends AppCompatActivity {
 

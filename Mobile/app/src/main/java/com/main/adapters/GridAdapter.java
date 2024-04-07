@@ -7,7 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 
 public class GridAdapter extends BaseAdapter {
 

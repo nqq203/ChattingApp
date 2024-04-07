@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 import com.main.adapters.MessageListAdapter;
 import com.main.adapters.StoryAdapter;
 import com.main.entities.MessageItem;

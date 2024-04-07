@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ImageViewHolder> {
     private Context mContext;

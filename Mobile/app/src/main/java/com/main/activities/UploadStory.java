@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 
 public class UploadStory extends Activity {
 

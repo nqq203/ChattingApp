@@ -2,13 +2,18 @@ package com.main.entities;
 
 public class MatchesItem {
     private String name;
-    private int picture;
+    private String pic;
     private int age;
+    private String userid;
 
-    public MatchesItem(String name, int picture, int age) {
+    public MatchesItem(String name, String pic, int age, String userid) {
         this.name = name;
-        this.picture = picture;
+        this.pic = pic;
         this.age = age;
+        this.userid = userid;
+    }
+
+    public MatchesItem() {
     }
 
     public String getName() {
@@ -19,12 +24,12 @@ public class MatchesItem {
         this.name = name;
     }
 
-    public int getPicture() {
-        return picture;
+    public String getPic() {
+        return pic;
     }
 
-    public void setPicture(int picture) {
-        this.picture = picture;
+    public void setPic(String pic) {
+        this.pic = pic;
     }
 
     public int getAge() {
@@ -33,5 +38,23 @@ public class MatchesItem {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    @Override
+    public String toString() {
+        return "MatchesItem{" +
+                "name='" + name + '\'' +
+                ", pic='" + pic + '\'' +
+                ", age=" + age +
+                ", userid='" + userid + '\'' +
+                '}';
     }
 }

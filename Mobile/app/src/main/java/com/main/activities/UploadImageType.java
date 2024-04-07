@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
-import com.example.myapplication.R;
+import com.group4.matchmingle.R;
 
 import java.io.File;
 import java.io.IOException;
