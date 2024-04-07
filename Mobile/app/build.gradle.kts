@@ -50,4 +50,6 @@ dependencies {
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation ("it.xabaras.android:recyclerview-swipedecorator:1.2.3")
     implementation ("androidx.recyclerview:recyclerview:1.2.1")
+    implementation ("com.github.shts:StoriesProgressView:3.0.0")
+    implementation ("com.squareup.picasso:picasso:2.71828")
 }

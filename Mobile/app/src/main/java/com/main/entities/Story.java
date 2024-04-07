@@ -4,11 +4,17 @@ public class Story {
     private String fullname;
     private String imageUrl;
     private String id;
+    private long duration;
 
-    public Story(String fullname, String imageUrl, String id) {
+    public Story(String fullname, String imageUrl, String id, long duration) {
         this.fullname = fullname;
         this.imageUrl = imageUrl;
         this.id = id;
+        this.duration = duration;
+    }
+
+    public long getDuration() {
+        return duration;
     }
 
     public void setId(String id) {

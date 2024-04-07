@@ -18,7 +18,7 @@
             android:resource="@xml/circle" />
 
         <activity
-            android:name="com.main.activities.MainActivity"
+            android:name="com.main.activities.StoryActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,7 +54,7 @@
             android:exported="true"/>
         <activity android:name="com.main.activities.ProfileView"
             android:exported="true"/>
-        <activity android:name="com.main.activities.Story"
+        <activity android:name="com.main.activities.MainActivity"
             android:exported="true"/>
         <activity android:name="com.main.activities.UploadImageType"
             android:exported="true"/>
