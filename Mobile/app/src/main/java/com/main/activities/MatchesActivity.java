@@ -99,7 +99,7 @@ public class MatchesActivity extends AppCompatActivity {
                         String pic = snap.child("pic").getValue(String.class);
                         String id = snap.child("userid").getValue(String.class);
                         MatchesItem matchesItem= new MatchesItem(name,pic,age,key);
-                        System.out.println(key+"TEN NE HUHUHUHUHUHUHU");
+
                         MatchesArrayList.add(matchesItem);
                     }
                     MatchesAdapter adapter = new MatchesAdapter(MatchesActivity.this, MatchesArrayList);

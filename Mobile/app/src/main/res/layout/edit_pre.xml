@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:weightSum="4">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="4">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/back_arrow"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/backblack"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="15dp"
+                    android:contentDescription="back" />
+
+                <TextView android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_marginStart="160dp"
+                    android:text="Profile"
+                    android:textSize="30dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="10dp"/>
+            </FrameLayout>
+            <!-- Preferred and Language -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Preferred and Language"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"/>
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="400dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
+                <!-- Show me-->
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="25dp"
+                    android:background="@drawable/border" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="12dp"
+                    android:text="Show me"
+                    android:textSize="18dp" />
+
+                <EditText
+                    android:id="@+id/gender_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="315dp"
+                    android:layout_marginTop="12dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Men"
+                    android:textColor="@color/black"
+                    android:textAlignment="center"
+                    style="@style/NoUnderlineEditText"
+                    android:textSize="17dp" />
+
+                <!-- AGE RANK -->
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="80dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="60dp"
+                    android:background="@drawable/border" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="72dp"
+                    android:text="Age range"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/agerange_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="290dp"
+                    android:layout_marginTop="72dp"
+                    android:text="24-34"
+                    android:textColor="@color/black"
+                    android:textSize="16dp" />
+
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/SliderAgeRank_profile"
+                    android:layout_width="330dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="35dp"
+                    android:layout_marginTop="90dp"
+                    android:stepSize="1"
+                    android:valueFrom="18"
+                    android:valueTo="80"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/normalContinuousSlider"
+                    app:values="@array/AgeRangeSlider"
+                    android:theme="@style/Theme.MaterialComponents.Light"/>
+
+
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="80dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="150dp"
+                    android:background="@drawable/border" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="165dp"
+                    android:text="Height range (in cm)"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/PreHeight_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="275dp"
+                    android:layout_marginTop="165dp"
+                    android:text=" 160-175"
+                    android:textColor="@color/black"
+                    android:textSize="16dp" />
+
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/SliderHeight_profile"
+                    android:layout_width="335dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="35dp"
+                    android:layout_marginTop="180dp"
+                    android:stepSize="1"
+                    android:valueFrom="65"
+                    android:valueTo="252"
+                    app:values="@array/HeightRangeSlider"
+                    android:theme="@style/Theme.MaterialComponents.Light"/>
+            </FrameLayout>
+            <Button
+                android:id="@+id/save_button"
+                android:layout_marginTop="30dp"
+                android:text="SAVE"
+                android:backgroundTint="@color/purple_1"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_width="200dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="100dp"/>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/custom_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:layout_weight="1"/>
+</LinearLayout>

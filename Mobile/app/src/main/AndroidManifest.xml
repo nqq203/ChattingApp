@@ -20,7 +20,7 @@
             android:resource="@xml/circle" />
 
         <activity
-            android:name="com.main.activities.MatchesActivity"
+            android:name="com.main.activities.MainActivity"
 
             android:exported="true">
             <intent-filter>
@@ -63,11 +63,15 @@
             android:exported="true"/>
         <activity android:name="com.main.activities.UploadStory"
             android:exported="true"/>
-        <!--<activity android:name="com.main.activities.MatchesActivity"
-            android:exported="true"/>-->
+        <activity android:name="com.main.activities.MatchesActivity"
+            android:exported="true"/>
         <activity android:name="com.main.activities.SendOTPActivity"
             android:exported="true"/>
         <activity android:name="com.main.activities.VerifyPhoneNumberActivity"
+            android:exported="true"/>
+        <activity android:name="com.main.activities.AboutMeEdit"
+            android:exported="true"/>
+        <activity android:name="com.main.activities.PreferencesEdit"
             android:exported="true"/>
         <meta-data
             android:name="preloaded_fonts"

@@ -54,9 +54,12 @@ public class NotificationActivity extends AppCompatActivity {
 
 package com.main.activities;
 
+import static java.lang.Integer.parseInt;
+
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -67,6 +70,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.main.adapters.NotificationAdapter;
 import com.group4.matchmingle.R;
 import com.group4.matchmingle.databinding.ActivityMainBinding;
@@ -88,6 +96,7 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 public class NotificationActivity extends AppCompatActivity {
     // creating a variable for recycler view,
     // array list and adapter class.
+    String userId="us1";
     private RecyclerView notiRV;
     private ArrayList<NotificationItem> notiArrayList;
     private NotificationAdapter notiAdapter;
@@ -106,15 +115,70 @@ public class NotificationActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
-
-        // creating new array list.
         notiArrayList = new ArrayList<>();
 
-        // in below line we are adding data to our array list.
-        notiArrayList.add(new NotificationItem("Dennis Nerdy just replied on your story", R.drawable.jisoo, "Xinh thế", "Last Wednesday at 9:42 AM", R.drawable.nini));
-        notiArrayList.add(new NotificationItem("Its a match you just matched with Henry Cavill", R.drawable.lisa, "Last Wednesday at 9:42 AM"));
-        notiArrayList.add(new NotificationItem("You have 3 unread message of Bryson Potts. Let’s catch up!", R.drawable.rose, "Last Wednesday at 9:42 AM"));
+        FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Notification/"+userId);
+        // creating new array list.
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //String value = dataSnapshot.getValue(String.class);
+                //System.out.println("Loading data: "+value);
+                if (dataSnapshot.exists()) {
 
+                    notiArrayList.clear();
+                    for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                        String key = snap.getKey();
+                        int key1=Integer.parseInt(key);
+                        //MatchesItem matchesItem = snap.getValue(MatchesItem.class);
+                        String Description = snap.child("Description").getValue(String.class);
+                        String Reply_Story = snap.child("Reply_Story").getValue(String.class);
+                        String Time = snap.child("Time").getValue(String.class);
+                        String Type = snap.child("Type").getValue(String.class);
+                        String profile_pic = snap.child("profile_pic").getValue(String.class);
+                        String story_pic = snap.child("story_pic").getValue(String.class);
+                        NotificationItem notificationItem= new NotificationItem(Description,profile_pic,Type,Reply_Story,Time,story_pic,key1);
+                        System.out.println(key+"TEN NE HUHUHUHUHUHUHU");
+                        Log.d("MyActivity", "Description: " + notificationItem.toString());
+                        
+                        notiArrayList.add(notificationItem);
+                    }
+                    notiAdapter = new NotificationAdapter(notiArrayList, NotificationActivity.this);
+
+                    // below line is to set layout manager for our recycler view.
+                    LinearLayoutManager manager = new LinearLayoutManager(NotificationActivity.this);
+
+                    // setting layout manager for our recycler view.
+                    notiRV.setLayoutManager(manager);
+
+                    // below line is to set adapter
+                    // to our recycler view.
+                    notiRV.setAdapter(notiAdapter);
+                }
+                else {
+                    System.out.println("Cant find data");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+                System.out.println("Error: " + databaseError.getMessage());
+            }
+        });
+        // in below line we are adding data to our array list.
+        /*
+        notiArrayList.add(new NotificationItem("Dennis Nerdy just replied on your story",
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF2tbJGtc87FhbEROZ8u-Q-01Z3oDBt1J3ww&usqp=CAU","Story" ,"Xinh thế",
+                "Last Wednesday at 9:42 AM", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF2tbJGtc87FhbEROZ8u-Q-01Z3oDBt1J3ww&usqp=CAU",1));
+        notiArrayList.add(new NotificationItem("Its a match you just matched with Henry Cavill",
+                "https://preview.redd.it/230812-danielle-phoning-photo-update-v0-det75s625ohb1.jpg?width=640&crop=smart&auto=webp&s=6617d49f38832c201f9659cc8759d5fc8a5595f1"
+                , "Normal",null,"Last Wednesday at 9:42 AM",null,1));
+        notiArrayList.add(new NotificationItem("Dennis Nerdy just like your story",
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF2tbJGtc87FhbEROZ8u-Q-01Z3oDBt1J3ww&usqp=CAU","Story" ,null,
+                "Last Wednesday at 9:42 AM", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF2tbJGtc87FhbEROZ8u-Q-01Z3oDBt1J3ww&usqp=CAU",3));
+        */
         // initializing our adapter class with our array list and context.
         notiAdapter = new NotificationAdapter(notiArrayList, this);
 
