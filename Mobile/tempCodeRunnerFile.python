@@ -1,0 +1,14 @@
+def countStudents(students, sandwiches) -> int:
+    n = len(students)
+    while sandwiches[0] in students or len(students) != 0:
+        print(students)
+        if students[0] != sandwiches[0]:
+            students.append(students.pop())
+        else: 
+            students.pop()
+            sandwiches.pop()
+    return n - len(students)
+
+# print(countStudents([1, 1, 0, 0], [0, 1, 0, 1]))
+a = [1, 0, 0 , 1]
+a.append(a.pop())

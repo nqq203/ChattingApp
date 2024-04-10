@@ -102,10 +102,10 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
             loadImageFromUrl(stories[++counter].getImageUrl());
             storiesProgressView.setStoryDuration(stories[counter].getDuration());
         } else {
+            // Nếu đang ở story cuối cùng, mở MessageActivity
             Intent intent = new Intent(StoryActivity.this, MessageActivity.class);
-            // After the progress bar animation is complete, post a message to finish the activity
             startActivity(intent);
-            finish();
+            finish(); // Kết thúc activity hiện tại
         }
     }
 
