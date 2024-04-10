@@ -17,20 +17,21 @@ public class ProfileMainActivity  extends AppCompatActivity {
     TextView btnRateApp, btnComApp;
     Dialog RateAppDialog, ComAppDialog;
     ImageView backBtn;
-    TextView editPlanBtn;
-
-
+    TextView editPlanBtn, btnLogout;
+    UserSessionManager sessionManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_profile_main);
         RateAppDialog = new Dialog(this);
         ComAppDialog = new Dialog(this);
+        sessionManager = new UserSessionManager(this);
 
         btnRateApp = (TextView) findViewById(R.id.rateapp_profile);
         btnComApp = (TextView) findViewById(R.id.next_improvement_profile);
         backBtn = (ImageView) findViewById(R.id.back_arrow);
         editPlanBtn = (TextView) findViewById(R.id.edit_plan_btn);
+        btnLogout = (TextView) findViewById(R.id.btnLogout);
 
         Button iconHome = findViewById(R.id.icon_home);
         Button iconFavourite = findViewById(R.id.icon_favorite);
@@ -91,7 +92,20 @@ public class ProfileMainActivity  extends AppCompatActivity {
                 ComAppDialog.show();
             }
         });
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onLogout();
+            }
+        });
     }
 
+    public void onLogout() {
+        sessionManager.logoutUser();
+        Intent intent = new Intent(ProfileMainActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
 }

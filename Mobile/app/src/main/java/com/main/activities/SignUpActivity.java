@@ -1,31 +1,57 @@
 package com.main.activities;
 
+import static android.content.ContentValues.TAG;
+
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import android.Manifest;
 import com.group4.matchmingle.R;
 import com.main.adapters.SignUpAdapter;
 import com.main.entities.User;
 
 public class SignUpActivity extends AppCompatActivity {
-
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+    private EditText editFullname, editGender, editBirthDate, editPassword, editPhoneNumber, editConPassword;
+    Button buttonSignUp;
+    ImageView backSignUp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup_activity);
-        EditText editFullname = (EditText) findViewById(R.id.editFullname);
-        EditText editGender = (EditText) findViewById(R.id.editGender);
-        EditText editBirthDate = (EditText) findViewById(R.id.editDate);
-        EditText editPhoneNumber = (EditText) findViewById(R.id.editPhoneNumber);
-        EditText editPassword = (EditText) findViewById(R.id.editPassword);
-        Button buttonSignUp = (Button) findViewById(R.id.signUpButton);
-        ImageView backSignUp = (ImageView) findViewById(R.id.back_signup);
+        editFullname = (EditText) findViewById(R.id.editFullname);
+        editGender = (EditText) findViewById(R.id.editGender);
+        editBirthDate = (EditText) findViewById(R.id.editDate);
+        editPassword = (EditText) findViewById(R.id.editPassword);
+        editPhoneNumber = (EditText) findViewById(R.id.editPhoneNumber);
+        editConPassword = (EditText) findViewById(R.id.editConPassword);
+        buttonSignUp = (Button) findViewById(R.id.signUpButton);backSignUp = (ImageView) findViewById(R.id.back_signup);
 
         backSignUp.setOnClickListener(view -> {
             Intent intentSignIn = new Intent(SignUpActivity.this, SignInActivity.class);
@@ -33,25 +59,54 @@ public class SignUpActivity extends AppCompatActivity {
             finish();
         });
 
-        buttonSignUp.setOnClickListener(view -> {
-            String fullname = editFullname.getText().toString();
-            String gender = editGender.getText().toString();
-            String birthDate = editBirthDate.getText().toString();
-            String phoneNumber = editPhoneNumber.getText().toString();
-            String password = editPassword.getText().toString();
+        buttonSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String fullname = editFullname.getText().toString();
+                String gender = editGender.getText().toString();
+                String date = editBirthDate.getText().toString();
+                String password = editPassword.getText().toString();
+                String phoneNumber = editPhoneNumber.getText().toString();
+                String mPhoneNumber = "+84" + phoneNumber.substring(1);
+                String conPassword = editConPassword.getText().toString();
+                if (fullname.isEmpty() || gender.isEmpty() || date.isEmpty() || password.isEmpty() || phoneNumber.isEmpty() || conPassword.isEmpty()) {
+                    Toast.makeText(SignUpActivity.this, "Required all fields", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if (!password.equals(conPassword)) {
+                    Toast.makeText(SignUpActivity.this, "Password are not matching", Toast.LENGTH_SHORT).show();
+                }
+                else {
 
-            new SignUpAdapter().signupUser(fullname, gender, birthDate, phoneNumber, password, new SignUpAdapter.SignupCallback() {
-                @Override
-                public void onSuccess(User user) {
-//                   handle navigate.
-                    Intent intentSignin = new Intent(SignUpActivity.this, SignInActivity.class);
-                    startActivity(intentSignin);
-                    finish();
+                    databaseReference.child("User").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.hasChild(mPhoneNumber)) {
+                                Toast.makeText(SignUpActivity.this, "Phone number is already exist", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                databaseReference.child("User").child(mPhoneNumber).child("FullName").setValue(fullname);
+                                databaseReference.child("User").child(mPhoneNumber).child("DateOfBirth").setValue(date);
+                                databaseReference.child("User").child(mPhoneNumber).child("Gender").setValue(gender);
+                                databaseReference.child("User").child(mPhoneNumber).child("Password").setValue(password);
+                                databaseReference.child("User").child(mPhoneNumber).child("IsSetup").setValue(false);
+                                Toast.makeText(SignUpActivity.this, "User register successfully!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(SignUpActivity.this, SetUpAccountActivity.class);
+                                intent.putExtra("mPhoneNumber", mPhoneNumber);
+                                UserSessionManager sessionManager = new UserSessionManager(getApplicationContext());
+                                sessionManager.createUserLoginSession(mPhoneNumber);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
-                public void onError(String message) {
-//                   show error message
-                }
-            });
+            }
         });
     }
 }

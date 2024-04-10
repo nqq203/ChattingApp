@@ -12,6 +12,14 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -22,6 +30,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:targetApi="31">
+        <activity
+            android:name="com.main.activities.SetUpAccountActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.actions"
@@ -36,6 +47,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name="com.main.activities.MessageActivity"
             android:theme="@style/AppTheme"
             android:exported="true"/>
@@ -48,39 +60,44 @@
             android:exported="true"/>
         <activity android:name="com.main.activities.SwipeCardViewActivity"
             android:exported="true"/>
-        <activity android:name="com.main.activities.FilterActivity"
-            android:exported="true"
-            android:theme="@style/Theme.App.Dialog"/>
-        <activity android:name="com.main.activities.ProfileMainActivity"
-            android:exported="true"/>
-        <activity android:name="com.main.activities.NotificationActivity"
-            android:exported="true"/>
-        <activity android:name="com.main.activities.RateActivity"
+        <activity android:name="com.main.activities.FilterActivity"/>
+        <activity
+            android:name="com.main.activities.ProfileMainActivity"
             android:exported="true" />
-        <activity android:name="com.main.activities.SharingHobbiesActivity"
-            android:exported="true"/>
-        <activity android:name="com.main.activities.AddNewSubActivity"
-            android:exported="true"/>
-        <activity android:name="com.main.activities.CommentsAppActivity"
-            android:exported="true"/>
-        <activity android:name="com.main.activities.Subscription_Activity"
-            android:exported="true"/>
-        <activity android:name="com.main.activities.MatchesActivity"
-            android:exported="true"/>
+        <activity
+            android:name="com.main.activities.NotificationActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.main.activities.RateActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.main.activities.SharingHobbiesActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.main.activities.AddNewSubActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.main.activities.CommentsAppActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.main.activities.Subscription_Activity"
+            android:exported="true" />
+        <activity
+            android:name="com.main.activities.UploadImageType"
+            android:exported="true" />
+        <activity
+            android:name="com.main.activities.UploadStory"
+            android:exported="true" />
+        <activity
+            android:name="com.main.activities.MatchesActivity"
+            android:exported="true" />
+
+
         <activity android:name="com.main.activities.MainActivity"
-            android:exported="true"/>
-        <activity android:name="com.main.activities.UploadImageType"
-            android:exported="true"/>
-        <activity android:name="com.main.activities.UploadStory"
             android:exported="true"/>
         <activity android:name="com.main.activities.UploadProfileConfirm"
             android:exported="true"/>
-        <!--<activity android:name="com.main.activities.MatchesActivity"
-            android:exported="true"/>-->
-        <activity android:name="com.main.activities.SendOTPActivity"
-            android:exported="true"/>
-        <activity android:name="com.main.activities.VerifyPhoneNumberActivity"
-            android:exported="true"/>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

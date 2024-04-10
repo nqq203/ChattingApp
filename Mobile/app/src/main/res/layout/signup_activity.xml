@@ -27,17 +27,19 @@
             android:textStyle="bold"
             android:layout_gravity="center"/>
     </androidx.appcompat.widget.Toolbar>
+
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/editFullname"
-        android:hint="Full Name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:textColor="@color/black"/>
+        android:hint="Enter full name"
+        android:textColor="@color/black" />
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Gender"
+        android:hint="Enter gender"
         android:id="@+id/editGender"
         android:layout_margin="15dp"
         android:textColor="@color/black"/>
@@ -47,21 +49,47 @@
         android:hint="DD/MM/YYYY"
         android:layout_margin="15dp"
         android:id="@+id/editDate"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:inputType="date"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Phone Number"
+        android:hint="Enter phone number"
         android:layout_margin="15dp"
         android:id="@+id/editPhoneNumber"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:inputType="phone"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
+        android:hint="Enter password"
         android:layout_margin="15dp"
         android:id="@+id/editPassword"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:inputType="textPassword"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter password again"
+        android:layout_margin="15dp"
+        android:id="@+id/editConPassword"
+        android:textColor="@color/black"
+        android:inputType="textPassword"/>
+<!--    <Button-->
+<!--        android:id="@+id/buttonChooseImage"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Choose Image"-->
+<!--        android:layout_marginTop="15dp"-->
+<!--        android:layout_margin="15dp"-->
+<!--        android:backgroundTint="@color/white"-->
+<!--        android:textColor="@color/black"/>-->
+<!--    <ImageView-->
+<!--        android:id="@+id/imageViewPreview"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="200dp"-->
+<!--        android:layout_marginTop="15dp"-->
+<!--        android:scaleType="centerCrop"/>-->
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,41 +97,42 @@
         android:id="@+id/signUpButton"
         android:padding="10dp"
         android:text="SIGN UP"
+        android:textColor="@color/white"
         android:backgroundTint="@color/purple_2"
         android:textStyle="bold"/>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
-            android:text="or"
-            android:gravity="center"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"/>
-    </RelativeLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:orientation="horizontal"
-        android:gravity="center">
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingLeft="50dp"-->
+<!--            android:paddingRight="50dp"-->
+<!--            android:text="or"-->
+<!--            android:gravity="center"-->
+<!--            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"/>-->
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:singleLine="true"/>-->
+<!--    </RelativeLayout>-->
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="20dp"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:gravity="center">-->
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="15dp"
-            android:src="@drawable/facebook_logo1"/>
+<!--        <ImageView-->
+<!--            android:layout_width="30dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:layout_margin="15dp"-->
+<!--            android:src="@drawable/facebook_logo1"/>-->
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="15dp"
-            android:src="@drawable/google_logo1"/>
-    </LinearLayout>
+<!--        <ImageView-->
+<!--            android:layout_width="30dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:layout_margin="15dp"-->
+<!--            android:src="@drawable/google_logo1"/>-->
+<!--    </LinearLayout>-->
 </LinearLayout>
