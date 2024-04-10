@@ -24,8 +24,11 @@ import androidx.core.content.ContextCompat;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import android.Manifest;
@@ -34,30 +37,21 @@ import com.main.adapters.SignUpAdapter;
 import com.main.entities.User;
 
 public class SignUpActivity extends AppCompatActivity {
-    private static final int PICK_IMAGE_REQUEST = 1;
-    private static final int PERMISSION_REQUEST_STORAGE = 2;
-    private Uri imageUri;
-    private String imageUrl;
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+    private EditText editFullname, editGender, editBirthDate, editPassword, editPhoneNumber, editConPassword;
+    Button buttonSignUp;
+    ImageView backSignUp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup_activity);
-        EditText editFullname = (EditText) findViewById(R.id.editFullname);
-        EditText editGender = (EditText) findViewById(R.id.editGender);
-        EditText editBirthDate = (EditText) findViewById(R.id.editDate);
-        EditText editPassword = (EditText) findViewById(R.id.editPassword);
-        Button buttonChooseImage = (Button) findViewById(R.id.buttonChooseImage);
-        Button buttonSignUp = (Button) findViewById(R.id.signUpButton);
-        ImageView backSignUp = (ImageView) findViewById(R.id.back_signup);
-
-        String phoneNumber = getIntent().getStringExtra("phone_number");
-
-        buttonChooseImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openFileChooser();
-            }
-        });
+        editFullname = (EditText) findViewById(R.id.editFullname);
+        editGender = (EditText) findViewById(R.id.editGender);
+        editBirthDate = (EditText) findViewById(R.id.editDate);
+        editPassword = (EditText) findViewById(R.id.editPassword);
+        editPhoneNumber = (EditText) findViewById(R.id.editPhoneNumber);
+        editConPassword = (EditText) findViewById(R.id.editConPassword);
+        buttonSignUp = (Button) findViewById(R.id.signUpButton);backSignUp = (ImageView) findViewById(R.id.back_signup);
 
         backSignUp.setOnClickListener(view -> {
             Intent intentSignIn = new Intent(SignUpActivity.this, SignInActivity.class);
@@ -72,99 +66,47 @@ public class SignUpActivity extends AppCompatActivity {
                 String gender = editGender.getText().toString();
                 String date = editBirthDate.getText().toString();
                 String password = editPassword.getText().toString();
-                if (fullname == "" || gender == "" || date == "" || password == "" || imageUri == null) {
+                String phoneNumber = editPhoneNumber.getText().toString();
+                String mPhoneNumber = "+84" + phoneNumber.substring(1);
+                String conPassword = editConPassword.getText().toString();
+                if (fullname.isEmpty() || gender.isEmpty() || date.isEmpty() || password.isEmpty() || phoneNumber.isEmpty() || conPassword.isEmpty()) {
                     Toast.makeText(SignUpActivity.this, "Required all fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                else if (!password.equals(conPassword)) {
+                    Toast.makeText(SignUpActivity.this, "Password are not matching", Toast.LENGTH_SHORT).show();
+                }
+                else {
 
-                User newUser = new User(fullname, gender, date, phoneNumber, password, null);
-                uploadImageToFirebaseStorage();
-                saveUserToDatabase(newUser);
-            }
-        });
-    }
-    private void saveUserToDatabase(User user) {
-        DatabaseReference usersRef = FirebaseDatabase.getInstance()
-                .getReference("User").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        Log.d(TAG, "Toi duoc save user");
-        usersRef.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "onComplete");
-                    // Chuyển đến MainActivity sau khi đăng ký thành công
-                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    // Xử lý lỗi
-                    Toast.makeText(SignUpActivity.this, "User register failed! Let try again" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    databaseReference.child("User").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.hasChild(mPhoneNumber)) {
+                                Toast.makeText(SignUpActivity.this, "Phone number is already exist", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                databaseReference.child("User").child(mPhoneNumber).child("FullName").setValue(fullname);
+                                databaseReference.child("User").child(mPhoneNumber).child("DateOfBirth").setValue(date);
+                                databaseReference.child("User").child(mPhoneNumber).child("Gender").setValue(gender);
+                                databaseReference.child("User").child(mPhoneNumber).child("Password").setValue(password);
+                                databaseReference.child("User").child(mPhoneNumber).child("IsSetup").setValue(false);
+                                Toast.makeText(SignUpActivity.this, "User register successfully!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(SignUpActivity.this, SetUpAccountActivity.class);
+                                intent.putExtra("mPhoneNumber", mPhoneNumber);
+                                UserSessionManager sessionManager = new UserSessionManager(getApplicationContext());
+                                sessionManager.createUserLoginSession(mPhoneNumber);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
             }
         });
-    }
-
-    private void openFileChooser() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // Quyền không được cấp, yêu cầu quyền
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_STORAGE);
-        } else {
-            // Quyền đã được cấp, mở file chooser
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "SELECT PICTURE"), PICK_IMAGE_REQUEST);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            ImageView imageView = findViewById(R.id.imageViewPreview);
-            imageView.setImageURI(imageUri);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_STORAGE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Quyền đã được cấp, mở file chooser
-                openFileChooser();
-            } else {
-                // Quyền bị từ chối, hiển thị thông báo
-                Toast.makeText(this, "Permission denied!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void uploadImageToFirebaseStorage() {
-        if (imageUri != null) {
-            StorageReference fileReference = FirebaseStorage.getInstance().getReference("uploads").child(System.currentTimeMillis()
-                    + "." + getFileExtension(imageUri));
-            Log.d(TAG, "uploadImageToFirebaseStorage:  " + imageUri);
-            fileReference.putFile(imageUri).continueWithTask(task -> {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
-                return fileReference.getDownloadUrl();
-            }).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Uri downloadUri = task.getResult();
-                    imageUrl = downloadUri.toString();
-                } else {
-                    Toast.makeText(SignUpActivity.this, "Upload failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
-    private String getFileExtension(Uri uri) {
-        ContentResolver cR = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 }
