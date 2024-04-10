@@ -10,8 +10,9 @@ public class User {
     private String password;
     private String imageUrl;
     private String location;
+    private Boolean IsSetup;
     private int height;
-    public User(String fullname, String gender, String date, String phoneNumber, String password, String imageUrl) {
+    public User(String fullname, String gender, String date, String phoneNumber, String password) {
         this.fullname = fullname;
         this.gender = gender;
         this.date = date;
@@ -19,6 +20,42 @@ public class User {
         this.password = password;
         this.imageUrl = imageUrl;
     }
+    public User(String fullname, String gender, String date, String phoneNumber, String password, String imageUrl, Boolean IsSetup, int height, String location) {
+        this.fullname = fullname;
+        this.gender = gender;
+        this.date = date;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.imageUrl = imageUrl;
+        this.IsSetup = IsSetup;
+        this.height = height;
+        this.location = location;
+    }
+
+    public User(String fullname, String gender, String date, String password, String imageUrl, Boolean isSetup) {
+        this.fullname = fullname;
+        this.gender = gender;
+        this.date = date;
+        this.password = password;
+        this.imageUrl = imageUrl;
+        IsSetup = isSetup;
+    }
+
+    public User(String fullname, String gender, String date, String imageUrl) {
+        this.fullname = fullname;
+        this.gender = gender;
+        this.date = date;
+        this.imageUrl = imageUrl;
+    }
+
+    public Boolean getSetup() {
+        return IsSetup;
+    }
+
+    public void setSetup(Boolean setup) {
+        IsSetup = setup;
+    }
+
     public String getLocation() {
         return location;
     }

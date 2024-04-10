@@ -85,10 +85,10 @@ public class SignUpActivity extends AppCompatActivity {
                                 Toast.makeText(SignUpActivity.this, "Phone number is already exist", Toast.LENGTH_SHORT).show();
                             }
                             else {
-                                databaseReference.child("User").child(mPhoneNumber).child("FullName").setValue(fullname);
-                                databaseReference.child("User").child(mPhoneNumber).child("DateOfBirth").setValue(date);
-                                databaseReference.child("User").child(mPhoneNumber).child("Gender").setValue(gender);
-                                databaseReference.child("User").child(mPhoneNumber).child("Password").setValue(password);
+                                databaseReference.child("User").child(mPhoneNumber).child("fullname").setValue(fullname);
+                                databaseReference.child("User").child(mPhoneNumber).child("date").setValue(date);
+                                databaseReference.child("User").child(mPhoneNumber).child("gender").setValue(gender);
+                                databaseReference.child("User").child(mPhoneNumber).child("password").setValue(password);
                                 databaseReference.child("User").child(mPhoneNumber).child("IsSetup").setValue(false);
                                 Toast.makeText(SignUpActivity.this, "User register successfully!", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(SignUpActivity.this, SetUpAccountActivity.class);

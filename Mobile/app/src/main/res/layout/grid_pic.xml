@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp">
-        <ImageButton
+        <ImageView
             android:id="@+id/Mtch_Pic"
             android:layout_width="150dp"
             android:layout_height="220dp"
@@ -35,12 +35,13 @@
             android:layout_width="70dp"
             android:layout_height="50dp"
             android:layout_marginStart="3dp"
-            app:icon="@drawable/baseline_close_24"
+            android:backgroundTint="@color/purple_3"
+            />
+            <!--app:icon="@drawable/baseline_delete_24"
             app:iconSize="28dp"
             app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            android:contentDescription="Delete"
-            />
+            app:iconPadding="0dp"-->
+
 
         <Button
             android:id="@+id/btn_msg"
@@ -48,11 +49,13 @@
             android:layout_width="70dp"
             android:layout_height="50dp"
             android:layout_marginLeft="80dp"
+            android:backgroundTint="@color/purple_3"/>
+            <!--
             app:icon="@drawable/baseline_chat_bubble_24"
             app:iconGravity="textStart"
             app:iconPadding="0dp"
-            android:contentDescription="Message"
-            app:iconSize="25dp" />
+            app:iconSize="25dp"-->
+
     </FrameLayout>
 
 </LinearLayout>
