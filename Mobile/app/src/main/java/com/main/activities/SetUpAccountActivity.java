@@ -57,8 +57,9 @@ public class SetUpAccountActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
                 if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, REQUEST_IMAGE_PICK);
+                    startActivityForResult(Intent.createChooser(intent, "Select picture"), REQUEST_IMAGE_PICK);
                 }
             }
         });
@@ -80,9 +81,10 @@ public class SetUpAccountActivity extends AppCompatActivity {
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                             if (snapshot.hasChild(mPhoneNumber)) {
                                                 databaseReference.child("User").child(mPhoneNumber).child("IsSetup").setValue(true);
-                                                databaseReference.child("User").child(mPhoneNumber).child("ImageUrl").setValue(imageUrl);
+                                                databaseReference.child("User").child(mPhoneNumber).child("imageUrl").setValue(imageUrl);
                                                 Intent intent = new Intent(SetUpAccountActivity.this, SwipeCardViewActivity.class);
                                                 startActivity(intent);
+                                                finish();
                                             }
                                         }
 

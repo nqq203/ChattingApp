@@ -2,30 +2,24 @@ package com.main.entities;
 
 public class NotificationItem {
     private String Description;
-    private int profile_pic;
+    private String profile_pic;
+    private String Type;
     private String reply_story;
     private String time;
-    private int story_pic=0;
+    private String story_pic;
+    private int key;
 
-    public NotificationItem(String description, int profile_pic, String reply_story, String time, int story_pic) {
+    public NotificationItem(String description, String profile_pic, String type, String reply_story, String time, String story_pic, int key) {
         Description = description;
         this.profile_pic = profile_pic;
+        Type = type;
         this.reply_story = reply_story;
         this.time = time;
         this.story_pic = story_pic;
+        this.key = key;
     }
 
-    public NotificationItem(String description, int profile_pic, String time, int story_pic) {
-        Description = description;
-        this.profile_pic = profile_pic;
-        this.time = time;
-        this.story_pic = story_pic;
-    }
-
-    public NotificationItem(String description, int profile_pic, String time) {
-        Description = description;
-        this.profile_pic = profile_pic;
-        this.time = time;
+    public NotificationItem() {
     }
 
     public String getDescription() {
@@ -36,12 +30,20 @@ public class NotificationItem {
         Description = description;
     }
 
-    public int getProfile_pic() {
+    public String getProfile_pic() {
         return profile_pic;
     }
 
-    public void setProfile_pic(int profile_pic) {
+    public void setProfile_pic(String profile_pic) {
         this.profile_pic = profile_pic;
+    }
+
+    public String getType() {
+        return Type;
+    }
+
+    public void setType(String type) {
+        Type = type;
     }
 
     public String getReply_story() {
@@ -60,11 +62,32 @@ public class NotificationItem {
         this.time = time;
     }
 
-    public int getStory_pic() {
+    public String getStory_pic() {
         return story_pic;
     }
 
-    public void setStory_pic(int story_pic) {
+    public void setStory_pic(String story_pic) {
         this.story_pic = story_pic;
+    }
+
+    public int getKey() {
+        return key;
+    }
+
+    public void setKey(int key) {
+        this.key = key;
+    }
+
+    @Override
+    public String toString() {
+        return "NotificationItem{" +
+                "Description='" + Description + '\'' +
+                ", profile_pic='" + profile_pic + '\'' +
+                ", Type='" + Type + '\'' +
+                ", reply_story='" + reply_story + '\'' +
+                ", time='" + time + '\'' +
+                ", story_pic='" + story_pic + '\'' +
+                ", key=" + key +
+                '}';
     }
 }

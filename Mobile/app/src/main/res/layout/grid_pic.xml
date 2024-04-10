@@ -35,12 +35,13 @@
             android:layout_width="70dp"
             android:layout_height="50dp"
             android:layout_marginStart="3dp"
-            app:icon="@drawable/baseline_delete_24"
-            app:iconSize="28dp"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
             android:backgroundTint="@color/purple_3"
             />
+            <!--app:icon="@drawable/baseline_delete_24"
+            app:iconSize="28dp"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"-->
+
 
         <Button
             android:id="@+id/btn_msg"
@@ -48,11 +49,13 @@
             android:layout_width="70dp"
             android:layout_height="50dp"
             android:layout_marginLeft="80dp"
+            android:backgroundTint="@color/purple_3"/>
+            <!--
             app:icon="@drawable/baseline_chat_bubble_24"
             app:iconGravity="textStart"
             app:iconPadding="0dp"
-            app:iconSize="25dp"
-            android:backgroundTint="@color/purple_3"/>
+            app:iconSize="25dp"-->
+
     </FrameLayout>
 
 </LinearLayout>

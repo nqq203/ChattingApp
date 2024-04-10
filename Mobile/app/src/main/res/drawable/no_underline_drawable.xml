@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- Set the background color you desire -->
+    <solid android:color="#FFFFFF" />
+    <!-- Set the stroke color to be transparent (or the same as background) -->
+    <stroke
+        android:width="0dp"
+        android:color="#FFFFFF" />
+</shape>

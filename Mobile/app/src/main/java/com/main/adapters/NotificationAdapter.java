@@ -56,6 +56,7 @@ public class NotificationAdapter extends ArrayAdapter<NotificationItem> {
 }*/
 package com.main.adapters;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +66,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.group4.matchmingle.R;
 import com.main.entities.NotificationItem;
 
@@ -96,14 +98,24 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         NotificationItem recyclerData = NotiDataArrayList.get(position);
 
         holder.Description_Text.setText(recyclerData.getDescription());
-        holder.ProfilePic.setImageResource(recyclerData.getProfile_pic());
-        if(recyclerData.getStory_pic()!=0) {
-            holder.PicStory.setImageResource(recyclerData.getStory_pic());
+        //holder.ProfilePic.setImageResource(recyclerData.getProfile_pic());
+        Glide.with(mcontext)
+                .load(recyclerData.getProfile_pic())
+                .into(holder.ProfilePic);
+        if(!recyclerData.getStory_pic().isEmpty()) {
+            Log.d("NULL TAAAAAAAAAAAAA", "RUNNING RN222222");
+            //holder.PicStory.setImageResource(recyclerData.getStory_pic());
+            Glide.with(mcontext)
+                    .load(recyclerData.getStory_pic())
+                    .into(holder.PicStory);
         } else
         {
             holder.PicStory.setVisibility(View.GONE);
         }
-        if(recyclerData.getReply_story()!=null) {
+
+
+        if(!recyclerData.getReply_story().isEmpty()) {
+            Log.d("NULL TAAAAAAAAAAAAA", "RUNNING RN2222222222222222");
             holder.StoryMess.setText(recyclerData.getReply_story());
         } else
         {

@@ -55,7 +55,7 @@ public class SignInActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.hasChild(mPhoneNumber)) {
-                                String getPassword = snapshot.child(mPhoneNumber).child("Password").getValue(String.class);
+                                String getPassword = snapshot.child(mPhoneNumber).child("password").getValue(String.class);
                                 if (getPassword.equals(password)) {
                                     Toast.makeText(SignInActivity.this, "Sign in successfully", Toast.LENGTH_SHORT).show();
                                     Boolean isSetup = snapshot.child(mPhoneNumber).child("IsSetup").getValue(Boolean.class);

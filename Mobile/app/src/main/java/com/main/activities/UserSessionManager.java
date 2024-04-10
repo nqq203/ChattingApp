@@ -6,9 +6,9 @@ import android.content.SharedPreferences;
 import java.util.HashMap;
 
 public class UserSessionManager {
-    static final String PREFERENCES_NAME = "UserSessionPreferences";
-    static final String KEY_IS_LOGGED_IN = "IsLoggedIn";
-    static final String KEY_PHONE_NUMBER = "PhoneNumber";
+    public static final String PREFERENCES_NAME = "UserSessionPreferences";
+    public static final String KEY_IS_LOGGED_IN = "IsLoggedIn";
+    public static final String KEY_PHONE_NUMBER = "PhoneNumber";
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
