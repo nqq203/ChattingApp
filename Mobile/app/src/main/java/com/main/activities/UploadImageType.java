@@ -154,6 +154,7 @@ public class UploadImageType extends Activity {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
         }
 
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
