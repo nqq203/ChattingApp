@@ -16,6 +16,11 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.group4.matchmingle.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,6 +34,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.main.entities.User;
 
 import java.util.concurrent.TimeUnit;
 
@@ -106,7 +112,53 @@ public class SendOTPActivity extends AppCompatActivity {
     private void goToSwipeCardActivity(String phoneNumber) {
         Intent intent = new Intent(this, SwipeCardViewActivity.class);
         intent.putExtra("phone_number", phoneNumber);
-        startActivity(intent);
+//        startActivity(intent);
+        checkUserExistsOrCreate(intent, phoneNumber);
+    }
+
+    private void checkUserExistsOrCreate(final Intent nextActivityIntent, String phoneNumber) {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app");
+            final String uid = firebaseUser.getUid();
+            Log.d(TAG, "checkUserExistsOrCreate: " + uid);
+            // Lấy tham chiếu tới node 'User' trong database
+            DatabaseReference usersRef = database.getReference("User").child(uid);
+            usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Log.d(TAG, "truoc khi kiem tra");
+                    if (dataSnapshot.exists()) {
+                        Log.d(TAG, "Co user roi");
+                        startActivity(nextActivityIntent);
+//                        // Người dùng không tồn tại, tạo mới
+//                        // Bạn sẽ cần tạo một User object mới tương ứng với cấu trúc của bạn
+//                        User newUser = new User(/* thông tin người dùng */);
+//                        // Thêm người dùng mới vào database
+//                        usersRef.setValue(newUser).addOnCompleteListener(task -> {
+//                            if (task.isSuccessful()) {
+//                                Log.d(TAG, "Người dùng mới đã được tạo trong database");
+//                            } else {
+//                                Log.d(TAG, "Lỗi khi tạo người dùng mới", task.getException());
+//                            }
+//                        });
+                    }
+                    else {
+                        Intent intent = new Intent(SendOTPActivity.this, SignUpActivity.class);
+                        intent.putExtra("phone_number", phoneNumber);
+                        Log.d(TAG, "khong co user");
+                        startActivity(intent);
+                    }
+                    Log.d(TAG, "sau khi kiem tra");
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Xử lý lỗi
+                    Log.e(TAG, "Lỗi khi kiểm tra người dùng trong database", databaseError.toException());
+                }
+            });
+        }
     }
 
     private void getDataIntent() {

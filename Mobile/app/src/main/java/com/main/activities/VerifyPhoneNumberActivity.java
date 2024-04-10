@@ -50,7 +50,8 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String phoneNumber = phoneEditText.getText().toString().trim();
-                onVerifyPhoneNumber(phoneNumber);
+                String mPhoneNumber = "+84" + phoneNumber.substring(1);
+                onVerifyPhoneNumber(mPhoneNumber);
             }
         });
 

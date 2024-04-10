@@ -47,21 +47,31 @@
         android:hint="DD/MM/YYYY"
         android:layout_margin="15dp"
         android:id="@+id/editDate"
-        android:textColor="@color/black"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Phone Number"
-        android:layout_margin="15dp"
-        android:id="@+id/editPhoneNumber"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:inputType="date"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
         android:layout_margin="15dp"
         android:id="@+id/editPassword"
+        android:textColor="@color/black"
+        android:inputType="textVisiblePassword"/>
+    <Button
+        android:id="@+id/buttonChooseImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose Image"
+        android:layout_marginTop="15dp"
+        android:layout_margin="15dp"
+        android:backgroundTint="@color/white"
         android:textColor="@color/black"/>
+    <ImageView
+        android:id="@+id/imageViewPreview"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,6 +79,7 @@
         android:id="@+id/signUpButton"
         android:padding="10dp"
         android:text="SIGN UP"
+        android:textColor="@color/white"
         android:backgroundTint="@color/purple_2"
         android:textStyle="bold"/>
     <RelativeLayout
