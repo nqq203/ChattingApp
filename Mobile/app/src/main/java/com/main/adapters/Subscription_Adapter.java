@@ -2,6 +2,7 @@ package com.main.adapters;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,7 @@ import java.util.Map;
 public class Subscription_Adapter extends ArrayAdapter<SubscriptionItem> {
     private Context mContext;
     private Dialog mDialog;
-    String userId="us01";
+    String userId="us1";
     SubscriptionItem Subscription;
 
     public Subscription_Adapter (Context context, List<SubscriptionItem> Subscription)
@@ -90,6 +91,7 @@ public class Subscription_Adapter extends ArrayAdapter<SubscriptionItem> {
     }
     private void delete_matches(String userId_Delete)
     {
+        Log.d("Delete",userId_Delete);
         FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference databaseReference = firebaseDatabase.getReference("Subscription/"+userId);
         //databaseReference.child("Test");

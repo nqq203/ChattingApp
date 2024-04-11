@@ -167,10 +167,10 @@ public class Subscription_Activity extends AppCompatActivity {
 
                 // Set the values for the new subscription entry
                 Map<String, Object> newSubscriptionValues = new HashMap<>();
-                newSubscriptionValues.put("endDate", "dd/MM/yyyy");
-                newSubscriptionValues.put("plan", "Your Plan");
-                newSubscriptionValues.put("startDate", "dd/MM/yyyy");
-                newSubscriptionValues.put("title", "Your Title");
+                newSubscriptionValues.put("endDate", EndDate.getText().toString());
+                newSubscriptionValues.put("plan", Note.getText().toString());
+                newSubscriptionValues.put("startDate", StartDate.getText().toString());
+                newSubscriptionValues.put("title", title.getText().toString());
 
                 // Update the database with the new subscription entry
                 newSubscriptionRef.setValue(newSubscriptionValues)
