@@ -10,42 +10,36 @@
         android:layout_height="125dp"
         android:src="@drawable/matchmingle_icon"
         android:layout_gravity="center"
-        android:layout_marginTop="150dp"/>
-
-    <Button
-        android:id="@+id/login_goolge"
+        android:layout_marginTop="150dp"
+        android:layout_marginBottom="50dp"/>
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="125dp"
-        android:backgroundTint="@color/white"
-        android:padding="10dp"
-        android:drawableLeft="@mipmap/google_logo_foreground"
-        android:text="LOGIN WITH GOOGLE"
+        android:id="@+id/editPhoneNumber"
+        android:hint="Phone Number"
+        android:layout_margin="15dp"
         android:textColor="@color/black"
-        android:textStyle="bold"/>
-
-    <Button
-        android:id="@+id/login_facebook"
+        android:background="@color/white"
+        android:padding="15dp"/>
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:backgroundTint="@color/white"
-        android:layout_marginTop="15dp"
-        android:text="LOGIN WITH FACEBOOK"
-        android:drawableLeft="@mipmap/facebook_logo_foreground"
-        android:textStyle="bold"
-        android:textColor="@color/black"/>
-
+        android:hint="Password"
+        android:id="@+id/editPassword"
+        android:layout_margin="15dp"
+        android:textColor="@color/black"
+        android:background="@color/white"
+        android:padding="15dp"
+        android:inputType="textPassword"/>
     <Button
-        android:id="@+id/login_phone"
+        android:id="@+id/signIn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:backgroundTint="@color/white"
-        android:layout_marginTop="15dp"
-        android:text="LOGIN WITH PHONE"
-        android:drawableLeft="@mipmap/phone_logo_foreground"
         android:textStyle="bold"
+        android:hint="Sign In"
+        android:textSize="20dp"
+        android:layout_margin="15dp"
+        android:background="@color/gray_1"
         android:textColor="@color/black"/>
 
     <LinearLayout

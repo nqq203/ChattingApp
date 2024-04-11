@@ -28,7 +28,9 @@ public class ProfileMainActivity  extends AppCompatActivity {
     TextView btnRateApp, btnComApp,btnAboutMe,btnAboutMe2,btn_pre;
     Dialog RateAppDialog, ComAppDialog;
     ImageView backBtn;
-    TextView editPlanBtn,phone_View,
+    TextView editPlanBtn, btnLogout;
+    UserSessionManager sessionManager;
+    TextView phone_View,
             dob_View,email_View,location_View,height_View,curdatingplan_View,gender_View,
             feedback_View, heightrhange_View,name_View,number_View,agerange_View,genderpre_View,
             comment_View,language_View,rate_View;
@@ -40,11 +42,14 @@ public class ProfileMainActivity  extends AppCompatActivity {
         setContentView(R.layout.edit_profile_main);
         RateAppDialog = new Dialog(this);
         ComAppDialog = new Dialog(this);
+        sessionManager = new UserSessionManager(this);
+
         btn_pre=(TextView) findViewById(R.id.btn_pre);
         btnRateApp = (TextView) findViewById(R.id.rateapp_profile);
         btnComApp = (TextView) findViewById(R.id.next_improvement_profile);
         backBtn = (ImageView) findViewById(R.id.back_arrow);
         editPlanBtn = (TextView) findViewById(R.id.edit_plan_btn);
+        btnLogout = (TextView) findViewById(R.id.btnLogout);
         btnAboutMe=(TextView) findViewById(R.id.btn_edit_aboutme);
         btnAboutMe2=(TextView) findViewById(R.id.btn_aboutme2);
 
@@ -205,7 +210,20 @@ public class ProfileMainActivity  extends AppCompatActivity {
                 ComAppDialog.show();
             }
         });
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onLogout();
+            }
+        });
     }
 
+    public void onLogout() {
+        sessionManager.logoutUser();
+        Intent intent = new Intent(ProfileMainActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
 }

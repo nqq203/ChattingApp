@@ -1,8 +1,11 @@
 package com.main.fragments;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +17,16 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.group4.matchmingle.R;
 import com.main.activities.FilterActivity;
 import com.main.activities.NotificationActivity;
+import com.main.activities.UserSessionManager;
 import com.main.callbacks.OnSwipeTouchListener;
 import com.main.entities.User;
 
@@ -33,7 +43,8 @@ public class SwipeCardFragment extends Fragment {
     private TextView notiIcon;
     private RelativeLayout cardWrapper;
     private List<User> users = new ArrayList<>();
-    private int currentUserIndex = 0;
+    private int currentUserIndex = users.isEmpty() ? - 1 : 0;
+    private UserSessionManager sessionManager;
 
     @Override
     public void onAttach(Context context) {
@@ -51,6 +62,7 @@ public class SwipeCardFragment extends Fragment {
         userProfileImage = cardView.findViewById(R.id.card_image);
         filterIcon = cardWrapper.findViewById(R.id.icon_filter);
         notiIcon = cardWrapper.findViewById(R.id.icon_noti);
+        sessionManager = new UserSessionManager(getContext());
 
         filterIcon.setOnClickListener(v -> {
             if (getActivity() != null) {
@@ -68,26 +80,32 @@ public class SwipeCardFragment extends Fragment {
         });
 
 //        Initialize list of users here
-        users.add( new User("Lisa", "female", "23/12/2000", "0912345678", "abc1234", "https://i.pinimg.com/originals/87/e3/68/87e3680db94fa0baa744017596863653.jpg"));
-        users.add( new User("Jisoo", "female", "23/12/1999", "0912345678", "abc1234", "https://th.bing.com/th/id/OIP.xNcchNwI9Vtv66fF0dGHbwHaLH?rs=1&pid=ImgDetMain"));
-        users.add( new User("Jennie", "female", "23/12/1998", "0912345678", "abc1234", "https://data.boomsbeat.com/data/images/full/304085/jennie.jpg?w=802&l=50&t=40"));
-        users.add( new User("Rose", "female", "23/12/1997", "0912345678", "abc1234", "https://th.bing.com/th/id/OIP.faNRNq3OP8EP-1O2yTlNhwHaNK?rs=1&pid=ImgDetMain"));
+//        users.add( new User("Lisa", "female", "23/12/2000", "0912345678", "abc1234", "https://i.pinimg.com/originals/87/e3/68/87e3680db94fa0baa744017596863653.jpg"));
+//        users.add( new User("Jisoo", "female", "23/12/1999", "0912345678", "abc1234", "https://th.bing.com/th/id/OIP.xNcchNwI9Vtv66fF0dGHbwHaLH?rs=1&pid=ImgDetMain"));
+//        users.add( new User("Jennie", "female", "23/12/1998", "0912345678", "abc1234", "https://data.boomsbeat.com/data/images/full/304085/jennie.jpg?w=802&l=50&t=40"));
+//        users.add( new User("Rose", "female", "23/12/1997", "0912345678", "abc1234", "https://th.bing.com/th/id/OIP.faNRNq3OP8EP-1O2yTlNhwHaNK?rs=1&pid=ImgDetMain"));
 
-        displayUser(users.get(currentUserIndex));
+//        displayUser(users.get(currentUserIndex));
+        fetchUsers();
         setupCardSwipe();
         return view;
     }
 
     private void displayUser(User user) {
-        userName.setText(user.getFullname());
-        userAge.setText(user.getDate());
-        distance.setText("345 miles");
-        if (user.getImageUrl() != null) {
-            Glide.with(getContext())
-                    .load(user.getImageUrl())
-                    .into(userProfileImage);
-        } else {
-            userProfileImage.setImageResource(R.drawable.lisa);
+        if (user  != null) {
+            userName.setText(user.getFullname());
+            userAge.setText(user.getDate());
+            distance.setText("345 miles");
+            if (user.getImageUrl() != null) {
+                Glide.with(getContext())
+                        .load(user.getImageUrl())
+                        .into(userProfileImage);
+            } else {
+                userProfileImage.setImageResource(R.drawable.lisa);
+            }
+        }
+        else {
+
         }
     }
 
@@ -148,5 +166,42 @@ public class SwipeCardFragment extends Fragment {
 
         // Hiển thị thông tin của user mới
         displayUser(users.get(currentUserIndex));
+    }
+
+    private void fetchUsers() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersRef = database.getReference("User");
+
+        Query query = usersRef.limitToFirst(100);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<User> fetchedUsers = new ArrayList<>();
+                String phoneNumber = sessionManager.getUserDetails().get(UserSessionManager.KEY_PHONE_NUMBER);
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String account = userSnapshot.child(phoneNumber).getKey();
+                    if (!account.equals(userSnapshot.getKey())) {
+                        String dbFullname = userSnapshot.child("fullname").getValue(String.class);
+                        String dbDate = userSnapshot.child("date").getValue(String.class);
+                        String dbGender = userSnapshot.child("gender").getValue(String.class);
+                        String dbImageUrl = userSnapshot.child("imageUrl").getValue(String.class);
+                        User user = new User(dbFullname, dbGender, dbDate, dbImageUrl);
+                        fetchedUsers.add(user);
+                    }
+                }
+                if (users.isEmpty()) {
+                    users.clear();
+                    users.addAll(fetchedUsers);
+                    currentUserIndex = 0; // Reset index
+                    displayUser(users.get(currentUserIndex));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Khi có lỗi, xử lý lỗi tại đây
+                Log.e("FetchUsers", "Failed to read user", databaseError.toException());
+            }
+        });
     }
 }

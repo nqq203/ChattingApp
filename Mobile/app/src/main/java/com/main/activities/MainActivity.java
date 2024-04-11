@@ -3,6 +3,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.group4.matchmingle.R;
 
@@ -14,8 +15,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent signinIntent = new Intent(MainActivity.this, SignInActivity.class);
-        startActivity(signinIntent);
+        UserSessionManager sessionManager = new UserSessionManager(getApplicationContext());
+        Log.d(TAG, "session: " + sessionManager.isLoggedIn());
+        if (sessionManager.isLoggedIn()) {
+//            String phoneNumber = sessionManager.getUserDetails().get(UserSessionManager.KEY_PHONE_NUMBER);
+            Intent intent = new Intent(MainActivity.this, SwipeCardViewActivity.class);
+            startActivity(intent);
+        }
+        else {
+            Intent signinIntent = new Intent(MainActivity.this, SignInActivity.class);
+            startActivity(signinIntent);
+        }
+
+
     }
 
     @Override
