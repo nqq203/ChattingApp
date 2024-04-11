@@ -70,7 +70,6 @@ public class MatchesActivity extends AppCompatActivity {
         });
 
 
-
         gridView=(GridView)  findViewById(R.id.matchesGrid);
         ArrayList<MatchesItem> MatchesArrayList= new ArrayList<MatchesItem>();
 

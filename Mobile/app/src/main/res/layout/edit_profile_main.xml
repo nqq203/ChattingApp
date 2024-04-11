@@ -404,14 +404,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="45dp"
                     android:layout_marginTop="20dp"
-                    android:text="Preferred and Language"
+                    android:text="Preferred"
                     android:textSize="20dp"
                     android:textStyle="bold" />
                 <TextView
                     android:id="@+id/btn_pre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="75dp"
+                    android:layout_marginStart="205dp"
                     android:layout_marginTop="20dp"
                     android:clickable="true"
                     android:text="Edit"

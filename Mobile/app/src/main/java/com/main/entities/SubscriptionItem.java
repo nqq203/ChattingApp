@@ -6,11 +6,17 @@ public class SubscriptionItem {
     private String startDate;
     private String endDate;
 
-    public SubscriptionItem(String title, String plan, String startDate, String endDate) {
+    private String userId;
+
+    public SubscriptionItem(String title, String plan, String startDate, String endDate, String userId) {
         this.title = title;
         this.plan = plan;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.userId = userId;
+    }
+
+    public SubscriptionItem() {
     }
 
     public String getTitle() {
@@ -43,5 +49,24 @@ public class SubscriptionItem {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "SubscriptionItem{" +
+                "title='" + title + '\'' +
+                ", plan='" + plan + '\'' +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", userId='" + userId + '\'' +
+                '}';
     }
 }
