@@ -1,4 +1,5 @@
 package com.main.activities;
+
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
@@ -13,23 +14,21 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.group4.matchmingle.R;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class UploadImageType extends Activity {
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private static final String TAG = "MediaActivity";
     private ImageView image;
     private static final int REQUEST_CODE_SELECT_IMAGES = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
-    int PICK_IMAGE_MULTIPLE = 1;
-    String imageEncoded;
-    List<String> imagesEncodedList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,7 @@ public class UploadImageType extends Activity {
                 intent.setType("image/*");
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select Picture"), PICK_IMAGE_MULTIPLE);
+                startActivityForResult(Intent.createChooser(intent,"Select Picture"), REQUEST_CODE_SELECT_IMAGES);
             }
         });
 
@@ -71,91 +70,76 @@ public class UploadImageType extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        try {
-            Log.v(TAG, String.valueOf(requestCode));
-            if (requestCode == PICK_IMAGE_MULTIPLE && resultCode == RESULT_OK && null != data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE_SELECT_IMAGES && data != null) {
                 // Xử lý khi chọn ảnh từ gallery
-
-                imagesEncodedList = new ArrayList<>();
-
-                if (data.getData() != null) {
-                    Uri mImageUri = data.getData();
-
-                    // Get the cursor
-                    Cursor cursor = getContentResolver().query(mImageUri, null, null, null, null);
-
-                    if (cursor != null) {
-                        while (cursor.moveToNext()) {
-                            String imagePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-                            imagesEncodedList.add(imagePath);
-                        }
-                        cursor.close();
-                    }
-                } else if (data.getClipData() != null) {
-                    ClipData mClipData = data.getClipData();
-
-                    for (int i = 0; i < mClipData.getItemCount(); i++) {
-                        ClipData.Item item = mClipData.getItemAt(i);
-                        Uri uri = item.getUri();
-
-                        // Get the cursor
-                        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-
-                        if (cursor != null) {
-                            while (cursor.moveToNext()) {
-                                String imagePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-                                imagesEncodedList.add(imagePath);
-                            }
-                            cursor.close();
-                        }
-                    }
-                }
-
-                // Gửi danh sách hình ảnh sang hoạt động UploadProfileConfirm
-
-                ArrayList<String> arrayList = new ArrayList<>(imagesEncodedList);
-                Intent intent = new Intent(UploadImageType.this, UploadProfileConfirm.class);
-                intent.putStringArrayListExtra("imageUris", arrayList);
-                startActivity(intent);
-
-
-
-            } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && null != data) {
-                if (data != null && data.getExtras() != null) {
-                    // Trích xuất ảnh từ dữ liệu Intent
-                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-
-                    // Lưu ảnh vào bộ nhớ hoặc thư mục tạm thời (nếu cần)
-                    //Log.e("UploadImageType",bitmap.toString());
-                    // Chuyển đường dẫn của ảnh thành Uri
-                    Uri imageUri = saveBitmapAndGetUri(bitmap);
-                    Picasso.get().load(imageUri).into(image);
-                    Log.v(TAG, imageUri.toString());
-                    // Gửi đường dẫn của ảnh qua Intent
-
-                    if (imageUri != null) {
-                        Log.e("UploadImageType",imageUri.toString());
-                        Intent intent = new Intent(UploadImageType.this, UploadProfileConfirm.class);
-                        intent.putExtra("imageUri", imageUri.toString());
-                        startActivity(intent);
-                    }
-
-
-
-                }
-                else{
-                    Log.v(TAG, "Picture canceled! :(");
-                }
+                handleSelectedImages(data);
+            } else if (requestCode == REQUEST_IMAGE_CAPTURE && data != null) {
+                // Xử lý khi chụp ảnh từ camera
+                handleCapturedImage(data);
             }
-            else {
-                Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void handleSelectedImages(Intent data) {
+        ArrayList<String> imageUris = new ArrayList<>();
+        if (data.getData() != null) {
+            Uri selectedImageUri = data.getData();
+            String imagePath = getRealPathFromUri(selectedImageUri);
+            imageUris.add(imagePath);
+        } else if (data.getClipData() != null) {
+            ClipData clipData = data.getClipData();
+            for (int i = 0; i < clipData.getItemCount(); i++) {
+                ClipData.Item item = clipData.getItemAt(i);
+                Uri uri = item.getUri();
+                String imagePath = getRealPathFromUri(uri);
+                imageUris.add(imagePath);
             }
-        } catch (Exception e) {
-            Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
         }
 
+        // Chuyển đổi đường dẫn tệp thành Uri
+        ArrayList<String> imageUrisToSend = new ArrayList<>();
+        for (String imagePath : imageUris) {
+            Uri fileUri = Uri.fromFile(new File(imagePath));
+            imageUrisToSend.add(fileUri.toString());
+        }
 
-        super.onActivityResult(requestCode, resultCode, data);
+        // Gửi Uri qua Intent
+        Intent intent = new Intent(UploadImageType.this, UploadProfileConfirm.class);
+        intent.putStringArrayListExtra("imageUris", imageUrisToSend);
+        startActivity(intent);
+    }
+
+    private void handleCapturedImage(Intent data) {
+        Bundle extras = data.getExtras();
+        Bitmap imageBitmap = (Bitmap) extras.get("data");
+        if (imageBitmap != null) {
+            Uri imageUri = saveBitmapAndGetUri(imageBitmap);
+
+            // Chuyển đổi đường dẫn tệp thành Uri
+            Uri fileUri = Uri.fromFile(new File(imageUri.getPath()));
+
+            // Gửi Uri qua Intent
+            ArrayList<String> imageUris = new ArrayList<>();
+            imageUris.add(fileUri.toString());
+            Intent intent = new Intent(UploadImageType.this, UploadProfileConfirm.class);
+            intent.putStringArrayListExtra("imageUris", imageUris);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Failed to capture image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private String getRealPathFromUri(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if (cursor == null) return null;
+        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String imagePath = cursor.getString(columnIndex);
+        cursor.close();
+        return imagePath;
     }
 
     private Uri saveBitmapAndGetUri(Bitmap bitmap) {

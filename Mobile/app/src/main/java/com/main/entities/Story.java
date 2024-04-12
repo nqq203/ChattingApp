@@ -3,13 +3,13 @@ package com.main.entities;
 public class Story {
     private String fullname;
     private String imageUrl;
-    private String id;
+    private String idUser;
     private long duration;
 
-    public Story(String fullname, String imageUrl, String id, long duration) {
+    public Story(String fullname, String imageUrl, String idUser, long duration) {
         this.fullname = fullname;
         this.imageUrl = imageUrl;
-        this.id = id;
+        this.idUser = idUser;
         this.duration = duration;
     }
 
@@ -18,7 +18,7 @@ public class Story {
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.idUser = id;
     }
 
     public void setFullname(String fullname) {
@@ -34,7 +34,7 @@ public class Story {
     }
 
     public String getId() {
-        return id;
+        return idUser;
     }
 
     public String getImageUrl() {

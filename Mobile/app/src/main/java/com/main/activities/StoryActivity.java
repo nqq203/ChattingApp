@@ -3,6 +3,7 @@ package com.main.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -98,10 +99,12 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
 
     @Override
     public void onNext() {
-        if (counter < PROGRESS_COUNT - 1) {
+        if (counter < PROGRESS_COUNT - 2) {
+            Log.e("story1", String.valueOf(counter));
             loadImageFromUrl(stories[++counter].getImageUrl());
             storiesProgressView.setStoryDuration(stories[counter].getDuration());
         } else {
+            Log.e("story2", String.valueOf(counter));
             // Nếu đang ở story cuối cùng, mở MessageActivity
             Intent intent = new Intent(StoryActivity.this, MessageActivity.class);
             startActivity(intent);
@@ -122,7 +125,6 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
 
     @Override
     protected void onDestroy() {
-        // Very important !
         storiesProgressView.destroy();
         super.onDestroy();
     }

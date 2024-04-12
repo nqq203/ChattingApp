@@ -38,7 +38,7 @@
             android:resource="@xml/circle" />
 
         <activity
-            android:name="com.main.activities.ProfileView"
+            android:name="com.main.activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -91,7 +91,7 @@
             android:name="com.main.activities.MatchesActivity"
             android:exported="true" />
 
-        <activity android:name="com.main.activities.MainActivity"
+        <activity android:name="com.main.activities.ProfileView"
             android:exported="true"/>
         <activity android:name="com.main.activities.UploadProfileConfirm"
             android:exported="true"/>

@@ -14,6 +14,7 @@ import com.main.fragments.SwipeCardFragment;
 public class SwipeCardViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         SwipeCardFragment swipeCardFragment = new SwipeCardFragment();
         getSupportFragmentManager().beginTransaction()

@@ -94,6 +94,7 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
         container.setAdapter(new StoryAdapter(storiesList, this));
     }
 
+
     private void populateMessageList(RecyclerView container) {
         container.setLayoutManager(new LinearLayoutManager(this));
         List<MessageItem> messages = new ArrayList<>();

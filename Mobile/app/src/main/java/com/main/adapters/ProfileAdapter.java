@@ -42,8 +42,8 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ImageVie
             // Nếu là ảnh từ Internet, sử dụng Picasso như bình thường
             Picasso.get().load(imageUrl).into(holder.imageView);
         } else {
-            // Nếu là ảnh cục bộ, chuyển đổi đường dẫn thành Uri và sử dụng Picasso
-            Uri imageUri = Uri.fromFile(new File(imageUrl));
+            // Nếu là ảnh cục bộ, sử dụng Uri.parse để chuyển đổi đường dẫn thành Uri và sử dụng Picasso
+            Uri imageUri = Uri.parse(imageUrl);
             Picasso.get().load(imageUri).into(holder.imageView);
         }
     }
