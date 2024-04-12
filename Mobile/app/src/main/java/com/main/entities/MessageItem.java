@@ -9,7 +9,10 @@ public class MessageItem {
     private long timestamp;
 
 
-    public MessageItem() {
+    public MessageItem(String id, String senderName, String imageUrl) {
+        this.id = id;
+        this.senderName = senderName;
+        this.imageUrl = imageUrl;
     }
 
     public MessageItem(String id, String senderName, String content, String imageUrl, long timestamp) {
