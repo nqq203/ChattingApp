@@ -2,6 +2,7 @@ package com.main.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -9,15 +10,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.group4.matchmingle.R;
 import com.main.adapters.MessageListAdapter;
 import com.main.adapters.StoryAdapter;
 import com.main.entities.MessageItem;
 import com.main.entities.Story;
+import com.main.entities.User;
 import com.main.fragments.ChatFragment;
 import com.main.fragments.ColorPickerDialogFragment;
 
@@ -25,12 +34,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageActivity  extends AppCompatActivity implements ColorPickerDialogFragment.ColorPickerDialogListener{
+    private UserSessionManager sessionManager;
+    private List<MessageItem> messages = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.message_activity);
-
+        sessionManager = new UserSessionManager(getApplicationContext());
 
 //      Handle Recycler View of stories and messages
         RecyclerView storiesContainer = findViewById(R.id.stories_container);
@@ -97,28 +108,43 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
 
     private void populateMessageList(RecyclerView container) {
         container.setLayoutManager(new LinearLayoutManager(this));
-        List<MessageItem> messages = new ArrayList<>();
-        MessageItem item1 = new MessageItem("1234", "Quynh Nga", "di dau v?", "https://vcdn-giaitri.vnecdn.net/2024/02/14/snapinsta-app-422549648-362365-4477-9392-1707881492.jpg", 10000);
+//        MessageItem item1 = new MessageItem("1234", "Quynh Nga", "di dau v?", "https://vcdn-giaitri.vnecdn.net/2024/02/14/snapinsta-app-422549648-362365-4477-9392-1707881492.jpg", 10000);
 
-        messages.add(item1);
-        messages.add(item1);
-        messages.add(item1);
-        messages.add(item1);
-        messages.add(item1);
-        messages.add(item1);
-        messages.add(item1);
-        messages.add(item1);
-        messages.add(item1);
-        messages.add(item1);
-
-//      Create new instance
         MessageListAdapter adapter = new MessageListAdapter(messages, this);
 
-        container.setAdapter(adapter);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference messageListRef = database.getReference("Message");
+
+        Query query = messageListRef;
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<MessageItem> fetchedMessages = new ArrayList<>();
+                String phoneNumber = sessionManager.getUserDetails().get(UserSessionManager.KEY_PHONE_NUMBER);
+                DataSnapshot myMessage = dataSnapshot.child(phoneNumber);
+                for (DataSnapshot messageSnapshot: myMessage.getChildren()) {
+                    String senderName = messageSnapshot.child("fullname").getValue(String.class);
+                    String id  = messageSnapshot.getKey();
+                    String imageUrl = messageSnapshot.child("imageUrl").getValue(String.class);
+                    MessageItem messageItem = new MessageItem(id, senderName, imageUrl);
+                    fetchedMessages.add(messageItem);
+                }
+                if (messages.isEmpty()) {
+                    messages.clear();
+                    messages.addAll(fetchedMessages);
+                    container.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         adapter.setOnItemClickListener(position ->  {
             ChatFragment chatFragment = new ChatFragment();
 
-//          Pass data
             Bundle args = new Bundle();
             args.putInt("selected_position", position);
             chatFragment.setArguments(args);

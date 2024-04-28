@@ -172,7 +172,7 @@ public class SwipeCardFragment extends Fragment {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usersRef = database.getReference("User");
 
-        Query query = usersRef.limitToFirst(100);
+        Query query = usersRef.limitToFirst(20);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
