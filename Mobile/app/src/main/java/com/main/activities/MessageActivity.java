@@ -2,12 +2,8 @@ package com.main.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
-import android.view.MotionEvent;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
@@ -19,23 +15,29 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.group4.matchmingle.R;
-import com.main.adapters.MessageListAdapter;
+import com.main.MemoryData;
+import com.main.adapters.MessageAdapter;
 import com.main.adapters.StoryAdapter;
-import com.main.entities.MessageItem;
+import com.main.entities.MessageList;
 import com.main.entities.Story;
-import com.main.entities.User;
-import com.main.fragments.ChatFragment;
 import com.main.fragments.ColorPickerDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MessageActivity  extends AppCompatActivity implements ColorPickerDialogFragment.ColorPickerDialogListener{
+    private final List<MessageList> messageLists = new ArrayList<>();
     private UserSessionManager sessionManager;
-    private List<MessageItem> messages = new ArrayList<>();
+    private String myPhone;
+    private RecyclerView messagesRecyclerView;
+    private String lastMessage = "";
+    private int unseenMessage = 0;
+    private MessageAdapter messageAdapter;
+    private String chatKey = "";
+    private boolean dataSet = false;
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +48,10 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
 //      Handle Recycler View of stories and messages
         RecyclerView storiesContainer = findViewById(R.id.stories_container);
         populateStories(storiesContainer);
-        RecyclerView messagesListContainer = findViewById(R.id.message_list_container);
-        populateMessageList(messagesListContainer);
+        messagesRecyclerView = findViewById(R.id.message_list_container);
+        messageAdapter = new MessageAdapter(messageLists, MessageActivity.this);
+        messagesRecyclerView.setAdapter(messageAdapter);
+        populateMessageList(messagesRecyclerView);
 
 //      Change the color of toolbar icon
         Button iconHome = findViewById(R.id.icon_home);
@@ -106,32 +110,70 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
     }
 
     private void populateMessageList(RecyclerView container) {
+        container.setHasFixedSize(true);
         container.setLayoutManager(new LinearLayoutManager(this));
-//        MessageItem item1 = new MessageItem("1234", "Quynh Nga", "di dau v?", "https://vcdn-giaitri.vnecdn.net/2024/02/14/snapinsta-app-422549648-362365-4477-9392-1707881492.jpg", 10000);
-
-        MessageListAdapter adapter = new MessageListAdapter(messages, this);
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference messageListRef = database.getReference("Message");
-
-        Query query = messageListRef;
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        myPhone = sessionManager.getUserDetails().get(UserSessionManager.KEY_PHONE_NUMBER);
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<MessageItem> fetchedMessages = new ArrayList<>();
-                String phoneNumber = sessionManager.getUserDetails().get(UserSessionManager.KEY_PHONE_NUMBER);
-                DataSnapshot myMessage = dataSnapshot.child(phoneNumber);
-                for (DataSnapshot messageSnapshot: myMessage.getChildren()) {
-                    String senderName = messageSnapshot.child("fullname").getValue(String.class);
-                    String id  = messageSnapshot.getKey();
-                    String imageUrl = messageSnapshot.child("imageUrl").getValue(String.class);
-                    MessageItem messageItem = new MessageItem(id, senderName, imageUrl);
-                    fetchedMessages.add(messageItem);
-                }
-                if (messages.isEmpty()) {
-                    messages.clear();
-                    messages.addAll(fetchedMessages);
-                    container.setAdapter(adapter);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                messageLists.clear();
+                lastMessage = "";
+                unseenMessage = 0;
+                chatKey = "";
+
+                for (DataSnapshot dataSnapshot : snapshot.child("Message").child(myPhone).getChildren()) {
+                    final String getMobilePhone = dataSnapshot.getKey();
+                    dataSet = false;
+                    if (!getMobilePhone.equals(myPhone)) {
+                        final String fullname = dataSnapshot.child("fullname").getValue(String.class);
+                        final String imageUrl = dataSnapshot.child("imageUrl").getValue(String.class);
+
+                        databaseReference.child("Chat").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                int chatCounts = (int)snapshot.getChildrenCount();
+                                if (chatCounts > 0) {
+                                    for (DataSnapshot dataSnapshot1: snapshot.getChildren()) {
+                                        final String getKey = dataSnapshot1.getKey();
+                                        chatKey = getKey;
+
+                                        if (dataSnapshot1.hasChild("user1") && dataSnapshot1.hasChild("user2") && dataSnapshot1.hasChild("messages")) {
+                                            final String getUserOne = dataSnapshot1.child("user1").getValue(String.class);
+                                            final String getUserTwo = dataSnapshot1.child("user2").getValue(String.class);
+
+                                            if ((getUserOne.equals(getMobilePhone) && getUserTwo.equals(myPhone)) || (getUserOne.equals(myPhone) && getUserTwo.equals(getMobilePhone))) {
+                                                for (DataSnapshot chatDataSnapshot : dataSnapshot1.child("messages").getChildren()) {
+                                                    final Long getLastSeenMessage = Long.parseLong(MemoryData.getLastMsg(MessageActivity.this, getKey));
+                                                    final Long getMessageKey = Long.parseLong(chatDataSnapshot.getKey());
+                                                    final String getGuestPhone = chatDataSnapshot.child("phoneNumber").getValue(String.class);
+
+                                                    lastMessage = chatDataSnapshot.child("msg").getValue(String.class);
+                                                    if (getMessageKey > getLastSeenMessage && !myPhone.equals(getGuestPhone)) {
+                                                        unseenMessage = 1;
+                                                    }
+                                                    else {
+                                                        unseenMessage = 0;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                if (!dataSet) {
+                                    dataSet  = true;
+                                    MessageList messageList = new MessageList(fullname, getMobilePhone, lastMessage, imageUrl, unseenMessage, chatKey);
+                                    messageLists.add(messageList);
+                                    messageAdapter.updateData(messageLists);
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
                 }
             }
 
@@ -139,19 +181,6 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
-
-        adapter.setOnItemClickListener(position ->  {
-            ChatFragment chatFragment = new ChatFragment();
-
-            Bundle args = new Bundle();
-            args.putInt("selected_position", position);
-            chatFragment.setArguments(args);
-
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.message_container, chatFragment, "CHAT_FRAGMENT_TAG")
-                    .addToBackStack(null)
-                    .commit();
         });
     }
 
