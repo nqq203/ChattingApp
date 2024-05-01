@@ -12,6 +12,11 @@ public class User {
     private String location;
     private Boolean IsSetup;
     private int height;
+
+    public User() {
+
+    }
+
     public User(String fullname, String gender, String date, String phoneNumber, String password) {
         this.fullname = fullname;
         this.gender = gender;

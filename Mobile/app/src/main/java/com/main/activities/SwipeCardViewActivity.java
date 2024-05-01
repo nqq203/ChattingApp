@@ -35,8 +35,23 @@ public class SwipeCardViewActivity extends AppCompatActivity {
         Button matchButton = findViewById(R.id.match_button);
         Button noMatchButton = findViewById(R.id.no_match_button);
 
-        matchButton.setOnClickListener(v -> swipeCardFragment.simulateSwipeRight());
-        noMatchButton.setOnClickListener(v -> swipeCardFragment.simulateSwipeLeft());
+        matchButton.setOnClickListener(v -> {
+            if (!swipeCardFragment.isDisabled) {
+                swipeCardFragment.simulateSwipeRight();
+            }
+            else {
+                swipeCardFragment.disableSwipe();
+            }
+        });
+        noMatchButton.setOnClickListener(v -> {
+            if (!swipeCardFragment.isDisabled) {
+                swipeCardFragment.simulateSwipeLeft();
+            }
+            else {
+                swipeCardFragment.disableSwipe();
+            }
+        });
+
 
         iconChat.setOnClickListener(v -> {
             Intent intent = new Intent(SwipeCardViewActivity.this, MessageActivity.class);

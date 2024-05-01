@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
@@ -31,6 +32,7 @@ import com.main.callbacks.OnSwipeTouchListener;
 import com.main.entities.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SwipeCardFragment extends Fragment {
@@ -41,12 +43,15 @@ public class SwipeCardFragment extends Fragment {
     private ImageView userProfileImage;
     private ImageView filterIcon;
     private TextView notiIcon;
+    private TextView noItemView;
     private RelativeLayout cardWrapper;
     private List<User> users = new ArrayList<>();
     private int currentUserIndex = users.isEmpty() ? - 1 : 0;
     private UserSessionManager sessionManager;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
     String mPhoneNumber;
+    private String lastUserId = null;
+    public boolean isDisabled = false;
 
     @Override
     public void onAttach(Context context) {
@@ -56,15 +61,7 @@ public class SwipeCardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.swipe_cardview_fragment, container, false);
-        cardView = view.findViewById(R.id.card_view);
-        cardWrapper = view.findViewById(R.id.card_wrapper);
-        userName = cardView.findViewById(R.id.card_name);
-        userAge = cardView.findViewById(R.id.card_age);
-        distance = cardView.findViewById(R.id.card_distance);
-        userProfileImage = cardView.findViewById(R.id.card_image);
-        filterIcon = cardWrapper.findViewById(R.id.icon_filter);
-        notiIcon = cardWrapper.findViewById(R.id.icon_noti);
-        sessionManager = new UserSessionManager(getContext());
+        initializeViews(view);
 
         filterIcon.setOnClickListener(v -> {
             if (getActivity() != null) {
@@ -81,33 +78,34 @@ public class SwipeCardFragment extends Fragment {
             }
         });
 
-//        Initialize list of users here
-//        users.add( new User("Lisa", "female", "23/12/2000", "0912345678", "abc1234", "https://i.pinimg.com/originals/87/e3/68/87e3680db94fa0baa744017596863653.jpg"));
-//        users.add( new User("Jisoo", "female", "23/12/1999", "0912345678", "abc1234", "https://th.bing.com/th/id/OIP.xNcchNwI9Vtv66fF0dGHbwHaLH?rs=1&pid=ImgDetMain"));
-//        users.add( new User("Jennie", "female", "23/12/1998", "0912345678", "abc1234", "https://data.boomsbeat.com/data/images/full/304085/jennie.jpg?w=802&l=50&t=40"));
-//        users.add( new User("Rose", "female", "23/12/1997", "0912345678", "abc1234", "https://th.bing.com/th/id/OIP.faNRNq3OP8EP-1O2yTlNhwHaNK?rs=1&pid=ImgDetMain"));
-
-//        displayUser(users.get(currentUserIndex));
-        fetchUsers();
         setupCardSwipe();
+        fetchNextUser();
         return view;
     }
 
+    private void initializeViews(View view) {
+        cardView = view.findViewById(R.id.card_view);
+        cardWrapper = view.findViewById(R.id.card_wrapper);
+        userName = cardView.findViewById(R.id.card_name);
+        userAge = cardView.findViewById(R.id.card_age);
+        distance = cardView.findViewById(R.id.card_distance);
+        userProfileImage = cardView.findViewById(R.id.card_image);
+        noItemView = cardView.findViewById(R.id.no_item_view);
+        filterIcon = cardWrapper.findViewById(R.id.icon_filter);
+        notiIcon = cardWrapper.findViewById(R.id.icon_noti);
+        sessionManager = new UserSessionManager(getContext());
+        mPhoneNumber = sessionManager.getUserDetails().get(UserSessionManager.KEY_PHONE_NUMBER);
+    }
+
     private void displayUser(User user) {
-        if (user  != null) {
+        if (user != null) {
             userName.setText(user.getFullname());
             userAge.setText(user.getDate());
-            distance.setText("345 miles");
-            if (user.getImageUrl() != null) {
-                Glide.with(getContext())
-                        .load(user.getImageUrl())
-                        .into(userProfileImage);
-            } else {
-                userProfileImage.setImageResource(R.drawable.lisa);
-            }
-        }
-        else {
-
+            distance.setText("345 miles"); // Example distance
+            Glide.with(getContext()).load(user.getImageUrl()).into(userProfileImage);
+            cardView.setTranslationX(0);
+            cardView.setAlpha(1);
+            cardView.setRotation(0);
         }
     }
 
@@ -124,87 +122,158 @@ public class SwipeCardFragment extends Fragment {
         });
     }
     public void simulateSwipeRight() {
-        // Example animation to simulate swipe right
         cardView.animate()
                 .translationX(1000)
                 .rotation(40)
                 .alpha(0)
                 .setDuration(500)
                 .withEndAction(() -> {
-                    // Reset card position and visibility here
-                    cardView.setTranslationX(0);
-                    cardView.setAlpha(1);
-                    cardView.setRotation(0);
-                    showNextUser(true);
+                    addUserToOneWayMatchList(lastUserId);
+                    fetchNextUser();
                 });
     }
 
-
     public void simulateSwipeLeft() {
-        // Similar to simulateSwipeRight but animate to the left
         cardView.animate()
                 .translationX(-1000)
                 .rotation(-40)
                 .alpha(0)
                 .setDuration(500)
                 .withEndAction(() -> {
-                    // Reset card position and visibility here
-                    cardView.setTranslationX(0);
-                    cardView.setAlpha(1);
-                    cardView.setRotation(0);
-                    showNextUser(false);
+                    removeUserFromSuggestions(lastUserId);
+                    fetchNextUser();
                 });
     }
 
-    private void showNextUser(boolean isRightSwipe) {
-        currentUserIndex++;
-        if (currentUserIndex >= users.size()) {
-            currentUserIndex = 0; // Hoặc có thể bạn muốn xử lý khi danh sách kết thúc
-        }
-        // Đặt card về vị trí ban đầu và hiển thị thông tin user mới
-        cardView.setTranslationX(0);
-        cardView.setRotation(0);
-        cardView.setAlpha(1);
+    private void fetchNextUser() {
+        DatabaseReference usersRef = databaseReference.child("SuggestionList").child(mPhoneNumber);
+        Query query = (lastUserId == null) ? usersRef.orderByKey().limitToFirst(1) : usersRef.orderByKey().startAfter(lastUserId).limitToFirst(1);
 
-        // Hiển thị thông tin của user mới
-        displayUser(users.get(currentUserIndex));
-    }
-
-    private void fetchUsers() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        String phoneNumber = sessionManager.getUserDetails().get(UserSessionManager.KEY_PHONE_NUMBER);
-        mPhoneNumber = phoneNumber;
-        DatabaseReference usersRef = database.getReference("SuggestionList").child(phoneNumber);
-
-        Query query = usersRef.limitToFirst(20);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<User> fetchedUsers = new ArrayList<>();
-                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                    String account = userSnapshot.child(phoneNumber).getKey();
-                    if (!account.equals(userSnapshot.getKey())) {
+                if (dataSnapshot.hasChildren()) {
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        lastUserId = userSnapshot.getKey(); // Update the last fetched user ID
                         String dbFullname = userSnapshot.child("fullname").getValue(String.class);
                         String dbDate = userSnapshot.child("date").getValue(String.class);
                         String dbGender = userSnapshot.child("gender").getValue(String.class);
                         String dbImageUrl = userSnapshot.child("imageUrl").getValue(String.class);
                         User user = new User(dbFullname, dbGender, dbDate, dbImageUrl);
-                        fetchedUsers.add(user);
+                        displayUser(user);
+                        break; // Break after the first user since we are only fetching one
                     }
-                }
-                if (users.isEmpty()) {
-                    users.clear();
-                    users.addAll(fetchedUsers);
-                    currentUserIndex = 0; // Reset index
-                    displayUser(users.get(currentUserIndex));
+                    if (noItemView.getVisibility() == View.VISIBLE) {
+                        noItemView.setVisibility(View.GONE);
+                    }
+                } else {
+                    isDisabled = true;
+                    Log.d(TAG, "No more users to fetch");
+                    // Handle the situation when there are no more users
+                    if (noItemView != null) {
+                        noItemView.setVisibility(View.VISIBLE); // Set noItemView to visible when no users are fetched
+                    }
+                    disableSwipe();
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Khi có lỗi, xử lý lỗi tại đây
-                Log.e("FetchUsers", "Failed to read user", databaseError.toException());
+                Log.e(TAG, "Failed to fetch user", databaseError.toException());
+            }
+
+        });
+    }
+
+    private void removeUserFromSuggestions(String userId) {
+        if (userId != null) {
+            DatabaseReference userRef = databaseReference.child("SuggestionList").child(mPhoneNumber).child(userId);
+            userRef.removeValue().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "User removed from suggestions: " + userId);
+                } else {
+                    Log.e(TAG, "Failed to remove user from suggestions", task.getException());
+                }
+            });
+        }
+    }
+
+    private void addUserToOneWayMatchList(String userId) {
+        DatabaseReference userInfo = databaseReference.child("User").child(userId);
+        userInfo.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Assuming all the necessary user fields are direct children of this snapshot
+                String userFullname = snapshot.child("fullname").getValue(String.class);
+                String userDate = snapshot.child("date").getValue(String.class);
+                String userGender = snapshot.child("gender").getValue(String.class);
+                String userImageUrl = snapshot.child("imageUrl").getValue(String.class);
+
+                HashMap<String, Object> user = new HashMap<>();
+                user.put("fullname", userFullname);
+                user.put("date", userDate);
+                user.put("gender", userGender);
+                user.put("imageUrl", userImageUrl);
+
+                // Update the OneWayMatchesList with the user data
+                databaseReference.child("OneWayMatchesList").child(mPhoneNumber).child(userId).setValue(user)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "User added to OneWayMatchList: " + userId);
+                                // Remove user from suggestions once added to OneWayMatchList
+                                removeUserFromSuggestions(userId);
+                            } else {
+                                Log.e(TAG, "Failed to add user to OneWayMatchList", task.getException());
+                            }
+                        });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "Failed to fetch user info", error.toException());
             }
         });
     }
+
+    public void disableSwipe() {
+        cardView.setOnTouchListener(null); // Disable swipe by setting touch listener to null
+    }
+
+//    private void fetchUsers() {
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        String phoneNumber = sessionManager.getUserDetails().get(UserSessionManager.KEY_PHONE_NUMBER);
+//        mPhoneNumber = phoneNumber;
+//        DatabaseReference usersRef = database.getReference("SuggestionList").child(phoneNumber);
+//
+//        Query query = usersRef.limitToFirst(20);
+//        query.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                List<User> fetchedUsers = new ArrayList<>();
+//                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+//                    String account = userSnapshot.child(phoneNumber).getKey();
+//                    if (!account.equals(userSnapshot.getKey())) {
+//                        String dbFullname = userSnapshot.child("fullname").getValue(String.class);
+//                        String dbDate = userSnapshot.child("date").getValue(String.class);
+//                        String dbGender = userSnapshot.child("gender").getValue(String.class);
+//                        String dbImageUrl = userSnapshot.child("imageUrl").getValue(String.class);
+//                        User user = new User(dbFullname, dbGender, dbDate, dbImageUrl);
+//                        fetchedUsers.add(user);
+//                    }
+//                }
+//                if (users.isEmpty()) {
+//                    users.clear();
+//                    users.addAll(fetchedUsers);
+//                    currentUserIndex = 0; // Reset index
+//                    displayUser(users.get(currentUserIndex));
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                // Khi có lỗi, xử lý lỗi tại đây
+//                Log.e("FetchUsers", "Failed to read user", databaseError.toException());
+//            }
+//        });
+//    }
 }

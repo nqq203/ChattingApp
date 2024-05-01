@@ -119,16 +119,16 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot user : snapshot.getChildren()) {
-                    if (user.getKey().toString() != mPhoneNumber) {
+                    if (user.getKey() != mPhoneNumber) {
                         String dbFullname = user.child("fullname").getValue(String.class);
                         String dbDate = user.child("date").getValue(String.class);
                         String dbGender = user.child("gender").getValue(String.class);
                         String dbImageUrl = user.child("imageUrl").getValue(String.class);
 
                         suggestionRef.child(user.getKey()).child("fullname").setValue(dbFullname);
-                        suggestionRef.child(user.getKey()).child("fullname").setValue(dbDate);
-                        suggestionRef.child(user.getKey()).child("fullname").setValue(dbGender);
-                        suggestionRef.child(user.getKey()).child("fullname").setValue(dbImageUrl);
+                        suggestionRef.child(user.getKey()).child("date").setValue(dbDate);
+                        suggestionRef.child(user.getKey()).child("gender").setValue(dbGender);
+                        suggestionRef.child(user.getKey()).child("imageUrl").setValue(dbImageUrl);
                     }
                 }
             }
