@@ -98,9 +98,9 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
     private void populateStories(RecyclerView container) {
         container.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         List<Story> storiesList = new ArrayList<>();
-        Story item1 = new Story("Quynh Nga", "https://i.pinimg.com/originals/5e/67/fa/5e67fa0bcd0230fb933e9c7a6169e953.jpg", "1234");
-        Story item2 = new Story("Quynh Ngan", "https://i.pinimg.com/originals/5e/67/fa/5e67fa0bcd0230fb933e9c7a6169e953.jpg", "1234");
-        Story item3 = new Story("Quynh Nguyen", "https://i.pinimg.com/originals/5e/67/fa/5e67fa0bcd0230fb933e9c7a6169e953.jpg", "1234");
+        Story item1 = new Story("Quynh Nga", "https://i.pinimg.com/originals/5e/67/fa/5e67fa0bcd0230fb933e9c7a6169e953.jpg", "1234", 3000L);
+        Story item2 = new Story("Quynh Ngan", "https://i.pinimg.com/originals/5e/67/fa/5e67fa0bcd0230fb933e9c7a6169e953.jpg", "1234", 4000L);
+        Story item3 = new Story("Quynh Nguyen", "https://i.pinimg.com/originals/5e/67/fa/5e67fa0bcd0230fb933e9c7a6169e953.jpg", "1234", 5000L);
 
         storiesList.add(item1);
         storiesList.add(item2);
@@ -108,6 +108,7 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
 
         container.setAdapter(new StoryAdapter(storiesList, this));
     }
+
 
     private void populateMessageList(RecyclerView container) {
         container.setHasFixedSize(true);
@@ -148,6 +149,9 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
                                                     final String getGuestPhone = chatDataSnapshot.child("phoneNumber").getValue(String.class);
 
                                                     lastMessage = chatDataSnapshot.child("msg").getValue(String.class);
+                                                    if (lastMessage.length() > 30) {
+                                                        lastMessage = lastMessage.substring(0, 30) + "...";
+                                                    }
                                                     if (getMessageKey > getLastSeenMessage && !myPhone.equals(getGuestPhone)) {
                                                         unseenMessage = 1;
                                                     }

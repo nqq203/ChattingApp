@@ -45,6 +45,8 @@ public class SwipeCardFragment extends Fragment {
     private List<User> users = new ArrayList<>();
     private int currentUserIndex = users.isEmpty() ? - 1 : 0;
     private UserSessionManager sessionManager;
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+    String mPhoneNumber;
 
     @Override
     public void onAttach(Context context) {
@@ -170,14 +172,15 @@ public class SwipeCardFragment extends Fragment {
 
     private void fetchUsers() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference usersRef = database.getReference("User");
+        String phoneNumber = sessionManager.getUserDetails().get(UserSessionManager.KEY_PHONE_NUMBER);
+        mPhoneNumber = phoneNumber;
+        DatabaseReference usersRef = database.getReference("SuggestionList").child(phoneNumber);
 
         Query query = usersRef.limitToFirst(20);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<User> fetchedUsers = new ArrayList<>();
-                String phoneNumber = sessionManager.getUserDetails().get(UserSessionManager.KEY_PHONE_NUMBER);
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String account = userSnapshot.child(phoneNumber).getKey();
                     if (!account.equals(userSnapshot.getKey())) {

@@ -36,7 +36,8 @@
                     android:text="Ngân, 21"
                     android:textColor="@color/white"
                     android:textSize="20dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
+
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_gravity="center"
                     android:id="@+id/Profile_Pic"
@@ -72,7 +73,17 @@
                     android:textColor="@color/white"
                     android:layout_marginTop="10dp"/>
             </FrameLayout>
-
+            <Button
+                android:id="@+id/ViewProfileBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Profile"
+                android:background="@color/white"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="20dp"
+                android:paddingHorizontal="10dp"
+                />
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

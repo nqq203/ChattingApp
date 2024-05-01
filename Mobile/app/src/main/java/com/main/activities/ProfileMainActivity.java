@@ -26,6 +26,7 @@ import org.w3c.dom.Text;
 public class ProfileMainActivity  extends AppCompatActivity {
 
     TextView btnRateApp, btnComApp,btnAboutMe,btnAboutMe2,btn_pre;
+    Button ViewProfileBtn;
     Dialog RateAppDialog, ComAppDialog;
     ImageView backBtn;
     TextView editPlanBtn, btnLogout;
@@ -67,6 +68,8 @@ public class ProfileMainActivity  extends AppCompatActivity {
         heightrhange_View=(TextView) findViewById(R.id.PreHeight_profile);
         language_View=(TextView) findViewById(R.id.language_profile);
 
+        ViewProfileBtn = (Button) findViewById(R.id.ViewProfileBtn);
+
 
         Button iconHome = findViewById(R.id.icon_home);
         Button iconFavourite = findViewById(R.id.icon_favorite);
@@ -77,6 +80,13 @@ public class ProfileMainActivity  extends AppCompatActivity {
         iconFavourite.setTextColor(getResources().getColor(R.color.black));
         iconChat.setTextColor(getResources().getColor(R.color.black));
         iconProfile.setTextColor(getResources().getColor(R.color.purple_2));
+
+        ViewProfileBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileMainActivity.this, ProfileView.class);
+            startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        });
 
         iconChat.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileMainActivity.this, MessageActivity.class);

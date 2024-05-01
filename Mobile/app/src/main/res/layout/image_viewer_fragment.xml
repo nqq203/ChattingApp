@@ -1,0 +1,23 @@
+<!-- fragment_image_viewer.xml -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:id="@+id/image_fullscreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside"/>
+
+    <ImageView
+        android:id="@+id/button_close"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="end|top"
+        android:layout_margin="16dp"
+        android:src="@drawable/baseline_close_24"/>
+</FrameLayout>
