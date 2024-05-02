@@ -2,11 +2,13 @@ package com.main.activities;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.content.ContentValues.TAG;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +49,7 @@ import com.group4.matchmingle.databinding.ImageViewerFragmentBinding;
 import com.main.MemoryData;
 import com.main.adapters.ChatAdapter;
 import com.main.entities.ChatList;
+import com.main.fragments.ColorPickerDialogFragment;
 import com.main.fragments.ImageViewerFragment;
 import com.main.fragments.InfoDialogFragment;
 
@@ -59,12 +63,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnImageClickListener {
+public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnImageClickListener, ColorPickerDialogFragment.ColorPickerDialogListener {
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private final List<ChatList> chatLists = new ArrayList<>();
     private UserSessionManager sessionManager;
     private String chatKey;
     private String myPhone;
+    private String guestPhone;
     private RecyclerView chatRecyclerView;
     private ChatAdapter chatAdapter;
     private boolean loadingFirstTime = true;
@@ -79,7 +84,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
         setContentView(R.layout.chat_activity);
 
         sessionManager = new UserSessionManager(getApplicationContext());
-
+        final RelativeLayout chatLayout = findViewById(R.id.chat_layout);
         final ImageView backBtn = findViewById(R.id.back_chat);
         final TextView senderName = findViewById(R.id.user_chat_name);
         final EditText msgEditText = findViewById(R.id.edit_text_message);
@@ -139,18 +144,45 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
                     if (snapshot.child("Chat").child(chatKey).hasChild("messages")) {
                         chatLists.clear();
                         for (DataSnapshot messagesSnapshot : snapshot.child("Chat").child(chatKey).child("messages").getChildren()) {
+                             String user1 = snapshot.child("Chat").child(chatKey).child("user1").getValue(String.class);
+                             String user2 = snapshot.child("Chat").child(chatKey).child("user2").getValue(String.class);
+                             Drawable chatColor = null;
+                             String myChatBgColor = null;
+                             if (user1.equals(myPhone)) {
+                                 guestPhone = user2;
+                                 myChatBgColor = snapshot.child("Message").child(myPhone).child(user2).child("myChatBgColor").getValue(String.class);
+                             }
+                             else {
+                                 guestPhone = user1;
+                                 myChatBgColor = snapshot.child("Message").child(myPhone).child(user1).child("myChatBgColor").getValue(String.class);
+                             }
+                            if (myChatBgColor != null) {
+                                if (myChatBgColor.equals("purple")) {
+                                    chatColor = getResources().getDrawable(R.drawable.msg_background);
+                                }
+                                else if (myChatBgColor.equals("orange")) {
+                                    chatColor = getResources().getDrawable(R.drawable.msg_background_orange);
+                                }
+                                else if (myChatBgColor.equals("blue")) {
+                                    chatColor = getResources().getDrawable(R.drawable.msg_background_blue);
+                                }
+                            }
+                            else {
+                                chatColor = getResources().getDrawable(R.drawable.msg_background);;
+                            }
                             if (messagesSnapshot.hasChild("msg") && messagesSnapshot.hasChild("phoneNumber")) {
                                 final String messageTimestamps = messagesSnapshot.getKey();
                                 final String getPhone = messagesSnapshot.child("phoneNumber").getValue(String.class);
                                 final String getMsg = messagesSnapshot.child("msg").getValue(String.class);
                                 final String getType = messagesSnapshot.child("type").getValue(String.class);
-                                final String getName = snapshot.child("Message").child(myPhone).child(getPhone).child("fullname").getValue(String.class);
+                                String getName = snapshot.child("Message").child(myPhone).child(getPhone).child("fullname").getValue(String.class);
 
                                 Timestamp timestamp = new Timestamp(Long.parseLong(messageTimestamps));
                                 Date date = new Date(timestamp.getTime());
                                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
                                 SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("hh:mm aa", Locale.getDefault());
-                                ChatList chatList = new ChatList(getPhone, getName, getMsg, simpleDateFormat.format(date), simpleTimeFormat.format(date), getType);
+
+                                ChatList chatList = new ChatList(getPhone, getName, getMsg, simpleDateFormat.format(date), simpleTimeFormat.format(date), getType, chatColor);
                                 chatLists.add(chatList);
 
                                 if (loadingFirstTime || Long.parseLong(messageTimestamps) > Long.parseLong(MemoryData.getLastMsg(ChatActivity.this, chatKey))) {
@@ -349,5 +381,22 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
     public void showInfoDialog() {
         InfoDialogFragment dialog = new InfoDialogFragment();
         dialog.show(getSupportFragmentManager(), "InfoDialogFragment");
+    }
+
+    @Override
+    public void onColorSelected(String color) {
+        databaseReference.child("Message").child(myPhone).child(guestPhone).child("myChatBgColor").setValue(color);
+        Drawable bgColor = getResources().getDrawable(R.drawable.msg_background);
+        if (color.equals("blue")) {
+            bgColor = getResources().getDrawable(R.drawable.msg_background_blue);
+        }
+        else if (color.equals("purple")) {
+            bgColor = getResources().getDrawable(R.drawable.msg_background);
+        }
+        else if (color.equals("orange")) {
+            bgColor = getResources().getDrawable(R.drawable.msg_background_orange);
+        }
+        TextView msgItem = findViewById(R.id.msg_item);
+        msgItem.setBackground(bgColor);
     }
 }

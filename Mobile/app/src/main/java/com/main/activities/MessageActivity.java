@@ -1,9 +1,11 @@
 package com.main.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
@@ -27,7 +29,7 @@ import com.main.fragments.ColorPickerDialogFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageActivity  extends AppCompatActivity implements ColorPickerDialogFragment.ColorPickerDialogListener{
+public class MessageActivity  extends AppCompatActivity {
     private final List<MessageList> messageLists = new ArrayList<>();
     private UserSessionManager sessionManager;
     private String myPhone;
@@ -148,9 +150,16 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
                                                     final Long getMessageKey = Long.parseLong(chatDataSnapshot.getKey());
                                                     final String getGuestPhone = chatDataSnapshot.child("phoneNumber").getValue(String.class);
 
+                                                    String typeMsg = chatDataSnapshot.child("type").getValue(String.class);
                                                     lastMessage = chatDataSnapshot.child("msg").getValue(String.class);
-                                                    if (lastMessage.length() > 30) {
+                                                    if (typeMsg.equals("image")) {
+                                                        lastMessage = "Have sent a image message";
+                                                    }
+                                                    else if(lastMessage.length() > 30 && typeMsg.equals("text")) {
                                                         lastMessage = lastMessage.substring(0, 30) + "...";
+                                                    }
+                                                    else if (lastMessage.equals("audio")) {
+                                                        lastMessage = "Have sent a voice message";
                                                     }
                                                     if (getMessageKey > getLastSeenMessage && !myPhone.equals(getGuestPhone)) {
                                                         unseenMessage = 1;
@@ -186,12 +195,6 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
 
             }
         });
-    }
-
-    @Override
-    public void onColorSelected(int color) {
-        RelativeLayout chatLayout = findViewById(R.id.chat_layout);
-        chatLayout.setBackgroundColor(color);
     }
 
     @Override
