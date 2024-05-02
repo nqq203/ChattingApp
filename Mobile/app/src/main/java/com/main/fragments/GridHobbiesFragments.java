@@ -3,6 +3,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +14,26 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.group4.matchmingle.R;
+import com.main.activities.MatchesActivity;
 import com.main.activities.MessageActivity;
 import com.main.activities.SharingHobbiesActivity;
 import com.main.adapters.HobbiesAdapter;
+import com.main.adapters.MatchesAdapter;
 import com.main.entities.HobbiesItem;
 
 import java.util.ArrayList;
 import java.util.List;
 import com.main.callbacks.MainCallbacks;
+import com.main.entities.MatchesItem;
 
 public class GridHobbiesFragments extends Fragment{
 
@@ -36,6 +46,8 @@ public class GridHobbiesFragments extends Fragment{
     private FrameLayout hobbiesButn;
     String hobbiesEnter;
     private ImageView backBtn;
+    String userId="us1";
+    HobbiesAdapter adapter;
 
     public static GridHobbiesFragments newInstance(String strArg) {
         GridHobbiesFragments fragment = new GridHobbiesFragments();
@@ -73,9 +85,142 @@ public class GridHobbiesFragments extends Fragment{
         gridView=(GridView) viewList.findViewById(R.id.grid_hobbies);
         ArrayList<HobbiesItem> HobbiesArrayList= new ArrayList<HobbiesItem>();
 
+        FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Hobbies/"+userId);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //String value = dataSnapshot.getValue(String.class);
+
+                //System.out.println("Loading data: "+value);
+                if (dataSnapshot.exists()) {
+                    HobbiesArrayList.clear();
+                    for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                        String key = snap.getKey();
+                        Log.d("KEY NE",key);
+                        String isSelected="0";
+                        if(!key.equals("AllHobby")){
+                            isSelected  = snap.child("isSelected").getValue(String.class);
+                            Log.d("isSelected NE",isSelected);
+                        }
 
 
-        HobbiesArrayList.add(new HobbiesItem("GAME",R.drawable.game,false,R.drawable.border_hobbies));
+
+                        if (key.equals("GAME")) {
+                            if (isSelected.equals("0")) {
+                                HobbiesArrayList.add(new HobbiesItem("GAME", R.drawable.game, false, R.drawable.border_hobbies));
+                            } else {
+                                HobbiesArrayList.add(new HobbiesItem("GAME", R.drawable.movie, true, R.drawable.border_hobbies_clicked));
+
+                            }
+                        }
+
+                        if (key.equals("SPORT")) {
+
+                            if (isSelected.equals("0") ){
+                                Log.d("VO DAY NE","NO DA VO DC DAY");
+                                HobbiesArrayList.add(new HobbiesItem("SPORT", R.drawable.border_sport, false, R.drawable.border_hobbies));
+                            } else {
+                                Log.d("SPORT","SPORT HERE");
+                                HobbiesArrayList.add(new HobbiesItem("SPORT", R.drawable.border_sport, true, R.drawable.border_hobbies_clicked));
+                            }
+                        }
+                        if (key.equals("PHOTOGRAPHY")) {
+                            if (isSelected.equals("0")) {
+                                HobbiesArrayList.add(new HobbiesItem("PHOTOGRAPHY", R.drawable.photography, false, R.drawable.border_hobbies));
+                            } else {
+                                HobbiesArrayList.add(new HobbiesItem("PHOTOGRAPHY", R.drawable.photography, true, R.drawable.border_hobbies_clicked));
+
+                            }
+                        }
+                        if (key.equals("READING")) {
+                            if (isSelected.equals("0")) {
+                                HobbiesArrayList.add(new HobbiesItem("READING", R.drawable.reading, false, R.drawable.border_hobbies));
+                            } else {
+                                HobbiesArrayList.add(new HobbiesItem("READING", R.drawable.reading, true, R.drawable.border_hobbies_clicked));
+
+                            }
+                        }
+                        if (key.equals("DRAWING")) {
+                            if (isSelected.equals("0")) {
+                                HobbiesArrayList.add(new HobbiesItem("DRAWING", R.drawable.draw, false, R.drawable.border_hobbies));
+                            } else {
+                                HobbiesArrayList.add(new HobbiesItem("DRAWING", R.drawable.draw, true, R.drawable.border_hobbies_clicked));
+
+                            }
+                        }
+                        if (key.equals("FOODS")) {
+                            if (isSelected.equals("0")) {
+                                HobbiesArrayList.add(new HobbiesItem("FOODS", R.drawable.food, false, R.drawable.border_hobbies));
+                            } else {
+                                HobbiesArrayList.add(new HobbiesItem("FOODS", R.drawable.food, true, R.drawable.border_hobbies_clicked));
+
+                            }
+                        }
+                        if (key.equals("FRIENDS")) {
+                            if (isSelected.equals("0")) {
+                                HobbiesArrayList.add(new HobbiesItem("FRIENDS", R.drawable.friends, false, R.drawable.border_hobbies));
+                            } else {
+                                HobbiesArrayList.add(new HobbiesItem("FRIENDS", R.drawable.friends, true, R.drawable.border_hobbies_clicked));
+
+                            }
+                        }
+                        if (key.equals("CONNECT")) {
+                            if (isSelected.equals("0")) {
+                                HobbiesArrayList.add(new HobbiesItem("CONNECT", R.drawable.connect, false, R.drawable.border_hobbies));
+                            } else {
+                                HobbiesArrayList.add(new HobbiesItem("CONNECT", R.drawable.connect, true, R.drawable.border_hobbies_clicked));
+
+                            }
+                        }
+                        if (key.equals("COFFE")) {
+                            if (isSelected.equals("0")) {
+                                HobbiesArrayList.add(new HobbiesItem("COFFE", R.drawable.coffe, false, R.drawable.border_hobbies));
+                            } else {
+                                HobbiesArrayList.add(new HobbiesItem("COFFE", R.drawable.coffe, true, R.drawable.border_hobbies_clicked));
+
+                            }
+                        }
+                        if (key.equals("RUNNING")) {
+                            if (isSelected.equals("0")) {
+                                HobbiesArrayList.add(new HobbiesItem("RUNNING", R.drawable.running, false, R.drawable.border_hobbies));
+                            } else {
+                                HobbiesArrayList.add(new HobbiesItem("RUNNING", R.drawable.running, true, R.drawable.border_hobbies_clicked));
+
+                            }
+                        }
+                        if (key.equals("FILM")) {
+                            if (isSelected.equals("0")) {
+                                HobbiesArrayList.add(new HobbiesItem("FILM", R.drawable.movie, false, R.drawable.border_hobbies));
+                            } else {
+                                HobbiesArrayList.add(new HobbiesItem("FILM", R.drawable.movie, true, R.drawable.border_hobbies_clicked));
+
+                            }
+                        }
+                        if (key.equals("MUSIC")) {
+                            if (isSelected.equals("0")) {
+                                HobbiesArrayList.add(new HobbiesItem("MUSIC", R.drawable.movie, false, R.drawable.border_hobbies));
+                            } else {
+                                HobbiesArrayList.add(new HobbiesItem("MUSIC", R.drawable.movie, true, R.drawable.border_hobbies_clicked));
+
+                            }
+                        }
+
+                    }
+                    adapter= new HobbiesAdapter(getContext(),HobbiesArrayList);
+                    gridView.setAdapter(adapter);
+                }
+                else {
+                    System.out.println("Cant find data");
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("Error: " + databaseError.getMessage());
+            }
+        });
+
+        HobbiesArrayList.add(new HobbiesItem("GAME",R.drawable.game,true,R.drawable.border_hobbies));
         HobbiesArrayList.add(new HobbiesItem("MUSIC",R.drawable.music,false,R.drawable.border_hobbies));
         HobbiesArrayList.add(new HobbiesItem("FILM",R.drawable.movie,false,R.drawable.border_hobbies));
         HobbiesArrayList.add(new HobbiesItem("RUNNING",R.drawable.running,false,R.drawable.border_hobbies));
@@ -86,10 +231,11 @@ public class GridHobbiesFragments extends Fragment{
         HobbiesArrayList.add(new HobbiesItem("DRAWING",R.drawable.draw,false,R.drawable.border_hobbies));
         HobbiesArrayList.add(new HobbiesItem("READING",R.drawable.reading,false,R.drawable.border_hobbies));
         HobbiesArrayList.add(new HobbiesItem("PHOTOGRAPHY",R.drawable.photography,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("MORE",R.drawable.more,false,R.drawable.border_hobbies));
+        HobbiesArrayList.add(new HobbiesItem("SPORT",R.drawable.border_sport,false,R.drawable.border_hobbies));
 
         HobbiesAdapter adapter= new HobbiesAdapter(getContext(),HobbiesArrayList);
         gridView.setAdapter(adapter);
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -99,7 +245,6 @@ public class GridHobbiesFragments extends Fragment{
                     selectedHobby.setBackground(R.drawable.border_hobbies_clicked);
                     //hobbiesButn.setBackgroundResource(selectedHobby.getBackground());
                     selectedHobby.setSelected(true);
-
                     main.onMsgFromFragToMain("add", selectedHobby.getHobbies());
                 }
                 else if(selectedHobby.getSelected()==true)

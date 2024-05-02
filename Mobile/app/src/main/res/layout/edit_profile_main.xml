@@ -530,17 +530,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="45dp"
                     android:layout_marginTop="20dp"
-                    android:text="Languages"
+                    android:text="Hobbies"
                     android:textSize="20dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="170dp"
+                    android:layout_marginStart="220dp"
                     android:layout_marginTop="20dp"
                     android:clickable="true"
                     android:onClick="onClick"
+                    android:id="@+id/hobby_edit"
                     android:text="Edit"
                     android:textColor="@color/blue"
                     android:textSize="16dp"
@@ -564,18 +566,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="50dp"
                     android:layout_marginTop="12dp"
-                    android:text="Language"
+                    android:text="Hobbies"
                     android:textSize="18dp" />
 
                 <TextView
                     android:layout_marginTop="12dp"
-                    android:layout_marginStart="300dp"
+                    android:layout_marginStart="270dp"
                     android:id="@+id/language_profile"
-                    android:layout_width="65dp"
+                    android:layout_width="100dp"
                     android:layout_height="match_parent"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="English"
+                    android:text="Click on edit "
                     android:textColor="@color/gray"
                     android:textSize="16dp"
                     />

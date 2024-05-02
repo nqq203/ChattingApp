@@ -25,7 +25,7 @@ import org.w3c.dom.Text;
 
 public class ProfileMainActivity  extends AppCompatActivity {
 
-    TextView btnRateApp, btnComApp,btnAboutMe,btnAboutMe2,btn_pre;
+    TextView btnRateApp, btnComApp,btnAboutMe,btnAboutMe2,btn_pre,btnHobbyEdit;
     Button ViewProfileBtn;
     Dialog RateAppDialog, ComAppDialog;
     ImageView backBtn;
@@ -53,7 +53,7 @@ public class ProfileMainActivity  extends AppCompatActivity {
         btnLogout = (TextView) findViewById(R.id.btnLogout);
         btnAboutMe=(TextView) findViewById(R.id.btn_edit_aboutme);
         btnAboutMe2=(TextView) findViewById(R.id.btn_aboutme2);
-
+        btnHobbyEdit=(TextView) findViewById(R.id.hobby_edit);
         genderpre_View=(TextView)findViewById(R.id.gender_profile);
         name_View=(TextView) findViewById(R.id.name_profile);
         gender_View=(TextView) findViewById(R.id.genderus_profile);
@@ -80,7 +80,12 @@ public class ProfileMainActivity  extends AppCompatActivity {
         iconFavourite.setTextColor(getResources().getColor(R.color.black));
         iconChat.setTextColor(getResources().getColor(R.color.black));
         iconProfile.setTextColor(getResources().getColor(R.color.purple_2));
-
+        btnHobbyEdit.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileMainActivity.this, SharingHobbiesActivity.class);
+            startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        });
         ViewProfileBtn.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileMainActivity.this, ProfileView.class);
             startActivity(intent);
