@@ -88,5 +88,6 @@ public class SharingHobbiesActivity extends FragmentActivity implements MainCall
     }
     public void onMsgFromFragToMain (String sender, String hobby) {
         TextViewHobbies.onMsgFromMainToFragment(sender, hobby);
+        GridHobbies.onMsgFromMainToFragment(sender,hobby);
     }
 }
