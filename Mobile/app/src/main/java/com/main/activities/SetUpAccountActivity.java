@@ -80,6 +80,8 @@ public class SetUpAccountActivity extends AppCompatActivity {
                                             if (snapshot.hasChild(mPhoneNumber)) {
                                                 databaseReference.child("User").child(mPhoneNumber).child("IsSetup").setValue(true);
                                                 databaseReference.child("User").child(mPhoneNumber).child("imageUrl").setValue(imageUrl);
+                                                UserSessionManager sessionManager = new UserSessionManager(getApplicationContext());
+                                                sessionManager.createUserLoginSession(mPhoneNumber);
                                                 Intent intent = new Intent(SetUpAccountActivity.this, SwipeCardViewActivity.class);
                                                 startActivity(intent);
                                                 finish();

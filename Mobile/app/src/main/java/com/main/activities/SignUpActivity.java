@@ -36,6 +36,8 @@ import com.group4.matchmingle.R;
 import com.main.adapters.SignUpAdapter;
 import com.main.entities.User;
 
+import java.util.ArrayList;
+
 public class SignUpActivity extends AppCompatActivity {
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private EditText editFullname, editGender, editBirthDate, editPassword, editPhoneNumber, editConPassword;
@@ -89,11 +91,13 @@ public class SignUpActivity extends AppCompatActivity {
                                 databaseReference.child("User").child(mPhoneNumber).child("gender").setValue(gender);
                                 databaseReference.child("User").child(mPhoneNumber).child("password").setValue(password);
                                 databaseReference.child("User").child(mPhoneNumber).child("IsSetup").setValue(false);
+
+                                // Initialize SuggestionList for new user
+                                initializeSuggestionList(mPhoneNumber);
+
                                 Toast.makeText(SignUpActivity.this, "User register successfully!", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(SignUpActivity.this, SetUpAccountActivity.class);
                                 intent.putExtra("mPhoneNumber", mPhoneNumber);
-                                UserSessionManager sessionManager = new UserSessionManager(getApplicationContext());
-                                sessionManager.createUserLoginSession(mPhoneNumber);
                                 startActivity(intent);
                                 finish();
                             }
@@ -105,6 +109,45 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                     });
                 }
+            }
+        });
+    }
+
+    private void initializeSuggestionList(String mPhoneNumber) {
+        DatabaseReference suggestionRef = databaseReference.child("SuggestionList").child(mPhoneNumber);
+        DatabaseReference otherSuggestionRef = databaseReference.child("SuggestionList");
+        databaseReference.child("User").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String myFullname = snapshot.child(mPhoneNumber).child("fullname").getValue(String.class);
+                String myDate = snapshot.child(mPhoneNumber).child("date").getValue(String.class);
+                String myGender = snapshot.child(mPhoneNumber).child("gender").getValue(String.class);
+                String myImageUrl = snapshot.child(mPhoneNumber).child("imageUrl").getValue(String.class);
+
+                for (DataSnapshot user : snapshot.getChildren()) {
+                    if (!user.getKey().equals(mPhoneNumber)) {
+                        String dbFullname = user.child("fullname").getValue(String.class);
+                        String dbDate = user.child("date").getValue(String.class);
+                        String dbGender = user.child("gender").getValue(String.class);
+                        String dbImageUrl = user.child("imageUrl").getValue(String.class);
+
+
+                        suggestionRef.child(user.getKey()).child("fullname").setValue(dbFullname);
+                        suggestionRef.child(user.getKey()).child("date").setValue(dbDate);
+                        suggestionRef.child(user.getKey()).child("gender").setValue(dbGender);
+                        suggestionRef.child(user.getKey()).child("imageUrl").setValue(dbImageUrl);
+                        otherSuggestionRef.child(user.getKey()).child(mPhoneNumber).child("fullname").setValue(myFullname);
+                        otherSuggestionRef.child(user.getKey()).child(mPhoneNumber).child("date").setValue(myDate);
+                        otherSuggestionRef.child(user.getKey()).child(mPhoneNumber).child("gender").setValue(myGender);
+                        otherSuggestionRef.child(user.getKey()).child(mPhoneNumber).child("imageUrl").setValue(myImageUrl);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }

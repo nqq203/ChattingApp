@@ -3,6 +3,55 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/message_root_layout">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"> <!-- Thêm padding cho layout chính -->
 
+        <ImageView
+            android:id="@+id/user_msg_image"
+            android:layout_width="60dp"
+            android:layout_height="70dp"
+            android:src="@drawable/lisa"
+            android:layout_centerVertical="true" /> <!-- Căn giữa theo chiều dọc -->
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/user_msg_image"
+            android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"> <!-- Căn giữa theo chiều dọc so với ImageView -->
+
+            <TextView
+                android:id="@+id/sender_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="Ngo Quoc Quy" />
+
+            <TextView
+                android:id="@+id/last_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="may dang lam gi vay"
+                android:layout_below="@+id/sender_name"
+                android:layout_marginTop="5dp" /> <!-- Để khoảng cách giữa sender_name và message_text -->
+
+            <TextView
+               android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/circle_background"
+                android:layout_marginEnd="20dp"
+                android:textSize="10sp"
+                android:text="1"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:id="@+id/unseen_message"/> <!-- Căn dưới cùng với message_text -->
+        </RelativeLayout>
+    </RelativeLayout>
 </LinearLayout>

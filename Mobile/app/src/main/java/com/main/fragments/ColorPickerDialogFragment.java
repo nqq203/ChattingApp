@@ -9,12 +9,14 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.group4.matchmingle.R;
 
 public class ColorPickerDialogFragment extends DialogFragment {
 
     public interface ColorPickerDialogListener {
-        void onColorSelected(int color);
+        void onColorSelected(String color);
     }
 
     private ColorPickerDialogListener listener;
@@ -35,18 +37,18 @@ public class ColorPickerDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setTitle("Change Theme Color");
-        builder.setItems(new String[]{"Blue", "White", "Purple"}, new DialogInterface.OnClickListener() {
+        builder.setItems(new String[]{"Blue", "Orange", "Purple"}, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        notifyColorSelected(getResources().getColor(R.color.blue_1));
+                        notifyColorSelected("blue");
                         break;
                     case 1:
-                        notifyColorSelected(getResources().getColor(R.color.white));
+                        notifyColorSelected("orange");
                         break;
                     case 2:
-                        notifyColorSelected(getResources().getColor(R.color.purple_1));
+                        notifyColorSelected("purple");
                         break;
                 }
             }
@@ -55,7 +57,7 @@ public class ColorPickerDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    private void notifyColorSelected(int color) {
+    private void notifyColorSelected(String color) {
         if (listener != null) {
             listener.onColorSelected(color);
         }

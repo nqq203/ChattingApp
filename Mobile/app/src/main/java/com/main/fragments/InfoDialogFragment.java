@@ -30,22 +30,8 @@ public class InfoDialogFragment extends DialogFragment {
         // Đặt tiêu đề cho Dialog
         builder.setTitle("Options");
 
-        // Sử dụng LayoutInflater để inflate custom layout
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.closefriend_options_diaglog, null);
-
-        // Lấy tham chiếu đến Switch và thiết lập trạng thái ban đầu dựa trên SharedPreferences
-        Switch closeFriendSwitch = dialogView.findViewById(R.id.switch_close_friend);
-        SharedPreferences prefs = getActivity().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
-        closeFriendSwitch.setChecked(prefs.getBoolean("CloseFriendEnabled", false));
-
-        closeFriendSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // Lưu trạng thái mới vào SharedPreferences
-            prefs.edit().putBoolean("CloseFriendEnabled", isChecked).apply();
-        });
-
         // Thêm danh sách lựa chọn
-        builder.setItems(new String[]{"Report", "Unmatch", "Sharing Hobbies", "Change Theme Color"}, new DialogInterface.OnClickListener() {
+        builder.setItems(new String[]{"Report", "Sharing Hobbies", "Change Theme Color"}, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Xử lý sự kiện click vào từng item
                 // 'which' là vị trí của item trong danh sách
@@ -56,15 +42,11 @@ public class InfoDialogFragment extends DialogFragment {
                         reportFragment.show(getActivity().getSupportFragmentManager(), "REPORT_DIALOG");
                         break;
                     case 1:
-                        // Unmatch
-                        // Get list friend from database then remove it from list user
-                        break;
-                    case 2:
                         // Sharing Hobbies
                         Intent intentHobbies = new Intent(getActivity(), XemHobbiesActivity.class);
                         startActivity(intentHobbies);
                         break;
-                    case 3:
+                    case 2:
                         dismiss();
                         ColorPickerDialogFragment newFragment = new ColorPickerDialogFragment();
                         newFragment.show(getActivity().getSupportFragmentManager(), "INFO_DIALOG");
@@ -72,25 +54,8 @@ public class InfoDialogFragment extends DialogFragment {
                 }
             }
         });
-        builder.setView(dialogView);
 
         return builder.create();
-    }
-
-    private void toggleCloseFriend() {
-        SharedPreferences prefs = getActivity().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
-        boolean isCloseFriendEnabled = prefs.getBoolean("CloseFriendEnabled", false); // Mặc định là false
-        // Toggle giá trị
-        prefs.edit().putBoolean("CloseFriendEnabled", !isCloseFriendEnabled).apply();
-
-        // Cập nhật UI hoặc logic tại đây nếu cần
-        if (isCloseFriendEnabled) {
-            Log.d("InfoDialogFragment", "Close Friend disabled");
-            // Thực hiện hành động khi tắt
-        } else {
-            Log.d("InfoDialogFragment", "Close Friend enabled");
-            // Thực hiện hành động khi bật
-        }
     }
 }
 
