@@ -46,7 +46,7 @@ public class SwipeCardFragment extends Fragment {
     private TextView noItemView;
     private RelativeLayout cardWrapper;
     private List<User> users = new ArrayList<>();
-    private int currentUserIndex = users.isEmpty() ? - 1 : 0;
+    private int currentUserIndex = users.isEmpty() ? -1 : 0;
     private UserSessionManager sessionManager;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
     String mPhoneNumber;
@@ -115,12 +115,14 @@ public class SwipeCardFragment extends Fragment {
             public void onSwipeLeft() {
                 simulateSwipeLeft();
             }
+
             @Override
             public void onSwipeRight() {
                 simulateSwipeRight();
             }
         });
     }
+
     public void simulateSwipeRight() {
         cardView.animate()
                 .translationX(1000)
@@ -200,6 +202,7 @@ public class SwipeCardFragment extends Fragment {
 
     private void addUserToOneWayMatchList(String userId) {
         DatabaseReference userInfo = databaseReference.child("User").child(userId);
+
         userInfo.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -209,23 +212,78 @@ public class SwipeCardFragment extends Fragment {
                 String userGender = snapshot.child("gender").getValue(String.class);
                 String userImageUrl = snapshot.child("imageUrl").getValue(String.class);
 
+                // User for oneway match list
                 HashMap<String, Object> user = new HashMap<>();
                 user.put("fullname", userFullname);
                 user.put("date", userDate);
                 user.put("gender", userGender);
                 user.put("imageUrl", userImageUrl);
-
-                // Update the OneWayMatchesList with the user data
                 databaseReference.child("OneWayMatchesList").child(mPhoneNumber).child(userId).setValue(user)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                Log.d(TAG, "User added to OneWayMatchList: " + userId);
                                 // Remove user from suggestions once added to OneWayMatchList
                                 removeUserFromSuggestions(userId);
-                            } else {
-                                Log.e(TAG, "Failed to add user to OneWayMatchList", task.getException());
                             }
                         });
+                databaseReference.child("OneWayMatchesList").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                            String otherPhone = userSnapshot.getKey();
+                            if (otherPhone.equals(mPhoneNumber)) {
+                                HashMap<String, Object> otherInfo = new HashMap<>();
+
+                                otherInfo.put("name", userFullname);
+                                otherInfo.put("age", userDate);
+                                otherInfo.put("pic", userImageUrl);
+                                databaseReference.child("User").child(mPhoneNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        HashMap<String, Object> myInfo = new HashMap<>();
+                                        String myFullname = snapshot.child("fullname").getValue(String.class);
+                                        String myDate = snapshot.child("date").getValue(String.class);
+                                        String myImageUrl = snapshot.child("imageUrl").getValue(String.class);
+                                        myInfo.put("name", myFullname);
+                                        myInfo.put("age", myDate);
+                                        myInfo.put("pic", myImageUrl);
+
+                                        databaseReference.child("Matches").child(userId).child(mPhoneNumber).setValue(myInfo);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                                databaseReference.child("Matches").child(mPhoneNumber).child(userId).setValue(otherInfo);
+                                DatabaseReference removeRef1 = databaseReference.child("OneWayMatchesList").child(userId).child(mPhoneNumber);
+                                DatabaseReference removeRef2 = databaseReference.child("OneWayMatchesList").child(mPhoneNumber).child(userId);
+
+                                removeRef1.removeValue().addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        Log.d(TAG, "User removed from oneway list: " + userId);
+                                    } else {
+                                        Log.e(TAG, "Failed to remove user from oneway list", task.getException());
+                                    }
+                                });
+
+                                removeRef2.removeValue().addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        Log.d(TAG, "User removed from oneway list: " + mPhoneNumber);
+                                    } else {
+                                        Log.e(TAG, "Failed to remove user from oneway list", task.getException());
+                                    }
+                                });
+                                removeUserFromSuggestions(userId);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
 
             @Override

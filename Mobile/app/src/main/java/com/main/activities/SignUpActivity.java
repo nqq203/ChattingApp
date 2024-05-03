@@ -119,6 +119,11 @@ public class SignUpActivity extends AppCompatActivity {
         databaseReference.child("User").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String myFullname = snapshot.child(mPhoneNumber).child("fullname").getValue(String.class);
+                String myDate = snapshot.child(mPhoneNumber).child("date").getValue(String.class);
+                String myGender = snapshot.child(mPhoneNumber).child("gender").getValue(String.class);
+                String myImageUrl = snapshot.child(mPhoneNumber).child("imageUrl").getValue(String.class);
+
                 for (DataSnapshot user : snapshot.getChildren()) {
                     if (!user.getKey().equals(mPhoneNumber)) {
                         String dbFullname = user.child("fullname").getValue(String.class);
@@ -126,14 +131,15 @@ public class SignUpActivity extends AppCompatActivity {
                         String dbGender = user.child("gender").getValue(String.class);
                         String dbImageUrl = user.child("imageUrl").getValue(String.class);
 
+
                         suggestionRef.child(user.getKey()).child("fullname").setValue(dbFullname);
                         suggestionRef.child(user.getKey()).child("date").setValue(dbDate);
                         suggestionRef.child(user.getKey()).child("gender").setValue(dbGender);
                         suggestionRef.child(user.getKey()).child("imageUrl").setValue(dbImageUrl);
-                        otherSuggestionRef.child(user.getKey()).child(mPhoneNumber).child("fullname").setValue(dbFullname);
-                        otherSuggestionRef.child(user.getKey()).child(mPhoneNumber).child("date").setValue(dbDate);
-                        otherSuggestionRef.child(user.getKey()).child(mPhoneNumber).child("gender").setValue(dbGender);
-                        otherSuggestionRef.child(user.getKey()).child(mPhoneNumber).child("imageUrl").setValue(dbImageUrl);
+                        otherSuggestionRef.child(user.getKey()).child(mPhoneNumber).child("fullname").setValue(myFullname);
+                        otherSuggestionRef.child(user.getKey()).child(mPhoneNumber).child("date").setValue(myDate);
+                        otherSuggestionRef.child(user.getKey()).child(mPhoneNumber).child("gender").setValue(myGender);
+                        otherSuggestionRef.child(user.getKey()).child(mPhoneNumber).child("imageUrl").setValue(myImageUrl);
                     }
 
                 }
