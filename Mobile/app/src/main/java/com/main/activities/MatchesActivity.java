@@ -32,11 +32,15 @@ import java.util.Map;
 public class MatchesActivity extends AppCompatActivity {
 
     private GridView gridView;
-    String userId="us1";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.matches_list);
+
+        UserSessionManager sessionManager = new UserSessionManager(getBaseContext());
+        HashMap<String, String> userDetails = sessionManager.getUserDetails();
+        String userId=userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
 
         Button iconHome = findViewById(R.id.icon_home);
         Button iconFavourite = findViewById(R.id.icon_favorite);

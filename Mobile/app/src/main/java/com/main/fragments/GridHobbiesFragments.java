@@ -26,11 +26,13 @@ import com.group4.matchmingle.R;
 import com.main.activities.MatchesActivity;
 import com.main.activities.MessageActivity;
 import com.main.activities.SharingHobbiesActivity;
+import com.main.activities.UserSessionManager;
 import com.main.adapters.HobbiesAdapter;
 import com.main.adapters.MatchesAdapter;
 import com.main.entities.HobbiesItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import com.main.callbacks.MainCallbacks;
 import com.main.entities.MatchesItem;
@@ -46,7 +48,7 @@ public class GridHobbiesFragments extends Fragment{
     private FrameLayout hobbiesButn;
     String hobbiesEnter;
     private ImageView backBtn;
-    String userId="us1";
+    String userId;
     HobbiesAdapter adapter;
     ArrayList<HobbiesItem> HobbiesArrayList;
     FirebaseDatabase firebaseDatabase_UPD=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
@@ -61,7 +63,9 @@ public class GridHobbiesFragments extends Fragment{
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         try {
             context = getActivity();
             main = (SharingHobbiesActivity) getActivity();
@@ -69,6 +73,7 @@ public class GridHobbiesFragments extends Fragment{
         catch(IllegalStateException e) {
             throw new IllegalStateException("MainActivity must implement callbacks");
         }
+
     }
 
 
@@ -77,6 +82,11 @@ public class GridHobbiesFragments extends Fragment{
         View viewList= inflater.inflate(R.layout.frag_gridhobbies, container, false);
         searchHobbies=(EditText) viewList.findViewById(R.id.SearchBar);
         backBtn = (ImageView) viewList.findViewById(R.id.back_arrow);
+
+        UserSessionManager sessionManager = new UserSessionManager(getContext());
+        HashMap<String, String> userDetails = sessionManager.getUserDetails();
+        userId = userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
+
 
         backBtn.setOnClickListener(v -> {
             getActivity().onBackPressed();
@@ -205,7 +215,50 @@ public class GridHobbiesFragments extends Fragment{
                     gridView.setAdapter(adapter);
                 }
                 else {
-                    System.out.println("Cant find data");
+
+                    FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+                    DatabaseReference databaseReference = firebaseDatabase.getReference("Hobbies/"+userId);
+
+                    HashMap<String, Object> hobbiesMap = new HashMap<>();
+                    hobbiesMap.put("AllHobby", "");
+                    hobbiesMap.put("GAME", new HashMap<String, Object>() {{
+                        put("isSelected", "0");
+                    }});
+                    hobbiesMap.put("MUSIC", new HashMap<String, Object>() {{
+                        put("isSelected", "0");
+                    }});
+                    hobbiesMap.put("FILM", new HashMap<String, Object>() {{
+                        put("isSelected", "0");
+                    }});
+                    hobbiesMap.put("RUNNING", new HashMap<String, Object>() {{
+                        put("isSelected", "0");
+                    }});
+                    hobbiesMap.put("COFFE", new HashMap<String, Object>() {{
+                        put("isSelected", "0");
+                    }});
+                    hobbiesMap.put("CONNECT", new HashMap<String, Object>() {{
+                        put("isSelected", "0");
+                    }});
+                    hobbiesMap.put("FRIENDS", new HashMap<String, Object>() {{
+                        put("isSelected", "0");
+                    }});
+                    hobbiesMap.put("FOODS", new HashMap<String, Object>() {{
+                        put("isSelected", "0");
+                    }});
+                    hobbiesMap.put("DRAWING", new HashMap<String, Object>() {{
+                        put("isSelected", "0");
+                    }});
+                    hobbiesMap.put("READING", new HashMap<String, Object>() {{
+                        put("isSelected", "0");
+                    }});
+                    hobbiesMap.put("PHOTOGRAPHY", new HashMap<String, Object>() {{
+                        put("isSelected", "0");
+                    }});
+                    hobbiesMap.put("SPORT", new HashMap<String, Object>() {{
+                        put("isSelected", "0");
+                    }});
+                    databaseReference.setValue(hobbiesMap);
+
                 }
             }
             @Override

@@ -86,6 +86,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -96,7 +97,7 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 public class NotificationActivity extends AppCompatActivity {
     // creating a variable for recycler view,
     // array list and adapter class.
-    String userId="us1";
+    String userId;
     private RecyclerView notiRV;
     private ArrayList<NotificationItem> notiArrayList;
     private NotificationAdapter notiAdapter;
@@ -105,6 +106,12 @@ public class NotificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recyclerview_noti);
+
+        UserSessionManager sessionManager = new UserSessionManager(getBaseContext());
+        HashMap<String, String> userDetails = sessionManager.getUserDetails();
+        userId=userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
+
+
 
         // initializing our variables.
         notiRV = findViewById(R.id.noti_list);

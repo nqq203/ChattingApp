@@ -47,13 +47,18 @@ public class Subscription_Activity extends AppCompatActivity {
     private Button btn1;
     Dialog mDialog;
     private ImageView backBtn;
-    String userId="us1";
+    String userId;
     Subscription_Adapter adapter;
     private List<SubscriptionItem> subscriptionItemList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_subscription);
+
+        UserSessionManager sessionManager = new UserSessionManager(getBaseContext());
+        HashMap<String, String> userDetails = sessionManager.getUserDetails();
+        userId=userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
+
 
         txtsearch=(EditText) findViewById(R.id.SearchBar);
         listView=(ListView) findViewById(R.id.grid_sub);
@@ -65,6 +70,7 @@ public class Subscription_Activity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+
         mDialog=new Dialog(this);
 
         subscriptionItemList=new ArrayList<>();
@@ -163,7 +169,6 @@ public class Subscription_Activity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Get the number of children (current data size)
                 long count = dataSnapshot.getChildrenCount();
-
                 // Create a new subscription entry with the incremented key
                 DatabaseReference newSubscriptionRef = databaseReference.child(String.valueOf(count));
 

@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.group4.matchmingle.R;
+import com.main.activities.UserSessionManager;
 import com.main.entities.SubscriptionItem;
 
 import java.util.HashMap;
@@ -40,6 +41,10 @@ public class Subscription_Adapter extends ArrayAdapter<SubscriptionItem> {
         UpContext = context;
         mDialog = new Dialog(mContext);
         UpdateDialog=new Dialog(UpContext);
+
+        UserSessionManager sessionManager = new UserSessionManager(context);
+        HashMap<String, String> userDetails = sessionManager.getUserDetails();
+        String userId = userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
@@ -58,6 +63,8 @@ public class Subscription_Adapter extends ArrayAdapter<SubscriptionItem> {
         title.setText(Subscription.getTitle());
         plan.setText(Subscription.getPlan());
         timeper.setText(Subscription.getStartDate()+" - "+Subscription.getEndDate());
+
+
 
 
         but_Un.setOnClickListener(new View.OnClickListener() {
