@@ -115,11 +115,12 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void initializeSuggestionList(String mPhoneNumber) {
         DatabaseReference suggestionRef = databaseReference.child("SuggestionList").child(mPhoneNumber);
+        DatabaseReference otherSuggestionRef = databaseReference.child("SuggestionList");
         databaseReference.child("User").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot user : snapshot.getChildren()) {
-                    if (user.getKey() != mPhoneNumber) {
+                    if (!user.getKey().equals(mPhoneNumber)) {
                         String dbFullname = user.child("fullname").getValue(String.class);
                         String dbDate = user.child("date").getValue(String.class);
                         String dbGender = user.child("gender").getValue(String.class);
@@ -129,7 +130,12 @@ public class SignUpActivity extends AppCompatActivity {
                         suggestionRef.child(user.getKey()).child("date").setValue(dbDate);
                         suggestionRef.child(user.getKey()).child("gender").setValue(dbGender);
                         suggestionRef.child(user.getKey()).child("imageUrl").setValue(dbImageUrl);
+                        otherSuggestionRef.child(user.getKey()).child(mPhoneNumber).child("fullname").setValue(dbFullname);
+                        otherSuggestionRef.child(user.getKey()).child(mPhoneNumber).child("date").setValue(dbDate);
+                        otherSuggestionRef.child(user.getKey()).child(mPhoneNumber).child("gender").setValue(dbGender);
+                        otherSuggestionRef.child(user.getKey()).child(mPhoneNumber).child("imageUrl").setValue(dbImageUrl);
                     }
+
                 }
             }
 
