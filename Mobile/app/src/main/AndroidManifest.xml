@@ -100,6 +100,8 @@
             android:exported="true"/>
         <activity android:name="com.main.activities.PreferencesEdit"
             android:exported="true"/>
+        <activity android:name="com.main.activities.XemHobbiesActivity"
+            android:exported="true"/>
 
         <meta-data
             android:name="preloaded_fonts"

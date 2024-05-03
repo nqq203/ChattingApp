@@ -98,10 +98,11 @@ public class MatchesActivity extends AppCompatActivity {
                         String key = snap.getKey();
                         //MatchesItem matchesItem = snap.getValue(MatchesItem.class);
                         String name = snap.child("name").getValue(String.class);
-                        int age = snap.child("age").getValue(Integer.class);
+                        String age = snap.child("age").getValue(String.class);
                         String pic = snap.child("pic").getValue(String.class);
                         String id = snap.child("userid").getValue(String.class);
-                        MatchesItem matchesItem= new MatchesItem(name,pic,age,key);
+
+                        MatchesItem matchesItem= new MatchesItem(name,pic,20,key);
 
                         MatchesArrayList.add(matchesItem);
                     }
