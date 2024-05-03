@@ -31,7 +31,7 @@ public class Subscription_Adapter extends ArrayAdapter<SubscriptionItem> {
     private Context mContext,UpContext;
     private EditText titleEditText,StartDateEditText,EndDateEditText,NoteEditText;
     private Dialog mDialog,UpdateDialog;
-    String userId="us1";
+    String userId;
     SubscriptionItem Subscription;
 
     public Subscription_Adapter (Context context, List<SubscriptionItem> Subscription)
@@ -44,7 +44,7 @@ public class Subscription_Adapter extends ArrayAdapter<SubscriptionItem> {
 
         UserSessionManager sessionManager = new UserSessionManager(context);
         HashMap<String, String> userDetails = sessionManager.getUserDetails();
-        String userId = userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
+        userId = userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent)

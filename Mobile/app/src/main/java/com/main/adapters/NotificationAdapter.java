@@ -67,21 +67,34 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.group4.matchmingle.R;
+import com.main.activities.UserSessionManager;
 import com.main.entities.NotificationItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.RecyclerViewHolder> {
     private ArrayList<NotificationItem> NotiDataArrayList;
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private Context mcontext;
+    String userId,profile_pic;
 
     // creating a constructor class.
     public NotificationAdapter(ArrayList<NotificationItem> recyclerDataArrayList, Context mcontext) {
         this.NotiDataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
+
+        UserSessionManager sessionManager = new UserSessionManager(mcontext);
+        HashMap<String, String> userDetails = sessionManager.getUserDetails();
+        userId = userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
     }
 
     @NonNull
@@ -97,10 +110,33 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         // Set the data to textview from our modal class.
         NotificationItem recyclerData = NotiDataArrayList.get(position);
 
+        FirebaseDatabase firebaseDatabase1=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        DatabaseReference databaseReference1 = firebaseDatabase1.getReference("User/"+userId);
+        databaseReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    profile_pic = dataSnapshot.child("imageUrl").getValue(String.class);
+                    Log.d("Hinh dai dien ne",profile_pic);
+                }
+                else {
+                    System.out.println("Không tìm thấy dữ liệu cho người dùng có ID: " + userId);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+                System.out.println("Error: " + databaseError.getMessage());
+            }
+        });
+
+
+
         holder.Description_Text.setText(recyclerData.getDescription());
         //holder.ProfilePic.setImageResource(recyclerData.getProfile_pic());
         Glide.with(mcontext)
-                .load(recyclerData.getProfile_pic())
+                .load(profile_pic)
                 .into(holder.ProfilePic);
         if(!recyclerData.getStory_pic().isEmpty()) {
             Log.d("NULL TAAAAAAAAAAAAA", "RUNNING RN222222");

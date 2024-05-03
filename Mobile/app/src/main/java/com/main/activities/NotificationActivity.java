@@ -86,6 +86,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import androidx.annotation.NonNull;
@@ -133,24 +134,20 @@ public class NotificationActivity extends AppCompatActivity {
                 //String value = dataSnapshot.getValue(String.class);
                 //System.out.println("Loading data: "+value);
                 if (dataSnapshot.exists()) {
-
                     notiArrayList.clear();
                     for (DataSnapshot snap : dataSnapshot.getChildren()) {
                         String key = snap.getKey();
                         int key1=Integer.parseInt(key);
                         //MatchesItem matchesItem = snap.getValue(MatchesItem.class);
                         String Description = snap.child("Description").getValue(String.class);
-                        String Reply_Story = snap.child("Reply_Story").getValue(String.class);
                         String Time = snap.child("Time").getValue(String.class);
                         String Type = snap.child("Type").getValue(String.class);
-                        String profile_pic = snap.child("profile_pic").getValue(String.class);
-                        String story_pic = snap.child("story_pic").getValue(String.class);
-                        NotificationItem notificationItem= new NotificationItem(Description,profile_pic,Type,Reply_Story,Time,story_pic,key1);
-                        System.out.println(key+"TEN NE HUHUHUHUHUHUHU");
+                        String userID = snap.child("UserId").getValue(String.class);
+                        NotificationItem notificationItem= new NotificationItem(Description,"",Type,"",Time,"",key1,userID);
                         Log.d("MyActivity", "Description: " + notificationItem.toString());
-                        
                         notiArrayList.add(notificationItem);
                     }
+                    Collections.reverse(notiArrayList);
                     notiAdapter = new NotificationAdapter(notiArrayList, NotificationActivity.this);
 
                     // below line is to set layout manager for our recycler view.

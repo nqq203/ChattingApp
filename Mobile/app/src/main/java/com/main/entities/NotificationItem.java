@@ -8,8 +8,9 @@ public class NotificationItem {
     private String time;
     private String story_pic;
     private int key;
+    private String userid;
 
-    public NotificationItem(String description, String profile_pic, String type, String reply_story, String time, String story_pic, int key) {
+    public NotificationItem(String description, String profile_pic, String type, String reply_story, String time, String story_pic, int key, String userid) {
         Description = description;
         this.profile_pic = profile_pic;
         Type = type;
@@ -17,9 +18,7 @@ public class NotificationItem {
         this.time = time;
         this.story_pic = story_pic;
         this.key = key;
-    }
-
-    public NotificationItem() {
+        this.userid = userid;
     }
 
     public String getDescription() {
@@ -78,6 +77,14 @@ public class NotificationItem {
         this.key = key;
     }
 
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
     @Override
     public String toString() {
         return "NotificationItem{" +
@@ -88,6 +95,7 @@ public class NotificationItem {
                 ", time='" + time + '\'' +
                 ", story_pic='" + story_pic + '\'' +
                 ", key=" + key +
+                ", userid='" + userid + '\'' +
                 '}';
     }
 }
