@@ -29,6 +29,7 @@ public class TextViewHobbiesFragment extends Fragment implements FragmentCallbac
     SharingHobbiesActivity main;
     TextView HobbiesText;
     String userId="us1";
+    Button ShareHobby;
 
     public static TextViewHobbiesFragment newInstance(String strArg1) {
         TextViewHobbiesFragment fragment = new TextViewHobbiesFragment();
@@ -49,8 +50,9 @@ public class TextViewHobbiesFragment extends Fragment implements FragmentCallbac
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
         View viewDetail = inflater.inflate(R.layout.grid_hobbies_textview, container, false);
         HobbiesText=(TextView) viewDetail.findViewById(R.id.HobbiesText);
-
+        ShareHobby=(Button) viewDetail.findViewById(R.id.Shared_hobby);
         FirebaseDatabase firebaseDatabase1=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+
         DatabaseReference databaseReference1 = firebaseDatabase1.getReference("Hobbies/"+userId);
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
@@ -71,7 +73,19 @@ public class TextViewHobbiesFragment extends Fragment implements FragmentCallbac
                 System.out.println("Error: " + databaseError.getMessage());
             }
         });
+        ShareHobby.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseDatabase firebaseDatabase1=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+                DatabaseReference databaseReference1 = firebaseDatabase1.getReference("Hobbies/"+userId);
 
+                String hobbyentered=HobbiesText.getText().toString();
+                databaseReference1.child("AllHobby").setValue(hobbyentered);
+
+                main.onMsgFromFragToMain("push_Hobby", "push_Hobby");
+
+            }
+        });
         return viewDetail;
     }
     public void onMsgFromMainToFragment(String context, String hobby) { //msg từ main đến frag //nhận

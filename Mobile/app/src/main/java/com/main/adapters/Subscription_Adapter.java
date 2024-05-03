@@ -173,8 +173,6 @@ public class Subscription_Adapter extends ArrayAdapter<SubscriptionItem> {
         Log.d("Delete",userId_Delete);
         FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference databaseReference = firebaseDatabase.getReference("Subscription/"+userId);
-        //databaseReference.child("Test");
-        // Lấy dữ liệu từ nút "us1"
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

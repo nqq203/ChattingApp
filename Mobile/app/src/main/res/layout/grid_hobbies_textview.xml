@@ -36,7 +36,8 @@
             android:layout_marginTop="35dp"
             android:layout_marginLeft="100dp"
             android:backgroundTint="@color/gray"/>
-        <Button android:layout_width="100dp"
+        <Button android:id="@+id/Shared_hobby"
+            android:layout_width="100dp"
             android:layout_height="45dp"
             android:text="Sharing"
             android:layout_marginTop="35dp"

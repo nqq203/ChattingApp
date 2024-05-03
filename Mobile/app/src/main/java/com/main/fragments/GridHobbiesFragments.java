@@ -48,6 +48,8 @@ public class GridHobbiesFragments extends Fragment{
     private ImageView backBtn;
     String userId="us1";
     HobbiesAdapter adapter;
+    ArrayList<HobbiesItem> HobbiesArrayList;
+    FirebaseDatabase firebaseDatabase_UPD=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
 
     public static GridHobbiesFragments newInstance(String strArg) {
         GridHobbiesFragments fragment = new GridHobbiesFragments();
@@ -83,7 +85,7 @@ public class GridHobbiesFragments extends Fragment{
         searchHobbies.setHint("Search hobbies...");
 
         gridView=(GridView) viewList.findViewById(R.id.grid_hobbies);
-        ArrayList<HobbiesItem> HobbiesArrayList= new ArrayList<HobbiesItem>();
+        HobbiesArrayList= new ArrayList<HobbiesItem>();
 
         FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference databaseReference = firebaseDatabase.getReference("Hobbies/"+userId);
@@ -97,24 +99,18 @@ public class GridHobbiesFragments extends Fragment{
                     HobbiesArrayList.clear();
                     for (DataSnapshot snap : dataSnapshot.getChildren()) {
                         String key = snap.getKey();
-                        Log.d("KEY NE",key);
                         String isSelected="0";
                         if(!key.equals("AllHobby")){
                             isSelected  = snap.child("isSelected").getValue(String.class);
                             Log.d("isSelected NE",isSelected);
                         }
-
-
-
                         if (key.equals("GAME")) {
                             if (isSelected.equals("0")) {
                                 HobbiesArrayList.add(new HobbiesItem("GAME", R.drawable.game, false, R.drawable.border_hobbies));
                             } else {
                                 HobbiesArrayList.add(new HobbiesItem("GAME", R.drawable.movie, true, R.drawable.border_hobbies_clicked));
-
                             }
                         }
-
                         if (key.equals("SPORT")) {
 
                             if (isSelected.equals("0") ){
@@ -146,7 +142,6 @@ public class GridHobbiesFragments extends Fragment{
                                 HobbiesArrayList.add(new HobbiesItem("DRAWING", R.drawable.draw, false, R.drawable.border_hobbies));
                             } else {
                                 HobbiesArrayList.add(new HobbiesItem("DRAWING", R.drawable.draw, true, R.drawable.border_hobbies_clicked));
-
                             }
                         }
                         if (key.equals("FOODS")) {
@@ -202,7 +197,6 @@ public class GridHobbiesFragments extends Fragment{
                                 HobbiesArrayList.add(new HobbiesItem("MUSIC", R.drawable.movie, false, R.drawable.border_hobbies));
                             } else {
                                 HobbiesArrayList.add(new HobbiesItem("MUSIC", R.drawable.movie, true, R.drawable.border_hobbies_clicked));
-
                             }
                         }
 
@@ -219,7 +213,7 @@ public class GridHobbiesFragments extends Fragment{
                 System.out.println("Error: " + databaseError.getMessage());
             }
         });
-
+        /*
         HobbiesArrayList.add(new HobbiesItem("GAME",R.drawable.game,true,R.drawable.border_hobbies));
         HobbiesArrayList.add(new HobbiesItem("MUSIC",R.drawable.music,false,R.drawable.border_hobbies));
         HobbiesArrayList.add(new HobbiesItem("FILM",R.drawable.movie,false,R.drawable.border_hobbies));
@@ -234,17 +228,18 @@ public class GridHobbiesFragments extends Fragment{
         HobbiesArrayList.add(new HobbiesItem("SPORT",R.drawable.border_sport,false,R.drawable.border_hobbies));
 
         HobbiesAdapter adapter= new HobbiesAdapter(getContext(),HobbiesArrayList);
-        gridView.setAdapter(adapter);
+        gridView.setAdapter(adapter);*/
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 HobbiesItem selectedHobby = adapter.getItem(position);
-                if(selectedHobby.getSelected()==false) {
 
+                if(selectedHobby.getSelected()==false) {
                     selectedHobby.setBackground(R.drawable.border_hobbies_clicked);
-                    //hobbiesButn.setBackgroundResource(selectedHobby.getBackground());
                     selectedHobby.setSelected(true);
+                    HobbiesArrayList.get(position).setSelected(true);
+                    HobbiesArrayList.get(position).setBackground(R.drawable.border_hobbies_clicked);
                     main.onMsgFromFragToMain("add", selectedHobby.getHobbies());
                 }
                 else if(selectedHobby.getSelected()==true)
@@ -252,12 +247,45 @@ public class GridHobbiesFragments extends Fragment{
                     selectedHobby.setBackground(R.drawable.border_hobbies);
                     //
                     selectedHobby.setSelected(false);
+                    HobbiesArrayList.get(position).setSelected(false);
                     main.onMsgFromFragToMain("delete", selectedHobby.getHobbies());
+                    HobbiesArrayList.get(position).setBackground(R.drawable.border_hobbies);
                 }//MSg từ frag tới main
                 gridView.setAdapter(adapter);
             }
         });
         return viewList;
 
+
     }
+    public void onMsgFromMainToFragment(String context, String hobby) { //msg từ main đến frag //nhận
+        String isSelected1="0";
+        if(context.equals("push_Hobby")) {
+            for (int i = 0; i < HobbiesArrayList.size(); i++) {
+                HobbiesItem item = HobbiesArrayList.get(i);
+
+                String HobbyUPD=item.getHobbies();
+
+                DatabaseReference databaseReference_UPD = firebaseDatabase_UPD.getReference("Hobbies/"+userId+"/"+HobbyUPD);
+
+                Boolean selected=item.getSelected();
+                Log.d(item.getHobbies(),String. valueOf(item.getSelected()));
+
+                if(selected.equals(true)){
+                    Log.d("TRUE NE","TRUE NE");
+                    isSelected1="1";
+                }
+                else
+                {
+                    Log.d("FALSE NE","FALSE NE");
+                    isSelected1="0";
+                }
+
+
+                databaseReference_UPD.child("isSelected").setValue(isSelected1);
+            }
+        }
+    }
+
+
 }
