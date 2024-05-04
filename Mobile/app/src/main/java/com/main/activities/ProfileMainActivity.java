@@ -25,9 +25,14 @@ import com.group4.matchmingle.R;
 import com.main.adapters.MatchesAdapter;
 import com.main.entities.MatchesItem;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -42,13 +47,14 @@ public class ProfileMainActivity  extends AppCompatActivity {
     TextView editPlanBtn, btnLogout;
     Dialog mDialog;
     UserSessionManager sessionManager;
+
     TextView phone_View,
             dob_View,email_View,location_View,height_View,curdatingplan_View,gender_View,
             feedback_View, heightrhange_View,name_View,number_View,agerange_View,genderpre_View,
-            comment_View,language_View,rate_View;
+            comment_View,language_View,rate_View,Profile_Name_Age;
     FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
 
-    String userId;
+    String userId,dob_user,fullname_user,gender_user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +69,7 @@ public class ProfileMainActivity  extends AppCompatActivity {
         ComAppDialog = new Dialog(this);
         ResultDialog= new Dialog(this);
         sessionManager = new UserSessionManager(this);
-
+        Profile_Name_Age=(TextView) findViewById(R.id.Profile_Name_Age);
         btn_pre=(TextView) findViewById(R.id.btn_pre);
         btnRateApp = (TextView) findViewById(R.id.rateapp_profile);
         btnComApp = (TextView) findViewById(R.id.next_improvement_profile);
@@ -213,6 +219,10 @@ public class ProfileMainActivity  extends AppCompatActivity {
                     Log.d("UserData", "Feedback: " + feedback);
                     Log.d("UserData", "Comment: " + comment);
 
+                    LocalDate birthDate = LocalDate.parse(dob, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    LocalDate currentDate = LocalDate.now();
+                    Period age = Period.between(birthDate, currentDate);
+                        Profile_Name_Age.setText(name+", "+age.getYears());
                         name_View.setText(name);
                         phone_View.setText(phoneNumber);
                         location_View.setText(location);
@@ -227,7 +237,47 @@ public class ProfileMainActivity  extends AppCompatActivity {
                         gender_View.setText(gender);
                 }
                 else {
-                    Log.d("UserData", "No data exists");
+                    DatabaseReference databaseReference1 = firebaseDatabase.getReference("User/" + userId);
+                    databaseReference1.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                String fullname = dataSnapshot.child("fullname").getValue(String.class);
+                                fullname_user = fullname;
+                                Log.d("name", fullname_user);
+
+                                String dob = dataSnapshot.child("date").getValue(String.class);
+                                dob_user = dob;
+                                String gender = dataSnapshot.child("gender").getValue(String.class);
+                                gender_user = gender;
+                                Log.d("gender", gender_user);
+
+                                // Once you have all the necessary data, update Information node
+                                DatabaseReference databaseReference_Info = firebaseDatabase.getReference("Information/" + userId);
+                                HashMap<String, Object> InforMap = new HashMap<>();
+                                InforMap.put("Comment", " ");
+                                InforMap.put("Age range", "26-30");
+                                InforMap.put("Current Dating Plan", 0);
+                                InforMap.put("Email", " ");
+                                InforMap.put("Gender", gender_user);
+                                InforMap.put("GenderPre", " ");
+                                InforMap.put("Height", "150-200");
+                                InforMap.put("Height range", " ");
+                                InforMap.put("Language", "English");
+                                InforMap.put("date of birth", dob_user);
+                                InforMap.put("location", " ");
+                                InforMap.put("name", fullname_user);
+                                InforMap.put("number", "08684598456");
+                                databaseReference_Info.setValue(InforMap);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            // Handle errors
+                            Log.e("Firebase", "Error: " + databaseError.getMessage());
+                        }
+                    });
                 }
 
 
@@ -261,6 +311,7 @@ public class ProfileMainActivity  extends AppCompatActivity {
             }
         });
     }
+
     public void ImprovementDialog()
     {
         ComAppDialog.setContentView(R.layout.comments_improvement);

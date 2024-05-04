@@ -176,6 +176,9 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
                                 else if (myChatBgColor.equals("blue")) {
                                     chatColor = getResources().getDrawable(R.drawable.msg_background_blue);
                                 }
+                                else {
+                                    chatColor = getResources().getDrawable(R.drawable.msg_background);
+                                }
                             }
                             else {
                                 chatColor = getResources().getDrawable(R.drawable.msg_background);;

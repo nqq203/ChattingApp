@@ -26,21 +26,7 @@
             android:textSize="40dp"
             android:textStyle="bold"
             />
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:layout_marginLeft="50dp"
-            app:icon="@drawable/baseline_filter_list_alt_24"
-            app:iconSize="26dp"
-            app:iconGravity="textStart"
-
-            app:iconPadding="0dp"
-
-            android:contentDescription="Filter"
-             />
-        </LinearLayout>
+    </LinearLayout>
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"

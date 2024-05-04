@@ -69,7 +69,6 @@ public class MatchesAdapter extends ArrayAdapter<MatchesItem> {
         Glide.with(getContext())
                 .load(matchesItem.getPic())
                 .into(imageView);
-        Log.d("AAA",matchesItem.getUserid());
         btndelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,7 +110,7 @@ public class MatchesAdapter extends ArrayAdapter<MatchesItem> {
                     intent.putExtra("imageUrl",profile_pic);
                     mContext.startActivity(intent);
                     
-                }/*
+                }
                 else
                 {
                     Intent intent =new Intent(mContext, ChatActivity.class);
@@ -120,7 +119,7 @@ public class MatchesAdapter extends ArrayAdapter<MatchesItem> {
                     intent.putExtra("imageUrl",profile_pic);
                     intent.putExtra("mobile",userId);
                     mContext.startActivity(intent);
-                }*/
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

@@ -53,6 +53,7 @@ public class InfoDialogFragment extends DialogFragment {
                     case 1:
                         // Sharing Hobbies
                         Intent intentHobbies = new Intent(getActivity(), XemHobbiesActivity.class);
+                        intentHobbies.putExtra("userId",guestPhone);
                         startActivity(intentHobbies);
                         break;
                     case 2:

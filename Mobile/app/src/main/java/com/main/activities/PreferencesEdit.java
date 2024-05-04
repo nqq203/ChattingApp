@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.group4.matchmingle.R;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class PreferencesEdit extends AppCompatActivity {
@@ -37,6 +38,10 @@ public class PreferencesEdit extends AppCompatActivity {
         setContentView(R.layout.edit_pre);
         context = this;
         savebtn=(Button) findViewById(R.id.save_button);
+
+        UserSessionManager sessionManager = new UserSessionManager(getBaseContext());
+        HashMap<String, String> userDetails = sessionManager.getUserDetails();
+        userId=userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
 
 
         genderpre_View=(EditText) findViewById(R.id.gender_profile);

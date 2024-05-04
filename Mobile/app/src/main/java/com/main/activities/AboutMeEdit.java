@@ -22,9 +22,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.group4.matchmingle.R;
 import java.util.Calendar;
+import java.util.HashMap;
+
 public class AboutMeEdit extends AppCompatActivity {
     Button backbtn,savebtn;
-    String userId="us1";
+    String userId;
     Context context;
     EditText  dob_View,email_View,location_View,height_View,gender_View, name_View,number_View;
     @Override
@@ -33,6 +35,11 @@ public class AboutMeEdit extends AppCompatActivity {
         setContentView(R.layout.edit_aboutme);
         context = this;
         savebtn=(Button) findViewById(R.id.save_button);
+
+        UserSessionManager sessionManager = new UserSessionManager(getBaseContext());
+        HashMap<String, String> userDetails = sessionManager.getUserDetails();
+        userId=userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
+
 
         name_View=(EditText) findViewById(R.id.name_profile);
         gender_View=(EditText) findViewById(R.id.genderus_profile);
@@ -55,6 +62,7 @@ public class AboutMeEdit extends AppCompatActivity {
         FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference databaseReference = firebaseDatabase.getReference("Information/"+userId);
         DatabaseReference databaseReference1 = firebaseDatabase.getReference("Information/"+userId);
+        DatabaseReference databaseReference_User = firebaseDatabase.getReference("User/"+userId);
 
         iconChat.setOnClickListener(v -> {
             Intent intent = new Intent(AboutMeEdit.this, MessageActivity.class);
@@ -99,7 +107,6 @@ public class AboutMeEdit extends AppCompatActivity {
                 String location = location_View.getText().toString();
                 String height = height_View.getText().toString();
                 String gender = gender_View.getText().toString();
-
                 databaseReference1.child("name").setValue(name);
                 databaseReference1.child("number").setValue(number);
                 databaseReference1.child("Email").setValue(email);
@@ -107,6 +114,10 @@ public class AboutMeEdit extends AppCompatActivity {
                 databaseReference1.child("location").setValue(location);
                 databaseReference1.child("Height").setValue(height);
                 databaseReference1.child("Gender").setValue(gender);
+
+                databaseReference_User.child("fullname").setValue(name);
+                databaseReference_User.child("date").setValue(dob);
+                databaseReference_User.child("gender").setValue(gender);
 
             }
         });
