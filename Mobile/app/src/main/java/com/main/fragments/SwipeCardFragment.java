@@ -153,8 +153,8 @@ public class SwipeCardFragment extends Fragment {
 
     private void fetchNextUser() {
         DatabaseReference usersRef = databaseReference.child("SuggestionList").child(mPhoneNumber);
-//        Query query = (lastUserId == null) ? usersRef.orderByKey().limitToFirst(1) : usersRef.orderByKey().startAfter(lastUserId).limitToFirst(1);
-        Query query = usersRef.orderByKey().limitToFirst(1);
+        Query query = (lastUserId == null) ? usersRef.orderByKey().limitToFirst(1) : usersRef.orderByKey().startAfter(lastUserId).limitToFirst(1);
+//        Query query = usersRef.orderByKey().limitToFirst(1);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
