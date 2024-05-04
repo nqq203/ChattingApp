@@ -141,6 +141,8 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
         chatAdapter.setOnImageClickListener(this);
         chatRecyclerView.setAdapter(chatAdapter);
 
+        databaseReference.child("Chat").child(chatKey).child(myPhone+"_seen").setValue(0);
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -233,7 +235,8 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
 
                 databaseReference.child("Chat").child(chatKey).child("user1").setValue(myPhone);
                 databaseReference.child("Chat").child(chatKey).child("user2").setValue(senderMobile);
-//                databaseReference.child("Chat").child(chatKey).child("unseenmessage").setValue(0);
+                databaseReference.child("Chat").child(chatKey).child(myPhone+"_seen").setValue(0);
+                databaseReference.child("Chat").child(chatKey).child(senderMobile+"_seen").setValue(1);
 
 
 
@@ -409,6 +412,8 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
         message.put("type", type);
         message.put("phoneNumber", myPhone);
 
+        databaseReference.child("Chat").child(chatKey).child(myPhone+"_seen").setValue(0);
+        databaseReference.child("Chat").child(chatKey).child(guestPhone+"_seen").setValue(1);
         databaseReference.child("Chat").child(chatKey).child("messages").child(timestamp).setValue(message);
     }
 

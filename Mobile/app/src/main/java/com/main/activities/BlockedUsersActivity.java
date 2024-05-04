@@ -87,6 +87,7 @@ public class BlockedUsersActivity extends AppCompatActivity implements BlockedUs
                 newUser.put("gender", gender);
                 newUser.put("fullname", user.getName());
                 databaseReference.child("SuggestionList").child(myPhone).child(user.getUserId()).setValue(newUser);
+                databaseReference.child("SuggestionList").child(user.getUserId()).child(myPhone).setValue(newUser);
                 databaseReference.child("BlockList").child(myPhone).child(user.getUserId()).removeValue();
                 Intent intent = new Intent(BlockedUsersActivity.this, SwipeCardViewActivity.class);
                 startActivity(intent);
