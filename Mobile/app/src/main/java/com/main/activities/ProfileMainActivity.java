@@ -471,10 +471,18 @@ public class ProfileMainActivity  extends AppCompatActivity {
 
     }
     public void onLogout() {
-        sessionManager.logoutUser();
-        Intent intent = new Intent(ProfileMainActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        if (sessionManager != null) {
+            sessionManager.logoutUser();
+            Intent intent = new Intent(ProfileMainActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        else {
+            Intent intent = new Intent(ProfileMainActivity.this, SignInActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
     }
 
 }

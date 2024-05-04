@@ -257,7 +257,9 @@ public class SwipeCardFragment extends Fragment {
                                         myInfo.put("pic", myImageUrl);
 
                                         databaseReference.child("Matches").child(userId).child(mPhoneNumber).setValue(myInfo);
+                                        databaseReference.child("Matches").child(mPhoneNumber).child(userId).setValue(otherInfo);
                                         addMatchUserToMessage(mPhoneNumber, userId);
+                                        addMatchUserToMessage(userId, mPhoneNumber);
                                     }
 
                                     @Override
@@ -265,8 +267,7 @@ public class SwipeCardFragment extends Fragment {
 
                                     }
                                 });
-                                databaseReference.child("Matches").child(mPhoneNumber).child(userId).setValue(otherInfo);
-                                addMatchUserToMessage(userId, mPhoneNumber);
+
                                 addThongBao(userId, mPhoneNumber);
                                 addThongBao(mPhoneNumber,userId);
 
@@ -319,12 +320,12 @@ public class SwipeCardFragment extends Fragment {
     }
 
     private void addMatchUserToMessage(String user1, String user2) {
-        DatabaseReference matchRef = databaseReference.child("Matches");
+        DatabaseReference matchRef = databaseReference.child("User");
         matchRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String fullname = snapshot.child(user1).child(user2).child("name").getValue(String.class);
-                String imageUrl = snapshot.child(user1).child(user2).child("pic").getValue(String.class);
+                String fullname = snapshot.child(user2).child("fullname").getValue(String.class);
+                String imageUrl = snapshot.child(user2).child("imageUrl").getValue(String.class);
                 String myChatBgColor = "purple";
 
                 databaseReference.child("Message").child(user1).child(user2).child("fullname").setValue(fullname);
