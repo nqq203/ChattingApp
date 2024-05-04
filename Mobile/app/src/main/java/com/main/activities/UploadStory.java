@@ -27,7 +27,11 @@ import com.google.firebase.storage.StorageReference;
 import com.group4.matchmingle.R;
 import com.main.entities.Story;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.UUID;
 
 public class UploadStory extends Activity {
@@ -99,6 +103,7 @@ public class UploadStory extends Activity {
             }
         });
     }
+
     private void uploadImageToStorage(Uri imageUri, long duration) {
         // Tạo tham chiếu tới Firebase Storage
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -123,16 +128,19 @@ public class UploadStory extends Activity {
 
     private void saveImageInfoToDatabase(String imageUrl, long duration) {
         // Tạo tham chiếu tới Firebase Database
-        DatabaseReference storiesRef = databaseReference.child("Story");
+        DatabaseReference userStoryRef = databaseReference.child("Story").child(userId);
 
-        // Tạo một đối tượng Story mới với các thông tin cần lưu
-        Story story = new Story(fullname, imageUrl, userId, duration);
+        // Lấy ngày hiện tại
+        Date currentDate = new Date(); // Tạo một đối tượng Date đại diện cho ngày hiện tại
+
+        // Tạo đối tượng Story mới với các thông tin cần lưu
+        Story story = new Story(duration, imageUrl, currentDate, fullname);
 
         // Lưu thông tin của story vào Firebase Database
-        storiesRef.push().setValue(story)
+        userStoryRef.push().setValue(story)
                 .addOnSuccessListener(aVoid -> {
-                    Intent intent = new Intent(UploadStory.this, MessageActivity.class);
-                    startActivity(intent);
+                    //Intent intent = new Intent(UploadStory.this, MessageActivity.class);
+                    //startActivity(intent);
                     finish();
                 })
                 .addOnFailureListener(e -> {
@@ -140,6 +148,7 @@ public class UploadStory extends Activity {
                     // Ví dụ: hiển thị thông báo lỗi
                 });
     }
+
 
 
     private void openGallery() {

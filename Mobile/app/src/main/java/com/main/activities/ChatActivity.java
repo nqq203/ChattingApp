@@ -46,8 +46,12 @@ import com.group4.matchmingle.databinding.ImageViewerFragmentBinding;
 import com.main.MemoryData;
 import com.main.adapters.ChatAdapter;
 import com.main.entities.ChatList;
+import com.main.entities.User;
 import com.main.fragments.ImageViewerFragment;
 import com.main.fragments.InfoDialogFragment;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,17 +63,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnImageClickListener {
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private final List<ChatList> chatLists = new ArrayList<>();
     private UserSessionManager sessionManager;
     private String chatKey;
-    private String myPhone;
+    private String myPhone, myfullName;
     private RecyclerView chatRecyclerView;
     private ChatAdapter chatAdapter;
     private boolean loadingFirstTime = true;
     private MediaRecorder mediaRecorder;
     private String audioPath = null;
+    private User myUser, receiverUser;
     private final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     private static final int REQUEST_IMAGE_PICK = 2;
 
@@ -106,6 +119,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
             }
         });
 
+
         //get data from message adapter class
         final String senderFullname = getIntent().getStringExtra("fullname");
         final String senderProfilePic = getIntent().getStringExtra("imageUrl");
@@ -124,8 +138,16 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
 
         chatAdapter = new ChatAdapter(chatLists, ChatActivity.this);
         chatAdapter.setOnImageClickListener(this);
-        chatRecyclerView.setAdapter(chatAdapter);
 
+        chatRecyclerView.setAdapter(chatAdapter);
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChatActivity.this, ProfileView.class);
+                intent.putExtra("userID", senderMobile);
+                startActivity(intent);
+            }
+        });
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -145,6 +167,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
                                 final String getMsg = messagesSnapshot.child("msg").getValue(String.class);
                                 final String getType = messagesSnapshot.child("type").getValue(String.class);
                                 final String getName = snapshot.child("Message").child(myPhone).child(getPhone).child("fullname").getValue(String.class);
+
 
                                 Timestamp timestamp = new Timestamp(Long.parseLong(messageTimestamps));
                                 Date date = new Date(timestamp.getTime());
@@ -192,6 +215,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
 
                 sendMessage(getTextMsg, "text");
                 msgEditText.setText("");
+
             }
         });
 
@@ -294,7 +318,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
         message.put("msg", content);
         message.put("type", type);
         message.put("phoneNumber", myPhone);
-
+        sendNotification(content);
         databaseReference.child("Chat").child(chatKey).child("messages").child(timestamp).setValue(message);
     }
 
@@ -349,5 +373,133 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
     public void showInfoDialog() {
         InfoDialogFragment dialog = new InfoDialogFragment();
         dialog.show(getSupportFragmentManager(), "InfoDialogFragment");
+    }
+
+    void sendNotification(String content) {
+        final String senderMobile = getIntent().getStringExtra("mobile");
+
+        try {
+            // Tìm bản thân và người nhận trước khi gửi thông báo
+            setMyUser(myPhone, new MyUserCallback() {
+                @Override
+                public void onUserFound(User myUser) {
+                    setReceiverUser(senderMobile, new ReceiverUserCallback() {
+                        @Override
+                        public void onReceiverUserFound(User receiverUser) {
+                            try {
+                                JSONObject jsonObject = new JSONObject();
+
+                                JSONObject notificationObj = new JSONObject();
+                                notificationObj.put("title", myUser.getFullname());
+                                notificationObj.put("body", content);
+
+                                JSONObject dataObj = new JSONObject();
+                                dataObj.put("userId", myPhone);
+
+                                jsonObject.put("notification", notificationObj);
+                                jsonObject.put("data", dataObj);
+                                jsonObject.put("to", receiverUser.getToken());
+
+                                callApi(jsonObject);
+                            } catch (Exception e) {
+                                Log.e("SendNotification", "Error sending notification: " + e.getMessage());
+                            }
+                        }
+
+                        @Override
+                        public void onError(String errorMessage) {
+                            Log.e("SendNotification", "Error finding receiver user: " + errorMessage);
+                        }
+                    });
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+                    Log.e("SendNotification", "Error finding my user: " + errorMessage);
+                }
+            });
+        } catch (Exception e) {
+            Log.e("SendNotification", "Error sending notification: " + e.getMessage());
+        }
+    }
+
+    // Callback interface for getting the current user
+    interface MyUserCallback {
+        void onUserFound(User myUser);
+
+        void onError(String errorMessage);
+    }
+
+    // Callback interface for getting the receiver user
+    interface ReceiverUserCallback {
+        void onReceiverUserFound(User receiverUser);
+
+        void onError(String errorMessage);
+    }
+
+    void setMyUser(String phone, MyUserCallback callback) {
+        databaseReference.child("User").child(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String token = dataSnapshot.child("token").getValue(String.class);
+                    String name = dataSnapshot.child("fullname").getValue(String.class);
+                    User myUser = new User(name, token);
+                    callback.onUserFound(myUser);
+                } else {
+                    callback.onError("User not found");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    void setReceiverUser(String phone, ReceiverUserCallback callback) {
+        databaseReference.child("User").child(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String token = dataSnapshot.child("token").getValue(String.class);
+                    String name = dataSnapshot.child("fullname").getValue(String.class);
+                    User receiverUser = new User(name, token);
+                    callback.onReceiverUserFound(receiverUser);
+                } else {
+                    callback.onError("Receiver user not found");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+
+    void callApi(JSONObject jsonObject){
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://fcm.googleapis.com/fcm/send";
+        RequestBody body = RequestBody.create(jsonObject.toString(), JSON);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .header("Authorization","Bearer AAAAycOVJIU:APA91bGhJQOYm5KLWUi5G2B75tOLcN172hvPohzuS1CMVWLxr0pFOOH0EhVvX-OKPHFp7ZlFUD06ITrpdnmO6TJyv73-5kTZ4ANSOm_s-SwxLcf3O1hL1w5eM2w6-We4i1-FC13MbuwY")
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+
+            }
+        });
     }
 }

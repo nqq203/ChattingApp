@@ -1,15 +1,17 @@
 package com.main.entities;
 
+import java.util.Date;
+
 public class Story {
     private String fullname;
     private String imageUrl;
-    private String idUser;
+    private Date timeCreated;
     private long duration;
 
-    public Story(String fullname, String imageUrl, String idUser, long duration) {
+    public Story(long duration, String imageUrl, Date timeCreated, String fullname) {
         this.fullname = fullname;
         this.imageUrl = imageUrl;
-        this.idUser = idUser;
+        this.timeCreated = timeCreated;
         this.duration = duration;
     }
 
@@ -17,8 +19,8 @@ public class Story {
         return duration;
     }
 
-    public void setId(String id) {
-        this.idUser = id;
+    public void setTimeCreated(Date timeCreated) {
+        this.timeCreated = timeCreated;
     }
 
     public void setFullname(String fullname) {
@@ -33,8 +35,8 @@ public class Story {
         return fullname;
     }
 
-    public String getId() {
-        return idUser;
+    public Date getTimeCreated() {
+        return timeCreated;
     }
 
     public String getImageUrl() {

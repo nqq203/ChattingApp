@@ -3,6 +3,7 @@ package com.main.activities;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +18,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.group4.matchmingle.R;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignInActivity extends AppCompatActivity {
     private EditText editPhoneNumber, editPassword;
@@ -58,6 +63,14 @@ public class SignInActivity extends AppCompatActivity {
                                 String getPassword = snapshot.child(mPhoneNumber).child("password").getValue(String.class);
                                 if (getPassword.equals(password)) {
                                     Toast.makeText(SignInActivity.this, "Sign in successfully", Toast.LENGTH_SHORT).show();
+                                    //setToken
+                                    FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+                                        if(task.isSuccessful()){
+                                            String token = task.getResult();
+                                            databaseReference.child("User").child(mPhoneNumber).child("token").setValue(token);
+                                        }
+                                    });
+                                    //end
                                     Boolean isSetup = snapshot.child(mPhoneNumber).child("IsSetup").getValue(Boolean.class);
                                     if (isSetup) {
                                         Intent intent = new Intent(SignInActivity.this, SwipeCardViewActivity.class);
