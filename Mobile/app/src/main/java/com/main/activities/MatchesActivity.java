@@ -99,16 +99,14 @@ public class MatchesActivity extends AppCompatActivity {
                     MatchesArrayList.clear();
                     for (DataSnapshot snap : dataSnapshot.getChildren()) {
                         String key = snap.getKey();
-                        //MatchesItem matchesItem = snap.getValue(MatchesItem.class);
                         String name = snap.child("name").getValue(String.class);
                         String dob = snap.child("age").getValue(String.class);
                         String pic = snap.child("pic").getValue(String.class);
-                        String id = snap.child("userid").getValue(String.class);
+                        //String id = snap.child("userid").getValue(String.class);
                         LocalDate birthDate = LocalDate.parse(dob, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                         LocalDate currentDate = LocalDate.now();
                         Period age = Period.between(birthDate, currentDate);
-
-
+                        Log.d("ADD1",key);
                         MatchesItem matchesItem= new MatchesItem(name,pic,age.getYears(),key);
 
                         MatchesArrayList.add(matchesItem);

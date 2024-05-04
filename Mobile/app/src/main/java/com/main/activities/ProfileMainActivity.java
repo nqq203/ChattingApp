@@ -27,7 +27,10 @@ import com.main.entities.MatchesItem;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class ProfileMainActivity  extends AppCompatActivity {
@@ -274,10 +277,15 @@ public class ProfileMainActivity  extends AppCompatActivity {
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        Date currentDate = new Date();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
+                        String time=dateFormat.format(currentDate);
+
                         // Get the number of children (current data size)
-                        long count = dataSnapshot.getChildrenCount();
+
                         // Create a new subscription entry with the incremented key
-                        DatabaseReference newSubscriptionRef = databaseReference.child(String.valueOf(count));
+                        DatabaseReference newSubscriptionRef = databaseReference.child(time);
                         // Set the values for the new subscription entry
                         Map<String, Object> newSubscriptionValues = new HashMap<>();
                         newSubscriptionValues.put("Note", note_im.getText().toString());
@@ -350,10 +358,10 @@ public class ProfileMainActivity  extends AppCompatActivity {
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    // Get the number of children (current data size)
-                    long count = dataSnapshot.getChildrenCount();
-                    // Create a new subscription entry with the incremented key
-                    DatabaseReference newSubscriptionRef = databaseReference.child(String.valueOf(count));
+                    Date currentDate = new Date();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
+                    String time=dateFormat.format(currentDate);
+                    DatabaseReference newSubscriptionRef = databaseReference.child(time);
                     // Set the values for the new subscription entry
                     Map<String, Object> newSubscriptionValues = new HashMap<>();
                     newSubscriptionValues.put("Note", note_rate.getText().toString());

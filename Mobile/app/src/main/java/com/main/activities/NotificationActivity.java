@@ -137,13 +137,12 @@ public class NotificationActivity extends AppCompatActivity {
                     notiArrayList.clear();
                     for (DataSnapshot snap : dataSnapshot.getChildren()) {
                         String key = snap.getKey();
-                        int key1=Integer.parseInt(key);
                         //MatchesItem matchesItem = snap.getValue(MatchesItem.class);
                         String Description = snap.child("Description").getValue(String.class);
                         String Time = snap.child("Time").getValue(String.class);
                         String Type = snap.child("Type").getValue(String.class);
                         String userID = snap.child("UserId").getValue(String.class);
-                        NotificationItem notificationItem= new NotificationItem(Description,"",Type,"",Time,"",key1,userID);
+                        NotificationItem notificationItem= new NotificationItem(Description,"",Type,"",Time,"",key,userID);
                         Log.d("MyActivity", "Description: " + notificationItem.toString());
                         notiArrayList.add(notificationItem);
                     }

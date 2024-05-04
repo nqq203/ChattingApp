@@ -73,6 +73,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
     private final List<ChatList> chatLists = new ArrayList<>();
     private UserSessionManager sessionManager;
     String name,time;
+    String fullname_user;
     private String chatKey;
     private String myPhone;
     private String guestPhone;
@@ -101,6 +102,9 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
         final TextView infoCatalog = findViewById(R.id.button_info);
 
         chatRecyclerView = findViewById(R.id.chat_container);
+
+
+
 
         // scroll to bottom when open keyboard
         final View activityRootView = findViewById(android.R.id.content);
@@ -227,48 +231,10 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
                 databaseReference.child("Chat").child(chatKey).child("user1").setValue(myPhone);
                 databaseReference.child("Chat").child(chatKey).child("user2").setValue(senderMobile);
 //                databaseReference.child("Chat").child(chatKey).child("unseenmessage").setValue(0);
-                FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
-                DatabaseReference databaseReference1 = firebaseDatabase.getReference("Information/us1");
-                databaseReference1.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            name = dataSnapshot.child("name").getValue(String.class);
-                            Log.d("NAME NE",name);
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        // Xử lý khi có lỗi xảy ra
-                        System.out.println("Error: " + databaseError.getMessage());
-                    }
-                });
-                DatabaseReference databaseReference_chat = firebaseDatabase.getReference("Notification/"+guestPhone);
-                databaseReference_chat.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        // Get the number of children (current data size)
-                        long count = dataSnapshot.getChildrenCount();
-                        // Create a new subscription entry with the incremented key
-                        DatabaseReference newSubscriptionRef = databaseReference_chat.child(String.valueOf(count));
-                        // Set the values for the new subscription entry
-                        Map<String, Object> newSubscriptionValues = new HashMap<>();
-                        // Update the database with the new subscription entry
-                        Date currentDate = new Date();
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
-                        time=dateFormat.format(currentDate);
-                        newSubscriptionValues.put("Description", name+" Just send you messages, click to hoop into the conversation");
-                        newSubscriptionValues.put("Type", "Message");
-                        newSubscriptionValues.put("Time", time);
-                        newSubscriptionValues.put("UserId", myPhone);
-                        newSubscriptionRef.setValue(newSubscriptionValues);
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        // Xử lý khi có lỗi xảy ra
-                        System.out.println("Error: " + databaseError.getMessage());
-                    }
-                });
+
+
+
+                addThongBao(guestPhone,myPhone);
                 sendMessage(getTextMsg, "text");
                 msgEditText.setText("");
             }
@@ -315,39 +281,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
                         System.out.println("Error: " + databaseError.getMessage());
                     }
                 });
-                DatabaseReference databaseReference_chat = firebaseDatabase.getReference("Notification/"+guestPhone);
-                databaseReference_chat.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        // Get the number of children (current data size)
-                        long count = dataSnapshot.getChildrenCount();
-                        // Create a new subscription entry with the incremented key
-                        DatabaseReference newSubscriptionRef = databaseReference_chat.child(String.valueOf(count));
-                        // Set the values for the new subscription entry
-                        Map<String, Object> newSubscriptionValues = new HashMap<>();
-                        // Update the database with the new subscription entry
-                        Date currentDate = new Date();
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
-                        time=dateFormat.format(currentDate);
-                        newSubscriptionValues.put("Description", name+" Just send you some pictures, click to hoop into the conversation");
-                        newSubscriptionValues.put("Type", "Message");
-                        newSubscriptionValues.put("Time", time);
-                        newSubscriptionValues.put("UserId", myPhone);
-                        newSubscriptionRef.setValue(newSubscriptionValues);
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        // Xử lý khi có lỗi xảy ra
-                        System.out.println("Error: " + databaseError.getMessage());
-                    }
-                });
-
-
-
-
-
-
-
+                addThongBao(guestPhone,myPhone);
 
             }
         });
@@ -362,6 +296,51 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
         });
     }
 
+
+    private void addThongBao(String user1,String user2) {
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+
+
+        DatabaseReference databaseReference1 = firebaseDatabase.getReference("User/"+user2);
+        databaseReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    fullname_user=dataSnapshot.child("fullname").getValue(String.class);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+                System.out.println("Error: " + databaseError.getMessage());
+            }
+        });
+
+        DatabaseReference databaseReference_chat = firebaseDatabase.getReference("Notification/" + user1);
+        databaseReference_chat.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Date currentDate = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
+                String time = dateFormat.format(currentDate);
+                DatabaseReference newSubscriptionRef = databaseReference_chat.child(time);
+                Map<String, Object> newSubscriptionValues = new HashMap<>();
+                newSubscriptionValues.put("Description", fullname_user + " Just send some messages, click to hoop into the conversation");
+                newSubscriptionValues.put("Type", "Message");
+                newSubscriptionValues.put("Time", time);
+                newSubscriptionValues.put("UserId", user2);
+                newSubscriptionRef.setValue(newSubscriptionValues);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+                System.out.println("Error: " + databaseError.getMessage());
+            }
+        });
+    }
     public static float dpToPx(Context context, float valueInDp) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);

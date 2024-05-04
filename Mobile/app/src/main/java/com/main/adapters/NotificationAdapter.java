@@ -56,6 +56,7 @@ public class NotificationAdapter extends ArrayAdapter<NotificationItem> {
 }*/
 package com.main.adapters;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,12 +68,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.group4.matchmingle.R;
+import com.main.activities.ChatActivity;
 import com.main.activities.UserSessionManager;
 import com.main.entities.NotificationItem;
 
@@ -80,12 +83,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.internal.cache.DiskLruCache;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.RecyclerViewHolder> {
     private ArrayList<NotificationItem> NotiDataArrayList;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private Context mcontext;
-    String userId,profile_pic;
+    String userId,profile_pic,fullname;
+    FirebaseDatabase firebaseDatabase1=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
 
     // creating a constructor class.
     public NotificationAdapter(ArrayList<NotificationItem> recyclerDataArrayList, Context mcontext) {
@@ -109,16 +114,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         // Set the data to textview from our modal class.
         NotificationItem recyclerData = NotiDataArrayList.get(position);
-
-        FirebaseDatabase firebaseDatabase1=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference databaseReference1 = firebaseDatabase1.getReference("User/"+userId);
+        DatabaseReference databaseReference1 = firebaseDatabase1.getReference("User/"+recyclerData.getUserid());
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
 
                     profile_pic = dataSnapshot.child("imageUrl").getValue(String.class);
-                    Log.d("Hinh dai dien ne",profile_pic);
+                    fullname=dataSnapshot.child("fullname").getValue(String.class);
                 }
                 else {
                     System.out.println("Không tìm thấy dữ liệu cho người dùng có ID: " + userId);
@@ -135,9 +138,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         holder.Description_Text.setText(recyclerData.getDescription());
         //holder.ProfilePic.setImageResource(recyclerData.getProfile_pic());
+        RequestOptions requestOptions = RequestOptions.circleCropTransform();
+        Glide.with(mcontext).load(profile_pic).apply(requestOptions).into(holder.ProfilePic);
+        /*
         Glide.with(mcontext)
                 .load(profile_pic)
-                .into(holder.ProfilePic);
+                .into(holder.ProfilePic);*/
         if(!recyclerData.getStory_pic().isEmpty()) {
             Log.d("NULL TAAAAAAAAAAAAA", "RUNNING RN222222");
             //holder.PicStory.setImageResource(recyclerData.getStory_pic());
@@ -158,6 +164,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             holder.StoryMess.setVisibility(View.GONE);
         }
         holder.TimeNoti.setText(recyclerData.getTime());
+
+
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirect_Chat(recyclerData.getUserid(),profile_pic,fullname);
+            }
+        });
     }
 
     @Override
@@ -175,7 +190,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         ImageView PicStory;
         CircleImageView ProfilePic;
         TextView Description_Text;
-
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
             // initializing our text views.
@@ -185,6 +199,42 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
              StoryMess = (TextView) itemView.findViewById(R.id.story_mess);
              TimeNoti = (TextView) itemView.findViewById(R.id.time_noti);
         }
+    }
+
+    public void redirect_Chat(String guestId,String profile_pic,String fullname)
+    {
+        String chatKey;
+        DatabaseReference dataref=databaseReference.child("Chat");
+        dataref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("UserId",fullname);
+                Log.d("GUESTId",profile_pic);
+                if(snapshot.child(userId+"_"+guestId).hasChild("user1"))
+                {
+                    Intent intent =new Intent(mcontext, ChatActivity.class);
+                    intent.putExtra("chatKey",userId+"_"+guestId);
+                    intent.putExtra("fullname",fullname);
+                    intent.putExtra("imageUrl",profile_pic);
+                    mcontext.startActivity(intent);
+
+                }
+                else if (snapshot.child(guestId+"_"+userId).hasChild("user1"))
+                {
+                    Intent intent =new Intent(mcontext, ChatActivity.class);
+                    intent.putExtra("chatKey",guestId+"_"+userId);
+                    intent.putExtra("fullname",fullname);
+                    intent.putExtra("imageUrl",profile_pic);
+                    mcontext.startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
 }

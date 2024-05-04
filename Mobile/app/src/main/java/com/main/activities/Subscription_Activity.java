@@ -36,9 +36,12 @@ import com.main.entities.MatchesItem;
 import com.main.entities.NotificationItem;
 import com.main.entities.SubscriptionItem;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class Subscription_Activity extends AppCompatActivity {
@@ -167,10 +170,11 @@ public class Subscription_Activity extends AppCompatActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Get the number of children (current data size)
-                long count = dataSnapshot.getChildrenCount();
+                Date currentDate = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
+                String time=dateFormat.format(currentDate);
                 // Create a new subscription entry with the incremented key
-                DatabaseReference newSubscriptionRef = databaseReference.child(String.valueOf(count));
+                DatabaseReference newSubscriptionRef = databaseReference.child(time);
 
                 // Set the values for the new subscription entry
                 Map<String, Object> newSubscriptionValues = new HashMap<>();
