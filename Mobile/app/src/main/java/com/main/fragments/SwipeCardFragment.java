@@ -149,7 +149,8 @@ public class SwipeCardFragment extends Fragment {
 
     private void fetchNextUser() {
         DatabaseReference usersRef = databaseReference.child("SuggestionList").child(mPhoneNumber);
-        Query query = (lastUserId == null) ? usersRef.orderByKey().limitToFirst(1) : usersRef.orderByKey().startAfter(lastUserId).limitToFirst(1);
+//        Query query = (lastUserId == null) ? usersRef.orderByKey().limitToFirst(1) : usersRef.orderByKey().startAfter(lastUserId).limitToFirst(1);
+        Query query = usersRef.orderByKey().limitToFirst(1);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -162,6 +163,7 @@ public class SwipeCardFragment extends Fragment {
                         String dbGender = userSnapshot.child("gender").getValue(String.class);
                         String dbImageUrl = userSnapshot.child("imageUrl").getValue(String.class);
                         User user = new User(dbFullname, dbGender, dbDate, dbImageUrl);
+                        Log.d("useraaaaaaa", dbFullname + " " + dbDate + " " + dbImageUrl);
                         displayUser(user);
                         break; // Break after the first user since we are only fetching one
                     }
@@ -170,6 +172,9 @@ public class SwipeCardFragment extends Fragment {
                     }
                 } else {
                     isDisabled = true;
+                    cardView.setTranslationX(0);
+                    cardView.setAlpha(1);
+                    cardView.setRotation(0);
                     Log.d(TAG, "No more users to fetch");
                     // Handle the situation when there are no more users
                     if (noItemView != null) {

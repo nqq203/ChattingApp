@@ -132,6 +132,8 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
         chatAdapter.setOnImageClickListener(this);
         chatRecyclerView.setAdapter(chatAdapter);
 
+        databaseReference.child("Chat").child(chatKey).child(myPhone+"_seen").setValue(0);
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -163,6 +165,9 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
                                 }
                                 else if (myChatBgColor.equals("blue")) {
                                     chatColor = getResources().getDrawable(R.drawable.msg_background_blue);
+                                }
+                                else {
+                                    chatColor = getResources().getDrawable(R.drawable.msg_background);
                                 }
                             }
                             else {
@@ -218,7 +223,8 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
 
                 databaseReference.child("Chat").child(chatKey).child("user1").setValue(myPhone);
                 databaseReference.child("Chat").child(chatKey).child("user2").setValue(senderMobile);
-//                databaseReference.child("Chat").child(chatKey).child("unseenmessage").setValue(0);
+                databaseReference.child("Chat").child(chatKey).child(myPhone+"_seen").setValue(0);
+                databaseReference.child("Chat").child(chatKey).child(senderMobile+"_seen").setValue(1);
 
                 sendMessage(getTextMsg, "text");
                 msgEditText.setText("");
@@ -327,6 +333,8 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
         message.put("type", type);
         message.put("phoneNumber", myPhone);
 
+        databaseReference.child("Chat").child(chatKey).child(myPhone+"_seen").setValue(0);
+        databaseReference.child("Chat").child(chatKey).child(guestPhone+"_seen").setValue(1);
         databaseReference.child("Chat").child(chatKey).child("messages").child(timestamp).setValue(message);
     }
 
