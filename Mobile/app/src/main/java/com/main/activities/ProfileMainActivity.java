@@ -261,8 +261,8 @@ public class ProfileMainActivity  extends AppCompatActivity {
                                 InforMap.put("Email", " ");
                                 InforMap.put("Gender", gender_user);
                                 InforMap.put("GenderPre", " ");
-                                InforMap.put("Height", "150-200");
-                                InforMap.put("Height range", " ");
+                                InforMap.put("Height", "150");
+                                InforMap.put("Height range", "150-200");
                                 InforMap.put("Language", "English");
                                 InforMap.put("date of birth", dob_user);
                                 InforMap.put("location", " ");

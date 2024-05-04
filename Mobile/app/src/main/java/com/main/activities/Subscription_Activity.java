@@ -63,7 +63,6 @@ public class Subscription_Activity extends AppCompatActivity {
         userId=userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
 
 
-        txtsearch=(EditText) findViewById(R.id.SearchBar);
         listView=(ListView) findViewById(R.id.grid_sub);
         btn1=(Button) findViewById(R.id.addSub);
         backBtn=(ImageView) findViewById(R.id.back_arrow);
@@ -171,7 +170,7 @@ public class Subscription_Activity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Date currentDate = new Date();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm:ss a MMM yyyy", Locale.getDefault());
                 String time=dateFormat.format(currentDate);
                 // Create a new subscription entry with the incremented key
                 DatabaseReference newSubscriptionRef = databaseReference.child(time);

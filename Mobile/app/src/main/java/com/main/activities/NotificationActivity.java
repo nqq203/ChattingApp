@@ -170,34 +170,16 @@ public class NotificationActivity extends AppCompatActivity {
                 System.out.println("Error: " + databaseError.getMessage());
             }
         });
-        // in below line we are adding data to our array list.
-        /*
-        notiArrayList.add(new NotificationItem("Dennis Nerdy just replied on your story",
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF2tbJGtc87FhbEROZ8u-Q-01Z3oDBt1J3ww&usqp=CAU","Story" ,"Xinh thế",
-                "Last Wednesday at 9:42 AM", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF2tbJGtc87FhbEROZ8u-Q-01Z3oDBt1J3ww&usqp=CAU",1));
-        notiArrayList.add(new NotificationItem("Its a match you just matched with Henry Cavill",
-                "https://preview.redd.it/230812-danielle-phoning-photo-update-v0-det75s625ohb1.jpg?width=640&crop=smart&auto=webp&s=6617d49f38832c201f9659cc8759d5fc8a5595f1"
-                , "Normal",null,"Last Wednesday at 9:42 AM",null,1));
-        notiArrayList.add(new NotificationItem("Dennis Nerdy just like your story",
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF2tbJGtc87FhbEROZ8u-Q-01Z3oDBt1J3ww&usqp=CAU","Story" ,null,
-                "Last Wednesday at 9:42 AM", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF2tbJGtc87FhbEROZ8u-Q-01Z3oDBt1J3ww&usqp=CAU",3));
-        */
-        // initializing our adapter class with our array list and context.
         notiAdapter = new NotificationAdapter(notiArrayList, this);
 
-        // below line is to set layout manager for our recycler view.
         LinearLayoutManager manager = new LinearLayoutManager(this);
 
-        // setting layout manager for our recycler view.
+
         notiRV.setLayoutManager(manager);
 
-        // below line is to set adapter
-        // to our recycler view.
+
         notiRV.setAdapter(notiAdapter);
 
-        // on below line we are creating a method to create item touch helper
-        // method for adding swipe to delete functionality.
-        // in this we are specifying drag direction and position to right
         ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -207,31 +189,30 @@ public class NotificationActivity extends AppCompatActivity {
             }
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                // this method is called when we swipe our item to right direction.
-                // on below line we are getting the item at a particular position.
+
                 NotificationItem deletedCourse = notiArrayList.get(viewHolder.getAdapterPosition());
-                // below line is to get the position
-                // of the item at that position.
                 int position = viewHolder.getAdapterPosition();
-                // this method is called when item is swiped.
-                // below line is to remove item from our array list.
                 notiArrayList.remove(viewHolder.getAdapterPosition());
-                // below line is to notify our item is removed from adapter.
+
                 notiAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
-
-                // below line is to display our snackbar with action.
-                Snackbar.make(notiRV, "You've just deleted a notification", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+                DatabaseReference databaseReference = firebaseDatabase.getReference("Notification/"+userId);
+                //databaseReference.child("Test");
+                // Lấy dữ liệu từ nút "us1"
+                databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onClick(View v) {
-                        // adding on click listener to our action of snack bar.
-                        // below line is to add our item to array list with a position.
-                        notiArrayList.add(position, deletedCourse);
-
-                        // below line is to notify item is
-                        // added to our adapter class.
-                        notiAdapter.notifyItemInserted(position);
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        DatabaseReference m2Reference = databaseReference.child(deletedCourse.getKey());
+                        Log.d("Xoa thong bao",deletedCourse.getUserid());
+                        m2Reference.removeValue();
                     }
-                }).show();
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Xử lý khi có lỗi xảy ra
+                        System.out.println("Error: " + databaseError.getMessage());
+                    }
+                });
+
+                Snackbar.make(notiRV, "You've just deleted a notification", Snackbar.LENGTH_LONG).show();
             }
             // at last we are adding this
             // to our recycler view.

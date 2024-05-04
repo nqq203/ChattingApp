@@ -53,7 +53,7 @@ public class SwipeCardFragment extends Fragment {
     private int currentUserIndex = users.isEmpty() ? -1 : 0;
     private UserSessionManager sessionManager;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
-    String mPhoneNumber;
+    String mPhoneNumber,fullname_user;
     private String lastUserId = null;
     public boolean isDisabled = false;
 
@@ -340,29 +340,36 @@ public class SwipeCardFragment extends Fragment {
     }
     private void addThongBao(String user1,String user2)
     {
-        FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference databaseReference_chat = firebaseDatabase.getReference("Notification/"+user1);
-        databaseReference_chat.addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+
+        DatabaseReference databaseReference1 = firebaseDatabase.getReference("User/" + user2);
+        databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Date currentDate = new Date();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
-                String time=dateFormat.format(currentDate);
-                DatabaseReference newSubscriptionRef = databaseReference_chat.child(time);
-                Map<String, Object> newSubscriptionValues = new HashMap<>();
-                newSubscriptionValues.put("Description","You've just matched with "+user2);
-                newSubscriptionValues.put("Type", "Message");
-                newSubscriptionValues.put("Time", time);
-                newSubscriptionValues.put("UserId", user2);
-                newSubscriptionRef.setValue(newSubscriptionValues);
+                if (dataSnapshot.exists()) {
+                    fullname_user = dataSnapshot.child("fullname").getValue(String.class);
+                    Log.d("Ten", fullname_user);
+                    // Once fullname_user is retrieved, proceed to the next operation
+                    DatabaseReference databaseReference_chat = firebaseDatabase.getReference("Notification/" + user1);
+                    Date currentDate = new Date();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm:ss a MMM yyyy", Locale.getDefault());
+                    String time = dateFormat.format(currentDate);
+                    DatabaseReference newSubscriptionRef = databaseReference_chat.child(time);
+                    Map<String, Object> newSubscriptionValues = new HashMap<>();
+                    newSubscriptionValues.put("Description", "You've just matched with " + fullname_user);
+                    newSubscriptionValues.put("Type", "Message");
+                    newSubscriptionValues.put("Time", time);
+                    newSubscriptionValues.put("UserId", user2);
+                    newSubscriptionRef.setValue(newSubscriptionValues);
+                }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Xử lý khi có lỗi xảy ra
-                System.out.println("Error: " + databaseError.getMessage());
+                // Handle errors
+                Log.e("Firebase", "Error: " + databaseError.getMessage());
             }
         });
-
 
 
     }

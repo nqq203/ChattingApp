@@ -329,7 +329,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Date currentDate = new Date();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm:ss a MMM yyyy", Locale.getDefault());
                 String time = dateFormat.format(currentDate);
                 DatabaseReference newSubscriptionRef = databaseReference_chat.child(time);
                 Map<String, Object> newSubscriptionValues = new HashMap<>();

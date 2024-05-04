@@ -119,7 +119,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-
                     profile_pic = dataSnapshot.child("imageUrl").getValue(String.class);
                     fullname=dataSnapshot.child("fullname").getValue(String.class);
                 }
@@ -145,7 +144,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 .load(profile_pic)
                 .into(holder.ProfilePic);*/
         if(!recyclerData.getStory_pic().isEmpty()) {
-            Log.d("NULL TAAAAAAAAAAAAA", "RUNNING RN222222");
+
             //holder.PicStory.setImageResource(recyclerData.getStory_pic());
             Glide.with(mcontext)
                     .load(recyclerData.getStory_pic())
@@ -157,7 +156,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
 
         if(!recyclerData.getReply_story().isEmpty()) {
-            Log.d("NULL TAAAAAAAAAAAAA", "RUNNING RN2222222222222222");
+
             holder.StoryMess.setText(recyclerData.getReply_story());
         } else
         {

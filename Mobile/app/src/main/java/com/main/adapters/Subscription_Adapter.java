@@ -51,6 +51,7 @@ public class Subscription_Adapter extends ArrayAdapter<SubscriptionItem> {
     {
         View listitemView = convertView;
         Subscription=getItem(position);
+        Log.d("Position",""+position);
         if(listitemView==null)
         {
             listitemView = LayoutInflater.from(getContext()).inflate(R.layout.subscrip_item,parent,false);
@@ -70,12 +71,18 @@ public class Subscription_Adapter extends ArrayAdapter<SubscriptionItem> {
         but_Un.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Subscription=getItem(position);
                 showDeleteDialog();
+                Log.d("DELTET ",Subscription.getUserId());
+
             }
         });
         but_Up.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
+                Subscription=getItem(position);
+                Log.d("UPDADETE ",Subscription.getUserId());
                 ShowUpdateDialog();
             }
         });

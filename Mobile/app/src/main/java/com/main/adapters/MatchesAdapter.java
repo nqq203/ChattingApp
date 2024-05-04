@@ -72,6 +72,7 @@ public class MatchesAdapter extends ArrayAdapter<MatchesItem> {
         btndelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("CLICKED DELETE",matchesItem.getUserid());
                 showDialog();
             }
         });
