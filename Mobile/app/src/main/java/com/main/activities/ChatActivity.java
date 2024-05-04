@@ -49,6 +49,7 @@ import com.google.firebase.storage.StorageReference;
 import com.group4.matchmingle.R;
 import com.group4.matchmingle.databinding.ImageViewerFragmentBinding;
 import com.main.MemoryData;
+import com.main.Utils;
 import com.main.adapters.ChatAdapter;
 import com.main.entities.ChatList;
 import com.main.fragments.ColorPickerDialogFragment;
@@ -139,12 +140,9 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (chatKey.isEmpty()) {
-                    chatKey = "1";
-                    if (snapshot.hasChild("Chat")) {
-                        chatKey = String.valueOf(snapshot.child("Chat").getChildrenCount() + 1);
-                    }
-                }
+//                if (chatKey.isEmpty() || chatKey == null || chatKey.equals("")) {
+//                    chatKey = Utils.generateRandomKey(20);
+//                }
                 if (snapshot.hasChild("Chat")) {
                     if (snapshot.child("Chat").child(chatKey).hasChild("messages")) {
                         chatLists.clear();
@@ -357,6 +355,8 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(ChatActivity.this, MessageActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
