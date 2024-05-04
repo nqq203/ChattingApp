@@ -458,7 +458,8 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
     }
 
     public void showInfoDialog() {
-        InfoDialogFragment dialog = new InfoDialogFragment();
+        String guestPhone = this.guestPhone; // Ensure you have guestPhone available here
+        InfoDialogFragment dialog = InfoDialogFragment.newInstance(guestPhone);
         dialog.show(getSupportFragmentManager(), "InfoDialogFragment");
     }
 

@@ -1,5 +1,6 @@
 package com.main.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.group4.matchmingle.R;
 import com.main.entities.BlockedUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BlockedUsersAdapter extends RecyclerView.Adapter<BlockedUsersAdapter.ViewHolder> {

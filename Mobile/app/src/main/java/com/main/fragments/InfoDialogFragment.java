@@ -24,9 +24,18 @@ import com.main.activities.XemHobbiesActivity;
 
 public class InfoDialogFragment extends DialogFragment {
 
+    public static InfoDialogFragment newInstance(String guestPhone) {
+        InfoDialogFragment fragment = new InfoDialogFragment();
+        Bundle args = new Bundle();
+        args.putString("guestPhone", guestPhone);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final String guestPhone = getArguments().getString("guestPhone");
         // Đặt tiêu đề cho Dialog
         builder.setTitle("Options");
 
@@ -53,7 +62,7 @@ public class InfoDialogFragment extends DialogFragment {
                         break;
                     case 3:
                         dismiss();
-                        BlockUserDialogFragment blockFragment = new BlockUserDialogFragment();
+                        BlockUserDialogFragment blockFragment = BlockUserDialogFragment.newInstance(guestPhone);
                         blockFragment.show(getActivity().getSupportFragmentManager(), "BLOCK_FRAGMENT");
                         break;
                 }
