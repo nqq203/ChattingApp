@@ -108,7 +108,7 @@
             android:layout_height="wrap_content"
             android:text="@string/image_ic"
             android:fontFamily="@font/fa_solid_900"
-            android:textColor="@color/purple_2"
+            android:textColor="@color/black"
             android:textSize="30dp"
             android:id="@+id/send_image"
             android:layout_marginRight="15dp"/>
@@ -119,7 +119,7 @@
             android:layout_height="wrap_content"
             android:text="@string/micro_ic"
             android:fontFamily="@font/fa_solid_900"
-            android:textColor="@color/purple_2"
+            android:textColor="@color/black"
             android:textSize="30dp"
             android:layout_marginRight="15dp"/>
 
@@ -139,7 +139,7 @@
             android:layout_height="wrap_content"
             android:text="@string/send_ic"
             android:fontFamily="@font/fa_solid_900"
-            android:textColor="@color/purple_2"
+            android:textColor="@color/black"
             android:textSize="25dp"
             android:id="@+id/button_send"/>
     </LinearLayout>

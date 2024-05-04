@@ -25,7 +25,7 @@ import org.w3c.dom.Text;
 
 public class ProfileMainActivity  extends AppCompatActivity {
 
-    TextView btnRateApp, btnComApp,btnAboutMe,btnAboutMe2,btn_pre,btnHobbyEdit;
+    TextView btnRateApp, btnComApp,btnAboutMe,btnAboutMe2,btn_pre,btnHobbyEdit, blockListEdit;
     Button ViewProfileBtn;
     Dialog RateAppDialog, ComAppDialog;
     ImageView backBtn;
@@ -67,9 +67,9 @@ public class ProfileMainActivity  extends AppCompatActivity {
         agerange_View=(TextView) findViewById(R.id.agerange_profile);
         heightrhange_View=(TextView) findViewById(R.id.PreHeight_profile);
         language_View=(TextView) findViewById(R.id.language_profile);
+        blockListEdit = (TextView) findViewById(R.id.block_profile);
 
         ViewProfileBtn = (Button) findViewById(R.id.ViewProfileBtn);
-
 
         Button iconHome = findViewById(R.id.icon_home);
         Button iconFavourite = findViewById(R.id.icon_favorite);
@@ -136,6 +136,12 @@ public class ProfileMainActivity  extends AppCompatActivity {
 
         editPlanBtn.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileMainActivity.this, Subscription_Activity.class);
+            startActivity(intent);
+            finish();
+        });
+
+        blockListEdit.setOnClickListener(v -> {
+            Intent intent = new Intent (ProfileMainActivity.this, BlockedUsersActivity.class);
             startActivity(intent);
             finish();
         });

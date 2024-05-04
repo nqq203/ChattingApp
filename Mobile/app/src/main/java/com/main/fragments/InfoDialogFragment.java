@@ -30,7 +30,7 @@ public class InfoDialogFragment extends DialogFragment {
         builder.setTitle("Options");
 
         // Thêm danh sách lựa chọn
-        builder.setItems(new String[]{"Report", "Sharing Hobbies", "Change Theme Color"}, new DialogInterface.OnClickListener() {
+        builder.setItems(new String[]{"Report", "Sharing Hobbies", "Change Theme Color", "Block"}, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Xử lý sự kiện click vào từng item
                 // 'which' là vị trí của item trong danh sách
@@ -49,6 +49,11 @@ public class InfoDialogFragment extends DialogFragment {
                         dismiss();
                         ColorPickerDialogFragment newFragment = new ColorPickerDialogFragment();
                         newFragment.show(getActivity().getSupportFragmentManager(), "INFO_DIALOG");
+                        break;
+                    case 3:
+                        dismiss();
+                        BlockUserDialogFragment blockFragment = new BlockUserDialogFragment();
+                        blockFragment.show(getActivity().getSupportFragmentManager(), "BLOCK_FRAGMENT");
                         break;
                 }
             }

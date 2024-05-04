@@ -248,6 +248,7 @@ public class SwipeCardFragment extends Fragment {
                                         myInfo.put("pic", myImageUrl);
 
                                         databaseReference.child("Matches").child(userId).child(mPhoneNumber).setValue(myInfo);
+                                        addMatchUserToMessage(mPhoneNumber, userId);
                                     }
 
                                     @Override
@@ -256,6 +257,9 @@ public class SwipeCardFragment extends Fragment {
                                     }
                                 });
                                 databaseReference.child("Matches").child(mPhoneNumber).child(userId).setValue(otherInfo);
+                                addMatchUserToMessage(userId, mPhoneNumber);
+
+                                // Remove other user and you out of OneWayMatchList of each others
                                 DatabaseReference removeRef1 = databaseReference.child("OneWayMatchesList").child(userId).child(mPhoneNumber);
                                 DatabaseReference removeRef2 = databaseReference.child("OneWayMatchesList").child(mPhoneNumber).child(userId);
 
@@ -295,6 +299,27 @@ public class SwipeCardFragment extends Fragment {
 
     public void disableSwipe() {
         cardView.setOnTouchListener(null); // Disable swipe by setting touch listener to null
+    }
+
+    private void addMatchUserToMessage(String user1, String user2) {
+        DatabaseReference matchRef = databaseReference.child("Matches");
+        matchRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String fullname = snapshot.child(user1).child(user2).child("name").getValue(String.class);
+                String imageUrl = snapshot.child(user1).child(user2).child("pic").getValue(String.class);
+                String myChatBgColor = "purple";
+
+                databaseReference.child("Message").child(user1).child(user2).child("fullname").setValue(fullname);
+                databaseReference.child("Message").child(user1).child(user2).child("imageUrl").setValue(imageUrl);
+                databaseReference.child("Message").child(user1).child(user2).child("myChatBgColor").setValue(myChatBgColor);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 //    private void fetchUsers() {

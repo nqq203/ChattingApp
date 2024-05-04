@@ -1,8 +1,11 @@
 package com.main.activities;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,7 +41,8 @@ public class MessageActivity  extends AppCompatActivity {
     private int unseenMessage = 0;
     private MessageAdapter messageAdapter;
     private String chatKey = "";
-    private boolean dataSet = false;
+    private boolean isFirstTime = true;
+    private int countIsFirstTime = 0;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +55,18 @@ public class MessageActivity  extends AppCompatActivity {
         RecyclerView storiesContainer = findViewById(R.id.stories_container);
         populateStories(storiesContainer);
         messagesRecyclerView = findViewById(R.id.message_list_container);
-        messageAdapter = new MessageAdapter(messageLists, MessageActivity.this);
+        messageAdapter = new MessageAdapter(messageLists, MessageActivity.this, new MessageAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(MessageList message) {
+                Intent intent = new Intent(MessageActivity.this, ChatActivity.class);
+                intent.putExtra("mobile", message.getMobile());
+                intent.putExtra("fullname", message.getName());
+                intent.putExtra("imageUrl", message.getImageUrl());
+                intent.putExtra("chatKey", message.getChatKey());
+                startActivity(intent);
+                finish();
+            }
+        });
         messagesRecyclerView.setAdapter(messageAdapter);
         populateMessageList(messagesRecyclerView);
 
@@ -116,69 +131,100 @@ public class MessageActivity  extends AppCompatActivity {
         container.setHasFixedSize(true);
         container.setLayoutManager(new LinearLayoutManager(this));
         myPhone = sessionManager.getUserDetails().get(UserSessionManager.KEY_PHONE_NUMBER);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+
+        databaseReference.child("Message").child(myPhone).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                messageLists.clear();
-                lastMessage = "";
-                unseenMessage = 0;
-                chatKey = "";
-
-                for (DataSnapshot dataSnapshot : snapshot.child("Message").child(myPhone).getChildren()) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     final String getMobilePhone = dataSnapshot.getKey();
-                    dataSet = false;
+                    messageLists.clear();
+                    chatKey = "";
+                    unseenMessage = 0;
+                    lastMessage = "";
+//                    dataSet = false;
+                    isFirstTime = true;
                     if (!getMobilePhone.equals(myPhone)) {
                         final String fullname = dataSnapshot.child("fullname").getValue(String.class);
                         final String imageUrl = dataSnapshot.child("imageUrl").getValue(String.class);
 
-                        databaseReference.child("Chat").addValueEventListener(new ValueEventListener() {
+                        DatabaseReference chatRef = databaseReference.child("Chat");
+                        chatRef.addValueEventListener(new ValueEventListener() {
                             @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                int chatCounts = (int)snapshot.getChildrenCount();
-                                if (chatCounts > 0) {
-                                    for (DataSnapshot dataSnapshot1: snapshot.getChildren()) {
-                                        final String getKey = dataSnapshot1.getKey();
-                                        chatKey = getKey;
+                            public void onDataChange(@NonNull DataSnapshot chatSnapshot) {
+                                Log.d(TAG, "onDataChange: " + chatKey);
+                                if (chatSnapshot.child(myPhone + "_" + getMobilePhone).hasChild("user1") &&
+                                        chatSnapshot.child(myPhone + "_" + getMobilePhone).hasChild("user2") &&
+                                        chatSnapshot.child(myPhone + "_" + getMobilePhone).hasChild("messages")) {
+                                    chatKey = myPhone + "_" + getMobilePhone;
+                                    for (DataSnapshot chatDataSnapshot : chatSnapshot.child(chatKey).child("messages").getChildren()) {
+                                        final Long getLastSeenMessage = Long.parseLong(MemoryData.getLastMsg(MessageActivity.this, chatKey));
+                                        final Long getMessageKey = Long.parseLong(chatDataSnapshot.getKey());
+                                        final String guestPhone = chatDataSnapshot.child("phoneNumber").getValue(String.class);
 
-                                        if (dataSnapshot1.hasChild("user1") && dataSnapshot1.hasChild("user2") && dataSnapshot1.hasChild("messages")) {
-                                            final String getUserOne = dataSnapshot1.child("user1").getValue(String.class);
-                                            final String getUserTwo = dataSnapshot1.child("user2").getValue(String.class);
-
-                                            if ((getUserOne.equals(getMobilePhone) && getUserTwo.equals(myPhone)) || (getUserOne.equals(myPhone) && getUserTwo.equals(getMobilePhone))) {
-                                                for (DataSnapshot chatDataSnapshot : dataSnapshot1.child("messages").getChildren()) {
-                                                    final Long getLastSeenMessage = Long.parseLong(MemoryData.getLastMsg(MessageActivity.this, getKey));
-                                                    final Long getMessageKey = Long.parseLong(chatDataSnapshot.getKey());
-                                                    final String getGuestPhone = chatDataSnapshot.child("phoneNumber").getValue(String.class);
-
-                                                    String typeMsg = chatDataSnapshot.child("type").getValue(String.class);
-                                                    lastMessage = chatDataSnapshot.child("msg").getValue(String.class);
-                                                    if (typeMsg.equals("image")) {
-                                                        lastMessage = "Have sent a image message";
-                                                    }
-                                                    else if(lastMessage.length() > 30 && typeMsg.equals("text")) {
-                                                        lastMessage = lastMessage.substring(0, 30) + "...";
-                                                    }
-                                                    else if (lastMessage.equals("audio")) {
-                                                        lastMessage = "Have sent a voice message";
-                                                    }
-                                                    if (getMessageKey > getLastSeenMessage && !myPhone.equals(getGuestPhone)) {
-                                                        unseenMessage = 1;
-                                                    }
-                                                    else {
-                                                        unseenMessage = 0;
-                                                    }
-                                                }
-                                            }
+                                        String typeMsg = chatDataSnapshot.child("type").getValue(String.class);
+                                        lastMessage = chatDataSnapshot.child("msg").getValue(String.class);
+                                        if (typeMsg.equals("image")) {
+                                            lastMessage = "Have sent a image message";
+                                        }
+                                        else if(lastMessage.length() > 30 && typeMsg.equals("text")) {
+                                            lastMessage = lastMessage.substring(0, 30) + "...";
+                                        }
+                                        else if (lastMessage.equals("audio")) {
+                                            lastMessage = "Have sent a voice message";
+                                        }
+                                        if (getMessageKey > getLastSeenMessage && !myPhone.equals(guestPhone)) {
+                                            unseenMessage = 1;
+                                        }
+                                        else {
+                                            unseenMessage = 0;
                                         }
                                     }
                                 }
-                                if (!dataSet) {
-                                    dataSet  = true;
-                                    MessageList messageList = new MessageList(fullname, getMobilePhone, lastMessage, imageUrl, unseenMessage, chatKey);
-                                    messageLists.add(messageList);
-                                    messageAdapter.updateData(messageLists);
+                                else if (chatSnapshot.child(getMobilePhone + "_" + myPhone).hasChild("user1") &&
+                                        chatSnapshot.child(getMobilePhone + "_" + myPhone).hasChild("user2") &&
+                                        chatSnapshot.child(getMobilePhone + "_" + myPhone).hasChild("messages")) {
+                                    chatKey = getMobilePhone + "_" + myPhone;
+                                    for (DataSnapshot chatDataSnapshot : chatSnapshot.child(chatKey).child("messages").getChildren()) {
+                                        final Long getLastSeenMessage = Long.parseLong(MemoryData.getLastMsg(MessageActivity.this, chatKey));
+                                        final Long getMessageKey = Long.parseLong(chatDataSnapshot.getKey());
+                                        final String guestPhone = chatDataSnapshot.child("phoneNumber").getValue(String.class);
+
+                                        String typeMsg = chatDataSnapshot.child("type").getValue(String.class);
+                                        lastMessage = chatDataSnapshot.child("msg").getValue(String.class);
+                                        if (typeMsg.equals("image")) {
+                                            lastMessage = "Have sent a image message";
+                                        }
+                                        else if(lastMessage.length() > 30 && typeMsg.equals("text")) {
+                                            lastMessage = lastMessage.substring(0, 30) + "...";
+                                        }
+                                        else if (lastMessage.equals("audio")) {
+                                            lastMessage = "Have sent a voice message";
+                                        }
+                                        if (getMessageKey > getLastSeenMessage && !myPhone.equals(guestPhone)) {
+                                            unseenMessage = 1;
+                                        }
+                                        else {
+                                            unseenMessage = 0;
+                                        }
+                                    }
+                                }
+                                else {
+                                    chatKey = myPhone + "_" + getMobilePhone;
+                                    unseenMessage = 0;
+                                    lastMessage = "";
                                 }
 
+                                if (isFirstTime) {
+                                    if (countIsFirstTime == (int)snapshot.getChildrenCount() - 1) {
+                                        isFirstTime = false;
+                                    }
+                                    MessageList messageList = new MessageList(fullname, getMobilePhone, lastMessage, imageUrl, unseenMessage, chatKey);
+                                    messageLists.add(messageList);
+                                    if (countIsFirstTime <= (int)snapshot.getChildrenCount() - 1) {
+                                        messageAdapter.updateData(messageLists);
+                                        countIsFirstTime++;
+                                    }
+                                }
                             }
 
                             @Override
