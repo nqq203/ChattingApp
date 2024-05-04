@@ -738,21 +738,6 @@
                 android:textSize="18dp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="340dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="30dp"
-                android:background="@drawable/button_border"
-                android:clickable="true"
-                android:onClick="onClick"
-                android:text="Delete Account"
-                android:textAlignment="center"
-                android:textColor="@color/red"
-                android:textSize="18dp"
-                android:textStyle="bold" />
-
         </LinearLayout>
 
     </ScrollView>
