@@ -19,16 +19,19 @@ import com.google.firebase.database.ValueEventListener;
 import com.group4.matchmingle.R;
 import com.main.activities.MatchesActivity;
 import com.main.activities.SharingHobbiesActivity;
+import com.main.activities.UserSessionManager;
 import com.main.adapters.MatchesAdapter;
 import com.main.callbacks.FragmentCallbacks;
 import com.main.callbacks.MainCallbacks;
 import com.main.entities.MatchesItem;
 
+import java.util.HashMap;
+
 public class TextViewHobbiesFragment extends Fragment implements FragmentCallbacks {
 
     SharingHobbiesActivity main;
     TextView HobbiesText;
-    String userId="us1";
+    String userId;
     Button ShareHobby;
 
     public static TextViewHobbiesFragment newInstance(String strArg1) {
@@ -52,6 +55,10 @@ public class TextViewHobbiesFragment extends Fragment implements FragmentCallbac
         HobbiesText=(TextView) viewDetail.findViewById(R.id.HobbiesText);
         ShareHobby=(Button) viewDetail.findViewById(R.id.Shared_hobby);
         FirebaseDatabase firebaseDatabase1=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+
+        UserSessionManager sessionManager = new UserSessionManager(getContext());
+        HashMap<String, String> userDetails = sessionManager.getUserDetails();
+        userId = userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
 
         DatabaseReference databaseReference1 = firebaseDatabase1.getReference("Hobbies/"+userId);
         databaseReference1.addValueEventListener(new ValueEventListener() {

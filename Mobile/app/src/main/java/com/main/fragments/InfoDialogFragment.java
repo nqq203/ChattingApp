@@ -20,6 +20,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.group4.matchmingle.R;
 import com.main.activities.SharingHobbiesActivity;
+import com.main.activities.XemHobbiesActivity;
 
 public class InfoDialogFragment extends DialogFragment {
 
@@ -51,7 +52,7 @@ public class InfoDialogFragment extends DialogFragment {
                         break;
                     case 1:
                         // Sharing Hobbies
-                        Intent intentHobbies = new Intent(getActivity(), SharingHobbiesActivity.class);
+                        Intent intentHobbies = new Intent(getActivity(), XemHobbiesActivity.class);
                         startActivity(intentHobbies);
                         break;
                     case 2:

@@ -31,9 +31,13 @@ import com.main.activities.UserSessionManager;
 import com.main.callbacks.OnSwipeTouchListener;
 import com.main.entities.User;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class SwipeCardFragment extends Fragment {
     private CardView cardView;
@@ -149,8 +153,8 @@ public class SwipeCardFragment extends Fragment {
 
     private void fetchNextUser() {
         DatabaseReference usersRef = databaseReference.child("SuggestionList").child(mPhoneNumber);
-//        Query query = (lastUserId == null) ? usersRef.orderByKey().limitToFirst(1) : usersRef.orderByKey().startAfter(lastUserId).limitToFirst(1);
-        Query query = usersRef.orderByKey().limitToFirst(1);
+        Query query = (lastUserId == null) ? usersRef.orderByKey().limitToFirst(1) : usersRef.orderByKey().startAfter(lastUserId).limitToFirst(1);
+//        Query query = usersRef.orderByKey().limitToFirst(1);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -263,10 +267,18 @@ public class SwipeCardFragment extends Fragment {
                                 });
                                 databaseReference.child("Matches").child(mPhoneNumber).child(userId).setValue(otherInfo);
                                 addMatchUserToMessage(userId, mPhoneNumber);
+                                addThongBao(userId, mPhoneNumber);
+                                addThongBao(mPhoneNumber,userId);
+
+
 
                                 // Remove other user and you out of OneWayMatchList of each others
                                 DatabaseReference removeRef1 = databaseReference.child("OneWayMatchesList").child(userId).child(mPhoneNumber);
                                 DatabaseReference removeRef2 = databaseReference.child("OneWayMatchesList").child(mPhoneNumber).child(userId);
+
+
+
+
 
                                 removeRef1.removeValue().addOnCompleteListener(task -> {
                                     if (task.isSuccessful()) {
@@ -326,7 +338,34 @@ public class SwipeCardFragment extends Fragment {
             }
         });
     }
+    private void addThongBao(String user1,String user2)
+    {
+        FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        DatabaseReference databaseReference_chat = firebaseDatabase.getReference("Notification/"+user1);
+        databaseReference_chat.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Date currentDate = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
+                String time=dateFormat.format(currentDate);
+                DatabaseReference newSubscriptionRef = databaseReference_chat.child(time);
+                Map<String, Object> newSubscriptionValues = new HashMap<>();
+                newSubscriptionValues.put("Description","You've just matched with "+user2);
+                newSubscriptionValues.put("Type", "Message");
+                newSubscriptionValues.put("Time", time);
+                newSubscriptionValues.put("UserId", user2);
+                newSubscriptionRef.setValue(newSubscriptionValues);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+                System.out.println("Error: " + databaseError.getMessage());
+            }
+        });
 
+
+
+    }
 //    private void fetchUsers() {
 //        FirebaseDatabase database = FirebaseDatabase.getInstance();
 //        String phoneNumber = sessionManager.getUserDetails().get(UserSessionManager.KEY_PHONE_NUMBER);

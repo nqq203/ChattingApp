@@ -22,48 +22,6 @@ import com.main.fragments.TextViewHobbiesFragment;
 
 
 import java.util.ArrayList;
-/*
-public class SharingHobbiesActivity extends AppCompatActivity {
-
-    private GridView gridView;
-    private EditText searchHobbies;
-    private TextView hobbiestext;
-    String hobbiesEnter;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.sharing_hobbies);
-        hobbiestext=(TextView) findViewById(R.id.HobbiesText);
-        searchHobbies=(EditText) findViewById(R.id.SearchBar);
-        searchHobbies.setHint("Search hobbies...");
-
-        gridView=(GridView) findViewById(R.id.grid_hobbies);
-        ArrayList<HobbiesItem> HobbiesArrayList= new ArrayList<HobbiesItem>();
-
-        HobbiesArrayList.add(new HobbiesItem("GAME",R.drawable.game,false));
-        HobbiesArrayList.add(new HobbiesItem("MUSIC",R.drawable.music,false));
-        HobbiesArrayList.add(new HobbiesItem("FILM",R.drawable.movie,false));
-        HobbiesArrayList.add(new HobbiesItem("RUNNING",R.drawable.running,false));
-        HobbiesArrayList.add(new HobbiesItem("COFFE",R.drawable.coffe,false));
-        HobbiesArrayList.add(new HobbiesItem("CONNECT",R.drawable.connect,false));
-        HobbiesArrayList.add(new HobbiesItem("FRIENDS",R.drawable.friends,false));
-        HobbiesArrayList.add(new HobbiesItem("FOODS",R.drawable.food,false));
-        HobbiesArrayList.add(new HobbiesItem("DRAWING",R.drawable.draw,false));
-        HobbiesArrayList.add(new HobbiesItem("READING",R.drawable.reading,false));
-        HobbiesArrayList.add(new HobbiesItem("PHOTOGRAPHY",R.drawable.photography,false));
-        HobbiesArrayList.add(new HobbiesItem("MORE",R.drawable.more,false));
-
-        HobbiesAdapter adapter= new HobbiesAdapter(this,HobbiesArrayList);
-        gridView.setAdapter(adapter);
-
-
-
-    }
-
-
-
-}*/
 
 public class SharingHobbiesActivity extends FragmentActivity implements MainCallbacks {
 

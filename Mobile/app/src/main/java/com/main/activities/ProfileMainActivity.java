@@ -6,12 +6,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,26 +27,41 @@ import com.main.entities.MatchesItem;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 public class ProfileMainActivity  extends AppCompatActivity {
 
     TextView btnRateApp, btnComApp,btnAboutMe,btnAboutMe2,btn_pre,btnHobbyEdit, blockListEdit;
     Button ViewProfileBtn;
-    Dialog RateAppDialog, ComAppDialog;
+    Dialog RateAppDialog, ComAppDialog,ResultDialog;
     ImageView backBtn;
     TextView editPlanBtn, btnLogout;
+    Dialog mDialog;
     UserSessionManager sessionManager;
     TextView phone_View,
             dob_View,email_View,location_View,height_View,curdatingplan_View,gender_View,
             feedback_View, heightrhange_View,name_View,number_View,agerange_View,genderpre_View,
             comment_View,language_View,rate_View;
+    FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
 
-    String userId="us1";
+    String userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        UserSessionManager sessionManager = new UserSessionManager(getBaseContext());
+        HashMap<String, String> userDetails = sessionManager.getUserDetails();
+        userId=userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
+
         setContentView(R.layout.edit_profile_main);
         RateAppDialog = new Dialog(this);
         ComAppDialog = new Dialog(this);
+        ResultDialog= new Dialog(this);
         sessionManager = new UserSessionManager(this);
 
         btn_pre=(TextView) findViewById(R.id.btn_pre);
@@ -146,7 +165,13 @@ public class ProfileMainActivity  extends AppCompatActivity {
             finish();
         });
 
-        FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        blockListEdit.setOnClickListener(v -> {
+            Intent intent = new Intent (ProfileMainActivity.this, BlockedUsersActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
+
         DatabaseReference databaseReference = firebaseDatabase.getReference("Information/"+userId);
         //databaseReference.child("Test");
 
@@ -217,18 +242,15 @@ public class ProfileMainActivity  extends AppCompatActivity {
         btnRateApp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RateAppDialog.setContentView(R.layout.rating_app);
-                RateAppDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.dialog_background));
-                RateAppDialog.show();
+                ShowRateDialog();
+
             }
         });
 
         btnComApp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ComAppDialog.setContentView(R.layout.comments_improvement);
-                ComAppDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.dialog_background));
-                ComAppDialog.show();
+                ImprovementDialog();
             }
         });
 
@@ -239,7 +261,164 @@ public class ProfileMainActivity  extends AppCompatActivity {
             }
         });
     }
+    public void ImprovementDialog()
+    {
+        ComAppDialog.setContentView(R.layout.comments_improvement);
+        ComAppDialog.show();
+        EditText note_im=(EditText) ComAppDialog.findViewById(R.id.improvements);
+        Button nextBtn= (Button) ComAppDialog.findViewById(R.id.next_button);
+        Button cancelBtn= (Button) ComAppDialog.findViewById(R.id.cancel_button);
 
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String note= note_im.getText().toString();
+                DatabaseReference databaseReference = firebaseDatabase.getReference("Improvements/"+userId);
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        Date currentDate = new Date();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
+                        String time=dateFormat.format(currentDate);
+
+                        // Get the number of children (current data size)
+
+                        // Create a new subscription entry with the incremented key
+                        DatabaseReference newSubscriptionRef = databaseReference.child(time);
+                        // Set the values for the new subscription entry
+                        Map<String, Object> newSubscriptionValues = new HashMap<>();
+                        newSubscriptionValues.put("Note", note_im.getText().toString());
+                        // Update the database with the new subscription entry
+                        newSubscriptionRef.setValue(newSubscriptionValues)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        ResultDialog.setContentView(R.layout.succes_popup);
+                                        ResultDialog.show();
+                                        TextView content=(TextView) ResultDialog.findViewById(R.id.content);
+                                        Button btn_cancel=(Button) ResultDialog.findViewById(R.id.cancel_button);
+                                        content.setText("Update Successfully!");
+                                        btn_cancel.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                ResultDialog.dismiss();
+                                            }
+                                        });
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        ResultDialog.setContentView(R.layout.succes_popup);
+                                        ResultDialog.show();
+                                        TextView content=(TextView) ResultDialog.findViewById(R.id.content);
+                                        Button btn_cancel=(Button) ResultDialog.findViewById(R.id.cancel_button);
+                                        content.setText("Update Failed");
+                                        btn_cancel.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                ResultDialog.dismiss();
+                                            }
+                                        });
+                                    }
+                                });
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Handle any errors
+                    }
+                });
+
+                ComAppDialog.dismiss();
+            }
+        });
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ComAppDialog.dismiss();
+            }
+        });
+    }
+    public void ShowRateDialog()
+    {
+        RateAppDialog.setContentView(R.layout.rating_app);
+        RateAppDialog.show();
+        Button nextBtn= (Button) RateAppDialog.findViewById(R.id.next_button);
+        Button cancelBtn= (Button) RateAppDialog.findViewById(R.id.cancel_button);
+        RatingBar ratingBar=(RatingBar) RateAppDialog.findViewById(R.id.ratebar);
+        EditText note_rate=(EditText) RateAppDialog.findViewById(R.id.rate_note);
+
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            float star=ratingBar.getRating();
+            String note= note_rate.getText().toString();
+            DatabaseReference databaseReference = firebaseDatabase.getReference("Rate/"+userId);
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Date currentDate = new Date();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
+                    String time=dateFormat.format(currentDate);
+                    DatabaseReference newSubscriptionRef = databaseReference.child(time);
+                    // Set the values for the new subscription entry
+                    Map<String, Object> newSubscriptionValues = new HashMap<>();
+                    newSubscriptionValues.put("Note", note_rate.getText().toString());
+                    newSubscriptionValues.put("Star",star);
+                    // Update the database with the new subscription entry
+                    newSubscriptionRef.setValue(newSubscriptionValues)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    ResultDialog.setContentView(R.layout.succes_popup);
+                                    ResultDialog.show();
+                                    TextView content=(TextView) ResultDialog.findViewById(R.id.content);
+                                    Button btn_cancel=(Button) ResultDialog.findViewById(R.id.cancel_button);
+
+                                    content.setText("Update Successfully!");
+                                    btn_cancel.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ResultDialog.dismiss();
+                                        }
+                                    });
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    ResultDialog.setContentView(R.layout.succes_popup);
+                                    ResultDialog.show();
+                                    TextView content=(TextView) ResultDialog.findViewById(R.id.content);
+                                    Button btn_cancel=(Button) ResultDialog.findViewById(R.id.cancel_button);
+                                    content.setText("Update Failed");
+                                    btn_cancel.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ResultDialog.dismiss();
+                                        }
+                                    });
+                                }
+                            });
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Handle any errors
+                }
+            });
+
+            RateAppDialog.dismiss();
+        }
+    });
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RateAppDialog.dismiss();
+            }
+        });
+
+    }
     public void onLogout() {
         sessionManager.logoutUser();
         Intent intent = new Intent(ProfileMainActivity.this, MainActivity.class);
