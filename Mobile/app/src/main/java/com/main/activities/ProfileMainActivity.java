@@ -193,8 +193,16 @@ public class ProfileMainActivity  extends AppCompatActivity {
 
             }
         });
-
-
+        /*
+        qweqweqwe
+                qwe
+                wqe
+                        qwe
+                        qw
+                                eqw
+                                eq
+                                        we
+        */
         DatabaseReference databaseReference = firebaseDatabase.getReference("Information/"+userId);
         //databaseReference.child("Test");
 
