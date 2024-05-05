@@ -244,14 +244,8 @@ public class ProfileMainActivity  extends AppCompatActivity {
                             if (dataSnapshot.exists()) {
                                 String fullname = dataSnapshot.child("fullname").getValue(String.class);
                                 fullname_user = fullname;
-                                Log.d("name", fullname_user);
-
                                 String dob = dataSnapshot.child("date").getValue(String.class);
-                                dob_user = dob;
                                 String gender = dataSnapshot.child("gender").getValue(String.class);
-                                gender_user = gender;
-                                Log.d("gender", gender_user);
-
                                 // Once you have all the necessary data, update Information node
                                 DatabaseReference databaseReference_Info = firebaseDatabase.getReference("Information/" + userId);
                                 HashMap<String, Object> InforMap = new HashMap<>();
