@@ -426,11 +426,11 @@ public class SwipeCardFragment extends Fragment {
                     JSONObject jsonObject = new JSONObject();
 
                     JSONObject notificationObj = new JSONObject();
-                    notificationObj.put("title", "Bạn đã match với 1 người dùng, hãy xem qua ngay!");
-                    notificationObj.put("body", "Nhấn vào để xem người ấy là ai");
+                    notificationObj.put("title", "You've just match with someone!");
+                    notificationObj.put("body", "Click to see.");
 
                     JSONObject dataObj = new JSONObject();
-
+                    dataObj.put("userId", guestPhone);
                     jsonObject.put("notification", notificationObj);
                     jsonObject.put("data", dataObj);
                     jsonObject.put("to", token);
