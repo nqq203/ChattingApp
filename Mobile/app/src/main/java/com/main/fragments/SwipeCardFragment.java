@@ -471,4 +471,13 @@ public class SwipeCardFragment extends Fragment {
         });
     }
 }
-//allllllllllllllllllllllllllllllllll
+
+/*
+qweqw
+qweqwwqe
+        qwe
+qweq
+                w
+qe
+
+ */
