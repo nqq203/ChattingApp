@@ -14,6 +14,3 @@ public class RateActivity extends AppCompatActivity {
         setContentView(R.layout.rating_app);
     }
 }
-
-//qweqeweqweqweqweqwe//
-//qweqe
