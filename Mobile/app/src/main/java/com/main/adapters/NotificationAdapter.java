@@ -122,6 +122,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                     profile_pic = dataSnapshot.child("imageUrl").getValue(String.class);
                     fullname=dataSnapshot.child("fullname").getValue(String.class);
+                    Glide.with(mcontext)
+                            .load(profile_pic)
+                            .into(holder.ProfilePic);
                 }
                 else {
                     System.out.println("Không tìm thấy dữ liệu cho người dùng có ID: " + userId);
@@ -138,12 +141,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         holder.Description_Text.setText(recyclerData.getDescription());
         //holder.ProfilePic.setImageResource(recyclerData.getProfile_pic());
-        RequestOptions requestOptions = RequestOptions.circleCropTransform();
-        Glide.with(mcontext).load(profile_pic).apply(requestOptions).into(holder.ProfilePic);
-        /*
-        Glide.with(mcontext)
-                .load(profile_pic)
-                .into(holder.ProfilePic);*/
+        //RequestOptions requestOptions = RequestOptions.circleCropTransform();
+        //Glide.with(mcontext).load(profile_pic).apply(requestOptions).into(holder.ProfilePic);
+
+
         if(!recyclerData.getStory_pic().isEmpty()) {
             Log.d("NULL TAAAAAAAAAAAAA", "RUNNING RN222222");
             //holder.PicStory.setImageResource(recyclerData.getStory_pic());
