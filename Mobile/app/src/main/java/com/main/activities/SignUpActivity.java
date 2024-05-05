@@ -152,18 +152,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                 }
             }
-            /*
-            wqeqwe
-            qweqw
-            weqweqwe
-            qwe
-            qw
-            ewq
-            e
-            weqe
-            qw
-            eqwe
-                                    */
+
 
             @Override
             public boolean equals(@Nullable Object obj) {
