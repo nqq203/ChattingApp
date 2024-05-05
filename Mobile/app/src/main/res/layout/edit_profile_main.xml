@@ -45,16 +45,7 @@
                     android:layout_height="130dp"
                     android:src="@drawable/jisoo"
                     app:cardCornerRadius="80dp"/>
-                <Button
-                    android:id="@+id/EditPic_Profile"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="220dp"
-                    android:layout_marginTop="75dp"
-                    app:iconSize="25dp"
-                    app:iconGravity="textStart"
-                    app:iconPadding="0dp"
-                    app:icon='@drawable/edit_icon'/>
+
                 <ImageView
                     android:clickable="true"
                     android:id="@+id/back_arrow"

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -177,6 +178,23 @@ public class ProfileMainActivity  extends AppCompatActivity {
             finish();
         });
 
+        DatabaseReference databaseReference_Info = firebaseDatabase.getReference("User/" + userId);
+        databaseReference_Info.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String profile_pic=snapshot.child("imageUrl").getValue(String.class);
+                Log.d("profile_pic",profile_pic);
+                Glide.with(ProfileMainActivity.this)
+                        .load(profile_pic)
+                        .into((ImageView) findViewById(R.id.Profile_Pic));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
         DatabaseReference databaseReference = firebaseDatabase.getReference("Information/"+userId);
         //databaseReference.child("Test");
@@ -222,6 +240,7 @@ public class ProfileMainActivity  extends AppCompatActivity {
                     LocalDate birthDate = LocalDate.parse(dob, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                     LocalDate currentDate = LocalDate.now();
                     Period age = Period.between(birthDate, currentDate);
+<<<<<<< HEAD
                     Profile_Name_Age.setText(name+", "+age.getYears());
                     name_View.setText(name);
                     phone_View.setText(phoneNumber);
@@ -235,6 +254,22 @@ public class ProfileMainActivity  extends AppCompatActivity {
                     agerange_View.setText(ageRange);
                     genderpre_View.setText(genderPre);
                     gender_View.setText(gender);
+=======
+                        Profile_Name_Age.setText(name+", "+age.getYears());
+                        name_View.setText(name);
+                        phone_View.setText(phoneNumber);
+                        location_View.setText(location);
+                        dob_View.setText(dob);
+                        language_View.setText(language);
+                        heightrhange_View.setText(heightRange);
+                        height_View.setText(height);
+                        email_View.setText(email);
+                        curdatingplan_View.setText(dtingplan);
+                        agerange_View.setText(ageRange);
+                        genderpre_View.setText(genderPre);
+                        gender_View.setText(gender);
+
+>>>>>>> afdafc3dbca01b16a6042d8cfe1fb9d94134285f
                 }
                 else {
                     DatabaseReference databaseReference1 = firebaseDatabase.getReference("User/" + userId);
@@ -246,6 +281,10 @@ public class ProfileMainActivity  extends AppCompatActivity {
                                 fullname_user = fullname;
                                 String dob = dataSnapshot.child("date").getValue(String.class);
                                 String gender = dataSnapshot.child("gender").getValue(String.class);
+                                String profile_pic=dataSnapshot.child("imageUrl").getValue(String.class);
+                                Glide.with(ProfileMainActivity.this)
+                                        .load(profile_pic)
+                                        .into((ImageView) findViewById(R.id.Profile_Pic));
                                 // Once you have all the necessary data, update Information node
                                 DatabaseReference databaseReference_Info = firebaseDatabase.getReference("Information/" + userId);
                                 HashMap<String, Object> InforMap = new HashMap<>();
