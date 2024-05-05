@@ -1,21 +1,16 @@
-package com.main.fragments;
-import android.content.Context;
+package com.main.activities;
+
+import static java.security.AccessController.getContext;
+
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.FrameLayout;
+import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,79 +18,85 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.group4.matchmingle.R;
-import com.main.activities.MatchesActivity;
-import com.main.activities.MessageActivity;
-import com.main.activities.SharingHobbiesActivity;
-import com.main.activities.UserSessionManager;
 import com.main.adapters.HobbiesAdapter;
 import com.main.adapters.MatchesAdapter;
 import com.main.entities.HobbiesItem;
+import com.main.entities.MatchesItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import com.main.callbacks.MainCallbacks;
-import com.main.entities.MatchesItem;
 
-public class GridHobbiesFragments extends Fragment{
-
-    SharingHobbiesActivity main;
-    Context context = null;
+public class XemHobbiesActivity extends AppCompatActivity {
 
     private GridView gridView;
-
-    private EditText searchHobbies;
-    private FrameLayout hobbiesButn;
-    String hobbiesEnter;
-    private ImageView backBtn;
-    String userId;
-    HobbiesAdapter adapter;
-    ArrayList<HobbiesItem> HobbiesArrayList;
-    FirebaseDatabase firebaseDatabase_UPD=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
-
-    public static GridHobbiesFragments newInstance(String strArg) {
-        GridHobbiesFragments fragment = new GridHobbiesFragments();
-        Bundle args = new Bundle();
-        args.putString("strArg1", strArg);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    String userId="us1";
+    FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        try {
-            context = getActivity();
-            main = (SharingHobbiesActivity) getActivity();
-        }
-        catch(IllegalStateException e) {
-            throw new IllegalStateException("MainActivity must implement callbacks");
-        }
-
-    }
+        setContentView(R.layout.xem_hobbies);
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View viewList= inflater.inflate(R.layout.frag_gridhobbies, container, false);
-        backBtn = (ImageView) viewList.findViewById(R.id.back_arrow);
+        Button iconHome = findViewById(R.id.icon_home);
+        Button iconFavourite = findViewById(R.id.icon_favorite);
+        Button iconChat = findViewById(R.id.icon_chat);
+        Button iconProfile = findViewById(R.id.icon_profile);
 
-        UserSessionManager sessionManager = new UserSessionManager(getContext());
-        HashMap<String, String> userDetails = sessionManager.getUserDetails();
-        userId = userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
+        TextView HobbiesText=(TextView) findViewById(R.id.HobbiesText);
 
 
-        backBtn.setOnClickListener(v -> {
-            getActivity().onBackPressed();
+        DatabaseReference databaseReference1 = firebaseDatabase.getReference("Hobbies/"+userId);
+        databaseReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    String allHobby = dataSnapshot.child("AllHobby").getValue(String.class);
+                    Log.d("All HOBBY",allHobby);
+                    HobbiesText.setText(allHobby);
+                }
+                else {
+                    System.out.println("Không tìm thấy dữ liệu cho người dùng có ID: " + userId);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+                System.out.println("Error: " + databaseError.getMessage());
+            }
+        });
+
+        iconHome.setTextColor(getResources().getColor(R.color.black));
+        iconFavourite.setTextColor(getResources().getColor(R.color.purple_2));
+        iconChat.setTextColor(getResources().getColor(R.color.black));
+        iconProfile.setTextColor(getResources().getColor(R.color.black));
+
+        iconChat.setOnClickListener(v -> {
+            Intent intent = new Intent(XemHobbiesActivity.this, MessageActivity.class);
+            startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
+
+        iconProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(XemHobbiesActivity.this, ProfileMainActivity.class);
+            startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
+
+        iconHome.setOnClickListener(v -> {
+            Intent intent = new Intent(XemHobbiesActivity.this, SwipeCardViewActivity.class);
+            startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
 
 
-        gridView=(GridView) viewList.findViewById(R.id.grid_hobbies);
-        HobbiesArrayList= new ArrayList<HobbiesItem>();
+        gridView=(GridView) findViewById(R.id.grid_hobbies);
+        ArrayList<HobbiesItem> HobbiesArrayList= new ArrayList<HobbiesItem>();
 
-        FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+
         DatabaseReference databaseReference = firebaseDatabase.getReference("Hobbies/"+userId);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -209,7 +210,7 @@ public class GridHobbiesFragments extends Fragment{
                         }
 
                     }
-                    adapter= new HobbiesAdapter(getContext(),HobbiesArrayList);
+                    HobbiesAdapter adapter= new HobbiesAdapter(XemHobbiesActivity.this,HobbiesArrayList);
                     gridView.setAdapter(adapter);
                 }
                 else {
@@ -265,78 +266,15 @@ public class GridHobbiesFragments extends Fragment{
             }
         });
         /*
-        HobbiesArrayList.add(new HobbiesItem("GAME",R.drawable.game,true,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("MUSIC",R.drawable.music,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("FILM",R.drawable.movie,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("RUNNING",R.drawable.running,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("COFFE",R.drawable.coffe,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("CONNECT",R.drawable.connect,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("FRIENDS",R.drawable.friends,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("FOODS",R.drawable.food,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("DRAWING",R.drawable.draw,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("READING",R.drawable.reading,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("PHOTOGRAPHY",R.drawable.photography,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("SPORT",R.drawable.border_sport,false,R.drawable.border_hobbies));
+        MatchesArrayList.add(new MatchesItem("Chi Sô","https://pm1.aminoapps.com/7979/d76f871ef7a8985cb3cc9dd8d117f9c1efc03888r1-720-806v2_uhq.jpg",21));
+        MatchesArrayList.add(new MatchesItem("Hoa Hồng","https://pm1.aminoapps.com/7979/d76f871ef7a8985cb3cc9dd8d117f9c1efc03888r1-720-806v2_uhq.jpg",19));
+        MatchesArrayList.add(new MatchesItem("Ren Ni","https://pm1.aminoapps.com/7979/d76f871ef7a8985cb3cc9dd8d117f9c1efc03888r1-720-806v2_uhq.jpg",20));
+        //MatchesArrayList.add(new MatchesItem("Li Xa",R.drawable.lisa,19));
 
-        HobbiesAdapter adapter= new HobbiesAdapter(getContext(),HobbiesArrayList);
-        gridView.setAdapter(adapter);*/
+        MatchesAdapter adapter= new MatchesAdapter(this,MatchesArrayList);
+        gridView.setAdapter(adapter);
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HobbiesItem selectedHobby = adapter.getItem(position);
-
-                if(selectedHobby.getSelected()==false) {
-                    selectedHobby.setBackground(R.drawable.border_hobbies_clicked);
-                    selectedHobby.setSelected(true);
-                    HobbiesArrayList.get(position).setSelected(true);
-                    HobbiesArrayList.get(position).setBackground(R.drawable.border_hobbies_clicked);
-                    main.onMsgFromFragToMain("add", selectedHobby.getHobbies());
-                }
-                else if(selectedHobby.getSelected()==true)
-                {
-                    selectedHobby.setBackground(R.drawable.border_hobbies);
-                    //
-                    selectedHobby.setSelected(false);
-                    HobbiesArrayList.get(position).setSelected(false);
-                    main.onMsgFromFragToMain("delete", selectedHobby.getHobbies());
-                    HobbiesArrayList.get(position).setBackground(R.drawable.border_hobbies);
-                }//MSg từ frag tới main
-                gridView.setAdapter(adapter);
-            }
-        });
-        return viewList;
-
-
+         */
     }
-    public void onMsgFromMainToFragment(String context, String hobby) { //msg từ main đến frag //nhận
-        String isSelected1="0";
-        if(context.equals("push_Hobby")) {
-            for (int i = 0; i < HobbiesArrayList.size(); i++) {
-                HobbiesItem item = HobbiesArrayList.get(i);
-
-                String HobbyUPD=item.getHobbies();
-
-                DatabaseReference databaseReference_UPD = firebaseDatabase_UPD.getReference("Hobbies/"+userId+"/"+HobbyUPD);
-
-                Boolean selected=item.getSelected();
-                Log.d(item.getHobbies(),String. valueOf(item.getSelected()));
-
-                if(selected.equals(true)){
-                    Log.d("TRUE NE","TRUE NE");
-                    isSelected1="1";
-                }
-                else
-                {
-                    Log.d("FALSE NE","FALSE NE");
-                    isSelected1="0";
-                }
-
-
-                databaseReference_UPD.child("isSelected").setValue(isSelected1);
-            }
-        }
-    }
-
 
 }

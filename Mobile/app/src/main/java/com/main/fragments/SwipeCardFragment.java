@@ -25,15 +25,31 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.group4.matchmingle.R;
+import com.main.activities.ChatActivity;
 import com.main.activities.FilterActivity;
 import com.main.activities.NotificationActivity;
 import com.main.activities.UserSessionManager;
 import com.main.callbacks.OnSwipeTouchListener;
 import com.main.entities.User;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class SwipeCardFragment extends Fragment {
     private CardView cardView;
@@ -46,7 +62,7 @@ public class SwipeCardFragment extends Fragment {
     private TextView noItemView;
     private RelativeLayout cardWrapper;
     private List<User> users = new ArrayList<>();
-    private int currentUserIndex = users.isEmpty() ? - 1 : 0;
+    private int currentUserIndex = users.isEmpty() ? -1 : 0;
     private UserSessionManager sessionManager;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
     String mPhoneNumber;
@@ -115,12 +131,14 @@ public class SwipeCardFragment extends Fragment {
             public void onSwipeLeft() {
                 simulateSwipeLeft();
             }
+
             @Override
             public void onSwipeRight() {
                 simulateSwipeRight();
             }
         });
     }
+
     public void simulateSwipeRight() {
         cardView.animate()
                 .translationX(1000)
@@ -148,6 +166,7 @@ public class SwipeCardFragment extends Fragment {
     private void fetchNextUser() {
         DatabaseReference usersRef = databaseReference.child("SuggestionList").child(mPhoneNumber);
         Query query = (lastUserId == null) ? usersRef.orderByKey().limitToFirst(1) : usersRef.orderByKey().startAfter(lastUserId).limitToFirst(1);
+//        Query query = usersRef.orderByKey().limitToFirst(1);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -160,6 +179,7 @@ public class SwipeCardFragment extends Fragment {
                         String dbGender = userSnapshot.child("gender").getValue(String.class);
                         String dbImageUrl = userSnapshot.child("imageUrl").getValue(String.class);
                         User user = new User(dbFullname, dbGender, dbDate, dbImageUrl);
+                        Log.d("useraaaaaaa", dbFullname + " " + dbDate + " " + dbImageUrl);
                         displayUser(user);
                         break; // Break after the first user since we are only fetching one
                     }
@@ -168,6 +188,9 @@ public class SwipeCardFragment extends Fragment {
                     }
                 } else {
                     isDisabled = true;
+                    cardView.setTranslationX(0);
+                    cardView.setAlpha(1);
+                    cardView.setRotation(0);
                     Log.d(TAG, "No more users to fetch");
                     // Handle the situation when there are no more users
                     if (noItemView != null) {
@@ -200,6 +223,7 @@ public class SwipeCardFragment extends Fragment {
 
     private void addUserToOneWayMatchList(String userId) {
         DatabaseReference userInfo = databaseReference.child("User").child(userId);
+
         userInfo.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -209,23 +233,90 @@ public class SwipeCardFragment extends Fragment {
                 String userGender = snapshot.child("gender").getValue(String.class);
                 String userImageUrl = snapshot.child("imageUrl").getValue(String.class);
 
+                // User for oneway match list
                 HashMap<String, Object> user = new HashMap<>();
                 user.put("fullname", userFullname);
                 user.put("date", userDate);
                 user.put("gender", userGender);
                 user.put("imageUrl", userImageUrl);
-
-                // Update the OneWayMatchesList with the user data
                 databaseReference.child("OneWayMatchesList").child(mPhoneNumber).child(userId).setValue(user)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                Log.d(TAG, "User added to OneWayMatchList: " + userId);
                                 // Remove user from suggestions once added to OneWayMatchList
                                 removeUserFromSuggestions(userId);
-                            } else {
-                                Log.e(TAG, "Failed to add user to OneWayMatchList", task.getException());
                             }
                         });
+                databaseReference.child("OneWayMatchesList").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                            String otherPhone = userSnapshot.getKey();
+                            if (otherPhone.equals(mPhoneNumber)) {
+                                HashMap<String, Object> otherInfo = new HashMap<>();
+
+                                otherInfo.put("name", userFullname);
+                                otherInfo.put("age", userDate);
+                                otherInfo.put("pic", userImageUrl);
+                                databaseReference.child("User").child(mPhoneNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        HashMap<String, Object> myInfo = new HashMap<>();
+                                        String myFullname = snapshot.child("fullname").getValue(String.class);
+                                        String myDate = snapshot.child("date").getValue(String.class);
+                                        String myImageUrl = snapshot.child("imageUrl").getValue(String.class);
+                                        myInfo.put("name", myFullname);
+                                        myInfo.put("age", myDate);
+                                        myInfo.put("pic", myImageUrl);
+
+                                        databaseReference.child("Matches").child(userId).child(mPhoneNumber).setValue(myInfo);
+                                        addMatchUserToMessage(mPhoneNumber, userId);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                                databaseReference.child("Matches").child(mPhoneNumber).child(userId).setValue(otherInfo);
+                                addMatchUserToMessage(userId, mPhoneNumber);
+                                addThongBao(userId, mPhoneNumber);
+                                addThongBao(mPhoneNumber,userId);
+                                sendNotification(userId);
+
+
+                                // Remove other user and you out of OneWayMatchList of each others
+                                DatabaseReference removeRef1 = databaseReference.child("OneWayMatchesList").child(userId).child(mPhoneNumber);
+                                DatabaseReference removeRef2 = databaseReference.child("OneWayMatchesList").child(mPhoneNumber).child(userId);
+
+
+
+
+
+                                removeRef1.removeValue().addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        Log.d(TAG, "User removed from oneway list: " + userId);
+                                    } else {
+                                        Log.e(TAG, "Failed to remove user from oneway list", task.getException());
+                                    }
+                                });
+
+                                removeRef2.removeValue().addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        Log.d(TAG, "User removed from oneway list: " + mPhoneNumber);
+                                    } else {
+                                        Log.e(TAG, "Failed to remove user from oneway list", task.getException());
+                                    }
+                                });
+                                removeUserFromSuggestions(userId);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
 
             @Override
@@ -239,6 +330,54 @@ public class SwipeCardFragment extends Fragment {
         cardView.setOnTouchListener(null); // Disable swipe by setting touch listener to null
     }
 
+    private void addMatchUserToMessage(String user1, String user2) {
+        DatabaseReference matchRef = databaseReference.child("Matches");
+        matchRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String fullname = snapshot.child(user1).child(user2).child("name").getValue(String.class);
+                String imageUrl = snapshot.child(user1).child(user2).child("pic").getValue(String.class);
+                String myChatBgColor = "purple";
+
+                databaseReference.child("Message").child(user1).child(user2).child("fullname").setValue(fullname);
+                databaseReference.child("Message").child(user1).child(user2).child("imageUrl").setValue(imageUrl);
+                databaseReference.child("Message").child(user1).child(user2).child("myChatBgColor").setValue(myChatBgColor);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    private void addThongBao(String user1,String user2)
+    {
+        FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        DatabaseReference databaseReference_chat = firebaseDatabase.getReference("Notification/"+user1);
+        databaseReference_chat.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Date currentDate = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
+                String time=dateFormat.format(currentDate);
+                DatabaseReference newSubscriptionRef = databaseReference_chat.child(time);
+                Map<String, Object> newSubscriptionValues = new HashMap<>();
+                newSubscriptionValues.put("Description","You've just matched with "+user2);
+                newSubscriptionValues.put("Type", "Message");
+                newSubscriptionValues.put("Time", time);
+                newSubscriptionValues.put("UserId", user2);
+                newSubscriptionRef.setValue(newSubscriptionValues);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+                System.out.println("Error: " + databaseError.getMessage());
+            }
+        });
+
+
+
+    }
 //    private void fetchUsers() {
 //        FirebaseDatabase database = FirebaseDatabase.getInstance();
 //        String phoneNumber = sessionManager.getUserDetails().get(UserSessionManager.KEY_PHONE_NUMBER);
@@ -276,4 +415,59 @@ public class SwipeCardFragment extends Fragment {
 //            }
 //        });
 //    }
+
+    void sendNotification(String guestPhone) {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(guestPhone);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String token = snapshot.child("token").getValue(String.class);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+
+                    JSONObject notificationObj = new JSONObject();
+                    notificationObj.put("title", "Bạn đã match với 1 người dùng, hãy xem qua ngay!");
+                    notificationObj.put("body", "Nhấn vào để xem người ấy là ai");
+
+                    JSONObject dataObj = new JSONObject();
+
+                    jsonObject.put("notification", notificationObj);
+                    jsonObject.put("data", dataObj);
+                    jsonObject.put("to", token);
+
+                    callApi(jsonObject);
+                } catch (Exception e) {
+                    Log.e("SendNotification", "Error sending notification: " + e.getMessage());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+    void callApi(JSONObject jsonObject){
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://fcm.googleapis.com/fcm/send";
+        RequestBody body = RequestBody.create(jsonObject.toString(), JSON);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .header("Authorization","Bearer AAAAycOVJIU:APA91bGhJQOYm5KLWUi5G2B75tOLcN172hvPohzuS1CMVWLxr0pFOOH0EhVvX-OKPHFp7ZlFUD06ITrpdnmO6TJyv73-5kTZ4ANSOm_s-SwxLcf3O1hL1w5eM2w6-We4i1-FC13MbuwY")
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+
+            }
+        });
+    }
 }

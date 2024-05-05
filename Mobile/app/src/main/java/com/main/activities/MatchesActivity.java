@@ -18,6 +18,9 @@ import com.group4.matchmingle.R;
 import com.main.adapters.MatchesAdapter;
 import com.main.entities.MatchesItem;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,11 +35,15 @@ import java.util.Map;
 public class MatchesActivity extends AppCompatActivity {
 
     private GridView gridView;
-    String userId="us1";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.matches_list);
+
+        UserSessionManager sessionManager = new UserSessionManager(getBaseContext());
+        HashMap<String, String> userDetails = sessionManager.getUserDetails();
+        String userId=userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
 
         Button iconHome = findViewById(R.id.icon_home);
         Button iconFavourite = findViewById(R.id.icon_favorite);
@@ -70,7 +77,6 @@ public class MatchesActivity extends AppCompatActivity {
         });
 
 
-
         gridView=(GridView)  findViewById(R.id.matchesGrid);
         ArrayList<MatchesItem> MatchesArrayList= new ArrayList<MatchesItem>();
 
@@ -93,12 +99,15 @@ public class MatchesActivity extends AppCompatActivity {
                     MatchesArrayList.clear();
                     for (DataSnapshot snap : dataSnapshot.getChildren()) {
                         String key = snap.getKey();
-                        //MatchesItem matchesItem = snap.getValue(MatchesItem.class);
                         String name = snap.child("name").getValue(String.class);
-                        int age = snap.child("age").getValue(Integer.class);
+                        String dob = snap.child("age").getValue(String.class);
                         String pic = snap.child("pic").getValue(String.class);
-                        String id = snap.child("userid").getValue(String.class);
-                        MatchesItem matchesItem= new MatchesItem(name,pic,age,key);
+                        //String id = snap.child("userid").getValue(String.class);
+                        LocalDate birthDate = LocalDate.parse(dob, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        LocalDate currentDate = LocalDate.now();
+                        Period age = Period.between(birthDate, currentDate);
+                        Log.d("ADD1",key);
+                        MatchesItem matchesItem= new MatchesItem(name,pic,age.getYears(),key);
 
                         MatchesArrayList.add(matchesItem);
                     }

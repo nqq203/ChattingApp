@@ -32,14 +32,17 @@ import com.main.entities.MessageList;
 import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
-
-
+    public interface OnItemClickListener {
+        void onItemClick(MessageList message);
+    }
     private List<MessageList> messageLists;
     private final Context context;
+    private OnItemClickListener listener;
 
-    public MessageAdapter(List<MessageList> messageLists, Context context) {
+    public MessageAdapter(List<MessageList> messageLists, Context context, OnItemClickListener listener) {
         this.messageLists = messageLists;
         this.context = context;
+        this.listener = listener;
     }
     @NonNull
     @Override
@@ -68,13 +71,21 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         holder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra("mobile", item.getMobile());
-                intent.putExtra("fullname", item.getName());
-                intent.putExtra("imageUrl", item.getImageUrl());
-                intent.putExtra("chatKey", item.getChatKey());
-
-                context.startActivity(intent);
+                if (listener != null) {
+                    listener.onItemClick(item);
+                }
+//                Intent intent = new Intent(context, ChatActivity.class);
+//                Log.d(TAG, "mobile: " + item.getMobile());
+//                Log.d(TAG, "fullname: " + item.getName());
+//                Log.d(TAG, "imageUrl: " + item.getImageUrl());
+//                Log.d(TAG, "chatKey: " + item.getChatKey());
+//
+//                intent.putExtra("mobile", item.getMobile());
+//                intent.putExtra("fullname", item.getName());
+//                intent.putExtra("imageUrl", item.getImageUrl());
+//                intent.putExtra("chatKey", item.getChatKey());
+//
+//                context.startActivity(intent);
             }
         });
     }

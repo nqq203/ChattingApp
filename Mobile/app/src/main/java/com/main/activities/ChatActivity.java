@@ -2,11 +2,13 @@ package com.main.activities;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.content.ContentValues.TAG;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +37,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.auth.api.signin.internal.Storage;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,9 +49,11 @@ import com.google.firebase.storage.StorageReference;
 import com.group4.matchmingle.R;
 import com.group4.matchmingle.databinding.ImageViewerFragmentBinding;
 import com.main.MemoryData;
+import com.main.Utils;
 import com.main.adapters.ChatAdapter;
 import com.main.entities.ChatList;
 import com.main.entities.User;
+import com.main.fragments.ColorPickerDialogFragment;
 import com.main.fragments.ImageViewerFragment;
 import com.main.fragments.InfoDialogFragment;
 import com.squareup.picasso.Picasso;
@@ -62,6 +69,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -73,10 +81,14 @@ import okhttp3.Response;
 
 public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnImageClickListener {
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+
     private final List<ChatList> chatLists = new ArrayList<>();
     private UserSessionManager sessionManager;
+    String name,time;
+    String fullname_user;
     private String chatKey;
     private String myPhone, myfullName;
+    private String guestPhone;
     private RecyclerView chatRecyclerView;
     private ChatAdapter chatAdapter;
     private boolean loadingFirstTime = true;
@@ -92,7 +104,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
         setContentView(R.layout.chat_activity);
 
         sessionManager = new UserSessionManager(getApplicationContext());
-
+        final RelativeLayout chatLayout = findViewById(R.id.chat_layout);
         final ImageView backBtn = findViewById(R.id.back_chat);
         final TextView senderName = findViewById(R.id.user_chat_name);
         final EditText msgEditText = findViewById(R.id.edit_text_message);
@@ -103,6 +115,9 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
         final TextView infoCatalog = findViewById(R.id.button_info);
 
         chatRecyclerView = findViewById(R.id.chat_container);
+
+
+
 
         // scroll to bottom when open keyboard
         final View activityRootView = findViewById(android.R.id.content);
@@ -148,32 +163,65 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
                 startActivity(intent);
             }
         });
+
+        databaseReference.child("Chat").child(chatKey).child(myPhone+"_seen").setValue(0);
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (chatKey.isEmpty()) {
-                    chatKey = "1";
-                    if (snapshot.hasChild("Chat")) {
-                        chatKey = String.valueOf(snapshot.child("Chat").getChildrenCount() + 1);
-                    }
-                }
+//                if (chatKey.isEmpty() || chatKey == null || chatKey.equals("")) {
+//                    chatKey = Utils.generateRandomKey(20);
+//                }
                 if (snapshot.hasChild("Chat")) {
                     if (snapshot.child("Chat").child(chatKey).hasChild("messages")) {
                         chatLists.clear();
                         for (DataSnapshot messagesSnapshot : snapshot.child("Chat").child(chatKey).child("messages").getChildren()) {
+                             String user1 = snapshot.child("Chat").child(chatKey).child("user1").getValue(String.class);
+
+
+                             String user2 = snapshot.child("Chat").child(chatKey).child("user2").getValue(String.class);
+
+                             Drawable chatColor = null;
+                             String myChatBgColor = null;
+                             if (user1.equals(myPhone)) {
+                                 guestPhone = user2;
+                                 myChatBgColor = snapshot.child("Message").child(myPhone).child(user2).child("myChatBgColor").getValue(String.class);
+                             }
+                             else {
+                                 guestPhone = user1;
+                                 myChatBgColor = snapshot.child("Message").child(myPhone).child(user1).child("myChatBgColor").getValue(String.class);
+                             }
+                            if (myChatBgColor != null) {
+                                if (myChatBgColor.equals("purple")) {
+                                    chatColor = getResources().getDrawable(R.drawable.msg_background);
+                                }
+                                else if (myChatBgColor.equals("orange")) {
+                                    chatColor = getResources().getDrawable(R.drawable.msg_background_orange);
+                                }
+                                else if (myChatBgColor.equals("blue")) {
+                                    chatColor = getResources().getDrawable(R.drawable.msg_background_blue);
+                                }
+                                else {
+                                    chatColor = getResources().getDrawable(R.drawable.msg_background);
+                                }
+                            }
+                            else {
+                                chatColor = getResources().getDrawable(R.drawable.msg_background);;
+                            }
                             if (messagesSnapshot.hasChild("msg") && messagesSnapshot.hasChild("phoneNumber")) {
                                 final String messageTimestamps = messagesSnapshot.getKey();
                                 final String getPhone = messagesSnapshot.child("phoneNumber").getValue(String.class);
                                 final String getMsg = messagesSnapshot.child("msg").getValue(String.class);
                                 final String getType = messagesSnapshot.child("type").getValue(String.class);
-                                final String getName = snapshot.child("Message").child(myPhone).child(getPhone).child("fullname").getValue(String.class);
+                                String getName = snapshot.child("Message").child(myPhone).child(getPhone).child("fullname").getValue(String.class);
 
 
                                 Timestamp timestamp = new Timestamp(Long.parseLong(messageTimestamps));
                                 Date date = new Date(timestamp.getTime());
                                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
                                 SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("hh:mm aa", Locale.getDefault());
-                                ChatList chatList = new ChatList(getPhone, getName, getMsg, simpleDateFormat.format(date), simpleTimeFormat.format(date), getType);
+
+                                ChatList chatList = new ChatList(getPhone, getName, getMsg, simpleDateFormat.format(date), simpleTimeFormat.format(date), getType, chatColor);
                                 chatLists.add(chatList);
 
                                 if (loadingFirstTime || Long.parseLong(messageTimestamps) > Long.parseLong(MemoryData.getLastMsg(ChatActivity.this, chatKey))) {
@@ -211,8 +259,12 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
 
                 databaseReference.child("Chat").child(chatKey).child("user1").setValue(myPhone);
                 databaseReference.child("Chat").child(chatKey).child("user2").setValue(senderMobile);
-//                databaseReference.child("Chat").child(chatKey).child("unseenmessage").setValue(0);
+                databaseReference.child("Chat").child(chatKey).child(myPhone+"_seen").setValue(0);
+                databaseReference.child("Chat").child(chatKey).child(senderMobile+"_seen").setValue(1);
 
+
+
+                addThongBao(guestPhone,myPhone);
                 sendMessage(getTextMsg, "text");
                 msgEditText.setText("");
 
@@ -243,17 +295,83 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 intent.setType("image/*");
                 startActivityForResult(intent, REQUEST_IMAGE_PICK);
+
+                FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+                DatabaseReference databaseReference1 = firebaseDatabase.getReference("Information/us1");
+                databaseReference1.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            name = dataSnapshot.child("name").getValue(String.class);
+                            Log.d("NAME NE",name);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Xử lý khi có lỗi xảy ra
+                        System.out.println("Error: " + databaseError.getMessage());
+                    }
+                });
+                addThongBao(guestPhone,myPhone);
+
             }
         });
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(ChatActivity.this, MessageActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
     }
 
+
+    private void addThongBao(String user1,String user2) {
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+
+
+        DatabaseReference databaseReference1 = firebaseDatabase.getReference("User/"+user2);
+        databaseReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    fullname_user=dataSnapshot.child("fullname").getValue(String.class);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+                System.out.println("Error: " + databaseError.getMessage());
+            }
+        });
+
+        DatabaseReference databaseReference_chat = firebaseDatabase.getReference("Notification/" + user1);
+        databaseReference_chat.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Date currentDate = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
+                String time = dateFormat.format(currentDate);
+                DatabaseReference newSubscriptionRef = databaseReference_chat.child(time);
+                Map<String, Object> newSubscriptionValues = new HashMap<>();
+                newSubscriptionValues.put("Description", fullname_user + " Just send some messages, click to hoop into the conversation");
+                newSubscriptionValues.put("Type", "Message");
+                newSubscriptionValues.put("Time", time);
+                newSubscriptionValues.put("UserId", user2);
+                newSubscriptionRef.setValue(newSubscriptionValues);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+                System.out.println("Error: " + databaseError.getMessage());
+            }
+        });
+    }
     public static float dpToPx(Context context, float valueInDp) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
@@ -319,6 +437,9 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
         message.put("type", type);
         message.put("phoneNumber", myPhone);
         sendNotification(content);
+
+        databaseReference.child("Chat").child(chatKey).child(myPhone+"_seen").setValue(0);
+        databaseReference.child("Chat").child(chatKey).child(guestPhone+"_seen").setValue(1);
         databaseReference.child("Chat").child(chatKey).child("messages").child(timestamp).setValue(message);
     }
 
@@ -371,7 +492,8 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
     }
 
     public void showInfoDialog() {
-        InfoDialogFragment dialog = new InfoDialogFragment();
+        String guestPhone = this.guestPhone; // Ensure you have guestPhone available here
+        InfoDialogFragment dialog = InfoDialogFragment.newInstance(guestPhone);
         dialog.show(getSupportFragmentManager(), "InfoDialogFragment");
     }
 
@@ -502,4 +624,23 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnIma
             }
         });
     }
+/*
+    @Override
+    public void onColorSelected(String color) {
+        databaseReference.child("Message").child(myPhone).child(guestPhone).child("myChatBgColor").setValue(color);
+        Drawable bgColor = getResources().getDrawable(R.drawable.msg_background);
+        if (color.equals("blue")) {
+            bgColor = getResources().getDrawable(R.drawable.msg_background_blue);
+        }
+        else if (color.equals("purple")) {
+            bgColor = getResources().getDrawable(R.drawable.msg_background);
+        }
+        else if (color.equals("orange")) {
+            bgColor = getResources().getDrawable(R.drawable.msg_background_orange);
+        }
+        TextView msgItem = findViewById(R.id.msg_item);
+        msgItem.setBackground(bgColor);
+    }
+
+ */
 }

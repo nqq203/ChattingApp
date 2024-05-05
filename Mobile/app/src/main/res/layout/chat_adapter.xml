@@ -57,7 +57,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/msg_background"
-                android:padding="5dp">
+                android:padding="5dp"
+                android:id="@+id/voice_background">
                 <ImageView
                     android:id="@+id/voice_icon"
                     android:layout_width="30dp"

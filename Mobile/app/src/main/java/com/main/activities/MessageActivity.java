@@ -1,10 +1,14 @@
 package com.main.activities;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
@@ -31,17 +35,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class MessageActivity  extends AppCompatActivity implements ColorPickerDialogFragment.ColorPickerDialogListener{
+public class MessageActivity  extends AppCompatActivity {
     private final List<MessageList> messageLists = new ArrayList<>();
     private UserSessionManager sessionManager;
     private String myPhone;
     private RecyclerView messagesRecyclerView;
     private String lastMessage = "";
-    private int unseenMessage = 0;
     private MessageAdapter messageAdapter;
     private String chatKey = "";
     private String myUserID;
+    private boolean isFirstTime = true;
     private boolean dataSet = false;
+    private int countIsFirstTime = 0;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +61,18 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
         RecyclerView storiesContainer = findViewById(R.id.stories_container);
         populateStories(storiesContainer);
         messagesRecyclerView = findViewById(R.id.message_list_container);
-        messageAdapter = new MessageAdapter(messageLists, MessageActivity.this);
+        messageAdapter = new MessageAdapter(messageLists, MessageActivity.this, new MessageAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(MessageList message) {
+                Intent intent = new Intent(MessageActivity.this, ChatActivity.class);
+                intent.putExtra("mobile", message.getMobile());
+                intent.putExtra("fullname", message.getName());
+                intent.putExtra("imageUrl", message.getImageUrl());
+                intent.putExtra("chatKey", message.getChatKey());
+                startActivity(intent);
+                finish();
+            }
+        });
         messagesRecyclerView.setAdapter(messageAdapter);
         populateMessageList(messagesRecyclerView);
 
@@ -106,14 +122,14 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
         container.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         List<User> usersList = new ArrayList<>();
 
-        DatabaseReference myMatchesRef = FirebaseDatabase.getInstance().getReference("Matches").child(myUserID);
+        DatabaseReference myMatchesRef = databaseReference.child("Matches").child(myUserID);
         myMatchesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot matchSnapshot : dataSnapshot.getChildren()) {
                         String matchedUserID = matchSnapshot.getKey();
-                        DatabaseReference theirMatchesRef = FirebaseDatabase.getInstance().getReference("Matches").child(matchedUserID);
+                        DatabaseReference theirMatchesRef = databaseReference.child("Matches").child(matchedUserID);
                         theirMatchesRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -121,37 +137,55 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
                                     for (DataSnapshot theirMatchSnapshot : dataSnapshot.getChildren()) {
                                         String theirMatchedUserID = theirMatchSnapshot.getKey();
                                         if (theirMatchedUserID.equals(myUserID)) {
-                                            Log.d("abc", theirMatchedUserID);
-                                            // Nếu người dùng đã match lại với bạn trong OneWayMatchesList của họ
-                                            DatabaseReference userStoriesRef = FirebaseDatabase.getInstance().getReference("Story").child(matchedUserID);
+                                            DatabaseReference userStoriesRef = databaseReference.child("Story").child(matchedUserID);
                                             userStoriesRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                     if (dataSnapshot.exists()) {
-                                                        boolean hasRecentStory = false; // Biến này để kiểm tra xem người dùng có story trong vòng 24h không
+                                                        boolean hasRecentStory = false;
                                                         for (DataSnapshot storySnapshot : dataSnapshot.getChildren()) {
                                                             long duration = storySnapshot.child("duration").getValue(long.class);
                                                             String image = storySnapshot.child("imageUrl").getValue(String.class);
                                                             Date date = storySnapshot.child("timeCreated").getValue(Date.class);
                                                             String name = storySnapshot.child("fullname").getValue(String.class);
                                                             Story story = new Story(duration, image, date, name);
-                                                            if (story != null){// && story.getTimeCreated().getTime() > System.currentTimeMillis() - (24 * 60 * 60 * 1000)) {
+                                                            if (story != null){
                                                                 hasRecentStory = true;
-                                                                Log.d("abc", String.valueOf(hasRecentStory));
-                                                                break; // Nếu có story được tạo trong vòng 24 giờ, thoát vòng lặp
+                                                                break;
                                                             }
                                                         }
                                                         if (hasRecentStory) {
                                                             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(matchedUserID);
+                                                            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                    if (dataSnapshot.exists()) {
+                                                                            // Cập nhật thông tin cho user
 
-                                                            User user = matchSnapshot.getValue(User.class);
-                                                            user.setPhoneNumber(matchedUserID);
-                                                            if (user != null) {
-                                                                usersList.add(user);
-                                                            }
+                                                                        String PhoneNumber = matchedUserID;
+                                                                        String fullname = dataSnapshot.child("fullname").getValue(String.class);
+                                                                        String imageUrl = dataSnapshot.child("imageUrl").getValue(String.class);
+                                                                        User user = new User(matchedUserID, fullname, imageUrl);
+                                                                        usersList.add(user);
+
+                                                                        // Đặt Adapter sau khi đã duyệt qua tất cả người dùng
+                                                                        if (!usersList.isEmpty()) {
+                                                                            container.setAdapter(new StoryAdapter(usersList, MessageActivity.this));
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                    // Xử lý lỗi
+                                                                }
+                                                            });
                                                         }
+
                                                     }
-                                                    // Đặt Adapter sau khi đã duyệt qua tất cả người dùng
+                                                    else {
+                                                        container.setAdapter(new StoryAdapter(new ArrayList<User>(), MessageActivity.this));
+                                                    }
 
                                                 }
 
@@ -163,6 +197,9 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
                                         }
                                     }
                                 }
+                                else {
+                                    container.setAdapter(new StoryAdapter(new ArrayList<User>(), MessageActivity.this));
+                                }
                             }
 
                             @Override
@@ -172,6 +209,9 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
                         });
                     }
                 }
+                else {
+                    container.setAdapter(new StoryAdapter(new ArrayList<User>(), MessageActivity.this));
+                }
             }
 
             @Override
@@ -179,12 +219,6 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
                 // Xử lý lỗi
             }
         });
-        if(!usersList.isEmpty()) {
-            container.setAdapter(new StoryAdapter(usersList, MessageActivity.this));
-        }
-        else{
-            container.setAdapter(new StoryAdapter(new ArrayList<User>(), MessageActivity.this));
-        }
     }
 
 
@@ -198,84 +232,81 @@ public class MessageActivity  extends AppCompatActivity implements ColorPickerDi
         container.setHasFixedSize(true);
         container.setLayoutManager(new LinearLayoutManager(this));
         myPhone = sessionManager.getUserDetails().get(UserSessionManager.KEY_PHONE_NUMBER);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+
+        DatabaseReference chatRef = databaseReference.child("Chat");
+        databaseReference.child("Message").child(myPhone).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                messageLists.clear();
-                lastMessage = "";
-                unseenMessage = 0;
-                chatKey = "";
-
-                for (DataSnapshot dataSnapshot : snapshot.child("Message").child(myPhone).getChildren()) {
-                    final String getMobilePhone = dataSnapshot.getKey();
-                    dataSet = false;
-                    if (!getMobilePhone.equals(myPhone)) {
+                messageLists.clear();  // Clear once at the start of the update
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    final String otherPhone = dataSnapshot.getKey();
+                    if (!otherPhone.equals(myPhone)) {
                         final String fullname = dataSnapshot.child("fullname").getValue(String.class);
                         final String imageUrl = dataSnapshot.child("imageUrl").getValue(String.class);
 
-                        databaseReference.child("Chat").addValueEventListener(new ValueEventListener() {
+                        chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                int chatCounts = (int)snapshot.getChildrenCount();
-                                if (chatCounts > 0) {
-                                    for (DataSnapshot dataSnapshot1: snapshot.getChildren()) {
-                                        final String getKey = dataSnapshot1.getKey();
-                                        chatKey = getKey;
-
-                                        if (dataSnapshot1.hasChild("user1") && dataSnapshot1.hasChild("user2") && dataSnapshot1.hasChild("messages")) {
-                                            final String getUserOne = dataSnapshot1.child("user1").getValue(String.class);
-                                            final String getUserTwo = dataSnapshot1.child("user2").getValue(String.class);
-
-                                            if ((getUserOne.equals(getMobilePhone) && getUserTwo.equals(myPhone)) || (getUserOne.equals(myPhone) && getUserTwo.equals(getMobilePhone))) {
-                                                for (DataSnapshot chatDataSnapshot : dataSnapshot1.child("messages").getChildren()) {
-                                                    final Long getLastSeenMessage = Long.parseLong(MemoryData.getLastMsg(MessageActivity.this, getKey));
-                                                    final Long getMessageKey = Long.parseLong(chatDataSnapshot.getKey());
-                                                    final String getGuestPhone = chatDataSnapshot.child("phoneNumber").getValue(String.class);
-
-                                                    lastMessage = chatDataSnapshot.child("msg").getValue(String.class);
-                                                    if (lastMessage.length() > 30) {
-                                                        lastMessage = lastMessage.substring(0, 30) + "...";
-                                                    }
-                                                    if (getMessageKey > getLastSeenMessage && !myPhone.equals(getGuestPhone)) {
-                                                        unseenMessage = 1;
-                                                    }
-                                                    else {
-                                                        unseenMessage = 0;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                if (!dataSet) {
-                                    dataSet  = true;
-                                    MessageList messageList = new MessageList(fullname, getMobilePhone, lastMessage, imageUrl, unseenMessage, chatKey);
-                                    messageLists.add(messageList);
-                                    messageAdapter.updateData(messageLists);
+                            public void onDataChange(@NonNull DataSnapshot chatSnapshot) {
+                                String compositeKey = myPhone + "_" + otherPhone;
+                                if (!chatSnapshot.hasChild(compositeKey)) {
+                                    compositeKey = otherPhone + "_" + myPhone;
                                 }
 
+                                if (chatSnapshot.child(compositeKey).hasChild("messages")) {
+                                    DataSnapshot lastMessageSnapshot = getLastMessageSnapshot(chatSnapshot.child(compositeKey).child("messages"));
+                                    int mySeen = chatSnapshot.child(compositeKey).child(myPhone+"_seen").getValue(Integer.class);
+                                    processLastMessage(lastMessageSnapshot, fullname, otherPhone, imageUrl, compositeKey, mySeen);
+                                } else {
+                                    addMessageToList(fullname, otherPhone, "No messages", imageUrl, 0, compositeKey);
+                                }
                             }
 
                             @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
+                            public void onCancelled(@NonNull DatabaseError error) { }
                         });
                     }
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
     }
 
-    @Override
-    public void onColorSelected(int color) {
-        RelativeLayout chatLayout = findViewById(R.id.chat_layout);
-        chatLayout.setBackgroundColor(color);
+    private DataSnapshot getLastMessageSnapshot(DataSnapshot messagesSnapshot) {
+        DataSnapshot lastMessageSnapshot = null;
+        for (DataSnapshot child : messagesSnapshot.getChildren()) {
+            lastMessageSnapshot = child;
+        }
+        return lastMessageSnapshot;
+    }
+
+    private void processLastMessage(DataSnapshot dataSnapshot, String fullname, String mobile, String imageUrl, String chatKey, int mySeen) {
+        String lastMessage = dataSnapshot.child("msg").getValue(String.class);
+        String messageType = dataSnapshot.child("type").getValue(String.class);
+
+        if ("image".equals(messageType)) {
+            lastMessage = "Image message";
+        } else if ("audio".equals(messageType)) {
+            lastMessage = "Audio message";
+        } else if (lastMessage != null && lastMessage.length() > 30) {
+            lastMessage = lastMessage.substring(0, 30) + "...";
+        }
+
+//        long lastMessageTime = Long.parseLong(dataSnapshot.getKey());
+//        long lastSeenTime = Long.parseLong(MemoryData.getLastMsg(MessageActivity.this, chatKey));
+
+//        if (lastMessageTime > lastSeenTime && !myPhone.equals(mobile)) {
+//            unseenCount = 0;
+//        }
+//        int unseenCnt = Integer.parseInt(mySeen);
+        addMessageToList(fullname, mobile, lastMessage, imageUrl, mySeen, chatKey);
+    }
+
+    private void addMessageToList(String fullname, String mobile, String lastMessage, String imageUrl, int unseenCount, String chatKey) {
+        MessageList message = new MessageList(fullname, mobile, lastMessage, imageUrl, unseenCount, chatKey);
+        messageLists.add(message);
+        messageAdapter.updateData(messageLists);
     }
 
     @Override

@@ -6,31 +6,17 @@
 
     android:paddingBottom="20dp">
     <TextView android:layout_marginTop="50dp"
-        android:text="Rating our app for the next improvements:"
+        android:text="Do you sure you want to this subscription?"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
 
         android:textSize="14dp"
         android:layout_marginStart="14dp"
         />
-    <RatingBar android:layout_width="240dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="40dp"
-        android:id="@+id/ratebar"/>
-    <EditText
-        android:id="@+id/rate_note"
-        android:layout_height="200dp"
-        android:layout_width="320dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:paddingBottom="170dp"
-        android:ellipsize="end"
-        />
     <LinearLayout android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="15dp">
-
         <Button android:layout_height="40dp"
             android:layout_width="100dp"
             android:layout_marginStart="60dp"
@@ -39,8 +25,9 @@
         <Button android:layout_height="40dp"
             android:layout_width="100dp"
             android:layout_marginStart="10dp"
-            android:text="Next"
-            android:id="@+id/next_button"/>
-
+            android:text="Delete"
+            android:backgroundTint="@color/red"
+            android:textColor="@color/white"
+            android:id="@+id/dialog_delete_button"/>
     </LinearLayout>
 </LinearLayout>

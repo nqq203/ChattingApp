@@ -22,6 +22,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.group4.matchmingle.R;
 import com.group4.matchmingle.databinding.ImageViewerFragmentBinding;
 import com.main.activities.ChatActivity;
@@ -62,7 +67,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     @Override
     public void onBindViewHolder(@NonNull ChatAdapter.ChatViewHolder holder, int position) {
         ChatList item = chatList.get(position);
-        Log.d(TAG, "onBindViewHolder: " + item.getType());
+        if (item.getChatColor() != null) {
+            holder.myMessage.setBackground(item.getChatColor());
+            holder.voiceBackground.setBackground(item.getChatColor());
+        }
 
         if (item.getType().equals("text")) {
             if (item.getMobile().equals(myPhone)) {
@@ -186,7 +194,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     }
 
     static class ChatViewHolder extends RecyclerView.ViewHolder {
-        private LinearLayout guestLayout, myLayout, myVoiceLayout, guestVoiceLayout, myImageLayout, guestImageLayout;
+        private LinearLayout guestLayout, myLayout, myVoiceLayout, guestVoiceLayout, myImageLayout, guestImageLayout, voiceBackground;
         private TextView guestMessage, myMessage;
         private SeekBar guestVoice, myVoice;
         private ImageView guestIconVoice, myIconVoice, myImageItem, guestImageItem;
@@ -211,6 +219,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
             myImageItem = itemView.findViewById(R.id.image_view_item);
             guestImageItem = itemView.findViewById(R.id.image_view_item_guest);
+
+            voiceBackground = itemView.findViewById(R.id.voice_background);
         }
     }
 

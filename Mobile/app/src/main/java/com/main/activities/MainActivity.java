@@ -32,18 +32,19 @@ public class MainActivity extends AppCompatActivity {
         if (sessionManager.isLoggedIn()) {
             String phoneNumber = sessionManager.getUserDetails().get(UserSessionManager.KEY_PHONE_NUMBER);
             if(getIntent().getExtras() != null){
-                String UserID = getIntent().getExtras().getString("userID");
-                databaseReference.child("User").addValueEventListener(new ValueEventListener() {
+                String UserID = getIntent().getExtras().getString("userId");
+                databaseReference.child("User").child(UserID).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             // Tìm thấy User với userID tương ứng trong cơ sở dữ liệu
                             // Điều này cho phép bạn làm bất kỳ xử lý nào bạn muốn với thông tin của User này
                             // Ví dụ:
-                            User user = new User();
-                            user.setPhoneNumber(UserID);
-                            user.setFullname(dataSnapshot.child("fullname").getValue(String.class));
-                            user.setImageUrl(dataSnapshot.child("ImageUrl").getValue(String.class));
+
+                            String phone = UserID;
+                            String fullname = dataSnapshot.child("fullname").getValue(String.class);
+                            String imageUrl = dataSnapshot.child("imageUrl").getValue(String.class);
+                            User user = new User(phone, fullname, imageUrl);
                             databaseReference.child("Chat").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -56,14 +57,17 @@ public class MainActivity extends AppCompatActivity {
                                             if (dataSnapshot1.hasChild("user1") && dataSnapshot1.hasChild("user2") && dataSnapshot1.hasChild("messages")) {
                                                 final String getUserOne = dataSnapshot1.child("user1").getValue(String.class);
                                                 final String getUserTwo = dataSnapshot1.child("user2").getValue(String.class);
-
+                                                Log.d("my = ", phoneNumber);
+                                                Log.d("you = ", user.getPhoneNumber());
                                                 if ((getUserOne.equals(user.getPhoneNumber()) && getUserTwo.equals(phoneNumber)) || (getUserOne.equals(phoneNumber) && getUserTwo.equals(user.getPhoneNumber()))) {
-                                                    Intent intent = new Intent(MainActivity.this, MessageActivity.class);
+
+                                                    Intent intent = new Intent(MainActivity.this, ChatActivity.class);
                                                     intent.putExtra("mobile", user.getPhoneNumber());
                                                     intent.putExtra("fullname", user.getFullname());
                                                     intent.putExtra("imageUrl", user.getImageUrl());
                                                     intent.putExtra("chatKey", dataSnapshot1.getKey());
                                                     startActivity(intent);
+                                                    finish();
                                                 }
                                             }
                                         }
