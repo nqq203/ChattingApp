@@ -501,5 +501,3 @@ public class ProfileMainActivity  extends AppCompatActivity {
     }
 
 }
-
-//qweqweeeeeeee
