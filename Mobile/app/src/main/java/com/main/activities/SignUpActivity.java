@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -29,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import android.Manifest;
@@ -90,6 +92,12 @@ public class SignUpActivity extends AppCompatActivity {
                                 databaseReference.child("User").child(mPhoneNumber).child("date").setValue(date);
                                 databaseReference.child("User").child(mPhoneNumber).child("gender").setValue(gender);
                                 databaseReference.child("User").child(mPhoneNumber).child("password").setValue(password);
+                                FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+                                    if(task.isSuccessful()){
+                                        String token = task.getResult();
+                                        databaseReference.child("User").child(mPhoneNumber).child("token").setValue(token);
+                                    }
+                                });
                                 databaseReference.child("User").child(mPhoneNumber).child("IsSetup").setValue(false);
 
                                 // Initialize SuggestionList for new user
@@ -143,6 +151,12 @@ public class SignUpActivity extends AppCompatActivity {
                     }
 
                 }
+            }
+
+
+            @Override
+            public boolean equals(@Nullable Object obj) {
+                return super.equals(obj);
             }
 
             @Override

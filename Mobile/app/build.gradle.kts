@@ -68,6 +68,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-messaging-ktx:24.0.0")
 
     //Glide
     implementation ("com.github.bumptech.glide:glide:4.16.0")
@@ -78,4 +79,7 @@ dependencies {
     
     //Glide
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+
+    //okhttp
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }

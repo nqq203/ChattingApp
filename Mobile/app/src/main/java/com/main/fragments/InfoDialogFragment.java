@@ -47,13 +47,12 @@ public class InfoDialogFragment extends DialogFragment {
                 switch (which) {
                     case 0:
                         dismiss();
-                        ReportFragment reportFragment = new ReportFragment();
+                        ReportFragment reportFragment = new ReportFragment().newInstance(guestPhone);
                         reportFragment.show(getActivity().getSupportFragmentManager(), "REPORT_DIALOG");
                         break;
                     case 1:
                         // Sharing Hobbies
                         Intent intentHobbies = new Intent(getActivity(), XemHobbiesActivity.class);
-                        intentHobbies.putExtra("userId",guestPhone);
                         startActivity(intentHobbies);
                         break;
                     case 2:

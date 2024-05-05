@@ -194,18 +194,16 @@ public class ProfileMainActivity  extends AppCompatActivity {
             }
         });
 
-
         DatabaseReference databaseReference = firebaseDatabase.getReference("Information/"+userId);
         //databaseReference.child("Test");
 
-        // Lấy dữ liệu từ nút "us1"
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //String value = dataSnapshot.getValue(String.class);
                 //System.out.println("Loading data: "+value);
-                        //String key = dataSnapshot.getKey();
+                //String key = dataSnapshot.getKey();
                 if (dataSnapshot.exists()) {
                     //MatchesItem matchesItem = snap.getValue(MatchesItem.class);
                     String ageRange = dataSnapshot.child("Age range").getValue(String.class);
@@ -239,19 +237,19 @@ public class ProfileMainActivity  extends AppCompatActivity {
                     LocalDate birthDate = LocalDate.parse(dob, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                     LocalDate currentDate = LocalDate.now();
                     Period age = Period.between(birthDate, currentDate);
-                        Profile_Name_Age.setText(name+", "+age.getYears());
-                        name_View.setText(name);
-                        phone_View.setText(phoneNumber);
-                        location_View.setText(location);
-                        dob_View.setText(dob);
-                        language_View.setText(language);
-                        heightrhange_View.setText(heightRange);
-                        height_View.setText(height);
-                        email_View.setText(email);
-                        curdatingplan_View.setText(dtingplan);
-                        agerange_View.setText(ageRange);
-                        genderpre_View.setText(genderPre);
-                        gender_View.setText(gender);
+                    Profile_Name_Age.setText(name+", "+age.getYears());
+                    name_View.setText(name);
+                    phone_View.setText(phoneNumber);
+                    location_View.setText(location);
+                    dob_View.setText(dob);
+                    language_View.setText(language);
+                    heightrhange_View.setText(heightRange);
+                    height_View.setText(height);
+                    email_View.setText(email);
+                    curdatingplan_View.setText(dtingplan);
+                    agerange_View.setText(ageRange);
+                    genderpre_View.setText(genderPre);
+                    gender_View.setText(gender);
 
                 }
                 else {
@@ -418,67 +416,67 @@ public class ProfileMainActivity  extends AppCompatActivity {
         EditText note_rate=(EditText) RateAppDialog.findViewById(R.id.rate_note);
 
         nextBtn.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            float star=ratingBar.getRating();
-            String note= note_rate.getText().toString();
-            DatabaseReference databaseReference = firebaseDatabase.getReference("Rate/"+userId);
-            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Date currentDate = new Date();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
-                    String time=dateFormat.format(currentDate);
-                    DatabaseReference newSubscriptionRef = databaseReference.child(time);
-                    // Set the values for the new subscription entry
-                    Map<String, Object> newSubscriptionValues = new HashMap<>();
-                    newSubscriptionValues.put("Note", note_rate.getText().toString());
-                    newSubscriptionValues.put("Star",star);
-                    // Update the database with the new subscription entry
-                    newSubscriptionRef.setValue(newSubscriptionValues)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    ResultDialog.setContentView(R.layout.succes_popup);
-                                    ResultDialog.show();
-                                    TextView content=(TextView) ResultDialog.findViewById(R.id.content);
-                                    Button btn_cancel=(Button) ResultDialog.findViewById(R.id.cancel_button);
+            @Override
+            public void onClick(View v) {
+                float star=ratingBar.getRating();
+                String note= note_rate.getText().toString();
+                DatabaseReference databaseReference = firebaseDatabase.getReference("Rate/"+userId);
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Date currentDate = new Date();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
+                        String time=dateFormat.format(currentDate);
+                        DatabaseReference newSubscriptionRef = databaseReference.child(time);
+                        // Set the values for the new subscription entry
+                        Map<String, Object> newSubscriptionValues = new HashMap<>();
+                        newSubscriptionValues.put("Note", note_rate.getText().toString());
+                        newSubscriptionValues.put("Star",star);
+                        // Update the database with the new subscription entry
+                        newSubscriptionRef.setValue(newSubscriptionValues)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        ResultDialog.setContentView(R.layout.succes_popup);
+                                        ResultDialog.show();
+                                        TextView content=(TextView) ResultDialog.findViewById(R.id.content);
+                                        Button btn_cancel=(Button) ResultDialog.findViewById(R.id.cancel_button);
 
-                                    content.setText("Update Successfully!");
-                                    btn_cancel.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            ResultDialog.dismiss();
-                                        }
-                                    });
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    ResultDialog.setContentView(R.layout.succes_popup);
-                                    ResultDialog.show();
-                                    TextView content=(TextView) ResultDialog.findViewById(R.id.content);
-                                    Button btn_cancel=(Button) ResultDialog.findViewById(R.id.cancel_button);
-                                    content.setText("Update Failed");
-                                    btn_cancel.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            ResultDialog.dismiss();
-                                        }
-                                    });
-                                }
-                            });
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    // Handle any errors
-                }
-            });
+                                        content.setText("Update Successfully!");
+                                        btn_cancel.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                ResultDialog.dismiss();
+                                            }
+                                        });
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        ResultDialog.setContentView(R.layout.succes_popup);
+                                        ResultDialog.show();
+                                        TextView content=(TextView) ResultDialog.findViewById(R.id.content);
+                                        Button btn_cancel=(Button) ResultDialog.findViewById(R.id.cancel_button);
+                                        content.setText("Update Failed");
+                                        btn_cancel.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                ResultDialog.dismiss();
+                                            }
+                                        });
+                                    }
+                                });
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Handle any errors
+                    }
+                });
 
-            RateAppDialog.dismiss();
-        }
-    });
+                RateAppDialog.dismiss();
+            }
+        });
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

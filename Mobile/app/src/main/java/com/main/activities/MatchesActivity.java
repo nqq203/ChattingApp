@@ -84,7 +84,6 @@ public class MatchesActivity extends AppCompatActivity {
         gridView.setAdapter(adapter);
         FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference databaseReference = firebaseDatabase.getReference("Matches/"+userId);
-
         //databaseReference.child("Test");
 
         // Lấy dữ liệu từ nút "us1"
@@ -103,9 +102,11 @@ public class MatchesActivity extends AppCompatActivity {
                         String name = snap.child("name").getValue(String.class);
                         String dob = snap.child("age").getValue(String.class);
                         String pic = snap.child("pic").getValue(String.class);
+                        //String id = snap.child("userid").getValue(String.class);
                         LocalDate birthDate = LocalDate.parse(dob, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                         LocalDate currentDate = LocalDate.now();
                         Period age = Period.between(birthDate, currentDate);
+                        Log.d("ADD1",key);
                         MatchesItem matchesItem= new MatchesItem(name,pic,age.getYears(),key);
 
                         MatchesArrayList.add(matchesItem);

@@ -25,12 +25,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.group4.matchmingle.R;
+import com.main.activities.ChatActivity;
 import com.main.activities.FilterActivity;
 import com.main.activities.NotificationActivity;
 import com.main.activities.UserSessionManager;
 import com.main.callbacks.OnSwipeTouchListener;
 import com.main.entities.User;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,6 +42,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class SwipeCardFragment extends Fragment {
     private CardView cardView;
@@ -53,7 +65,7 @@ public class SwipeCardFragment extends Fragment {
     private int currentUserIndex = users.isEmpty() ? -1 : 0;
     private UserSessionManager sessionManager;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
-    String mPhoneNumber,fullname_user;
+    String mPhoneNumber;
     private String lastUserId = null;
     public boolean isDisabled = false;
 
@@ -257,9 +269,7 @@ public class SwipeCardFragment extends Fragment {
                                         myInfo.put("pic", myImageUrl);
 
                                         databaseReference.child("Matches").child(userId).child(mPhoneNumber).setValue(myInfo);
-                                        databaseReference.child("Matches").child(mPhoneNumber).child(userId).setValue(otherInfo);
                                         addMatchUserToMessage(mPhoneNumber, userId);
-                                        addMatchUserToMessage(userId, mPhoneNumber);
                                     }
 
                                     @Override
@@ -267,10 +277,11 @@ public class SwipeCardFragment extends Fragment {
 
                                     }
                                 });
-
+                                databaseReference.child("Matches").child(mPhoneNumber).child(userId).setValue(otherInfo);
+                                addMatchUserToMessage(userId, mPhoneNumber);
                                 addThongBao(userId, mPhoneNumber);
                                 addThongBao(mPhoneNumber,userId);
-
+                                sendNotification(userId);
 
 
                                 // Remove other user and you out of OneWayMatchList of each others
@@ -320,12 +331,12 @@ public class SwipeCardFragment extends Fragment {
     }
 
     private void addMatchUserToMessage(String user1, String user2) {
-        DatabaseReference matchRef = databaseReference.child("User");
+        DatabaseReference matchRef = databaseReference.child("Matches");
         matchRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String fullname = snapshot.child(user2).child("fullname").getValue(String.class);
-                String imageUrl = snapshot.child(user2).child("imageUrl").getValue(String.class);
+                String fullname = snapshot.child(user1).child(user2).child("name").getValue(String.class);
+                String imageUrl = snapshot.child(user1).child(user2).child("pic").getValue(String.class);
                 String myChatBgColor = "purple";
 
                 databaseReference.child("Message").child(user1).child(user2).child("fullname").setValue(fullname);
@@ -341,36 +352,29 @@ public class SwipeCardFragment extends Fragment {
     }
     private void addThongBao(String user1,String user2)
     {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
-
-        DatabaseReference databaseReference1 = firebaseDatabase.getReference("User/" + user2);
-        databaseReference1.addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        DatabaseReference databaseReference_chat = firebaseDatabase.getReference("Notification/"+user1);
+        databaseReference_chat.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    fullname_user = dataSnapshot.child("fullname").getValue(String.class);
-                    Log.d("Ten", fullname_user);
-                    // Once fullname_user is retrieved, proceed to the next operation
-                    DatabaseReference databaseReference_chat = firebaseDatabase.getReference("Notification/" + user1);
-                    Date currentDate = new Date();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm:ss a MMM yyyy", Locale.getDefault());
-                    String time = dateFormat.format(currentDate);
-                    DatabaseReference newSubscriptionRef = databaseReference_chat.child(time);
-                    Map<String, Object> newSubscriptionValues = new HashMap<>();
-                    newSubscriptionValues.put("Description", "You've just matched with " + fullname_user);
-                    newSubscriptionValues.put("Type", "Message");
-                    newSubscriptionValues.put("Time", time);
-                    newSubscriptionValues.put("UserId", user2);
-                    newSubscriptionRef.setValue(newSubscriptionValues);
-                }
+                Date currentDate = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
+                String time=dateFormat.format(currentDate);
+                DatabaseReference newSubscriptionRef = databaseReference_chat.child(time);
+                Map<String, Object> newSubscriptionValues = new HashMap<>();
+                newSubscriptionValues.put("Description","You've just matched with "+user2);
+                newSubscriptionValues.put("Type", "Message");
+                newSubscriptionValues.put("Time", time);
+                newSubscriptionValues.put("UserId", user2);
+                newSubscriptionRef.setValue(newSubscriptionValues);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors
-                Log.e("Firebase", "Error: " + databaseError.getMessage());
+                // Xử lý khi có lỗi xảy ra
+                System.out.println("Error: " + databaseError.getMessage());
             }
         });
+
 
 
     }
@@ -411,4 +415,59 @@ public class SwipeCardFragment extends Fragment {
 //            }
 //        });
 //    }
+
+    void sendNotification(String guestPhone) {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(guestPhone);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String token = snapshot.child("token").getValue(String.class);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+
+                    JSONObject notificationObj = new JSONObject();
+                    notificationObj.put("title", "You've just match with someone!");
+                    notificationObj.put("body", "Click to see.");
+
+                    JSONObject dataObj = new JSONObject();
+                    dataObj.put("userId", guestPhone);
+                    jsonObject.put("notification", notificationObj);
+                    jsonObject.put("data", dataObj);
+                    jsonObject.put("to", token);
+
+                    callApi(jsonObject);
+                } catch (Exception e) {
+                    Log.e("SendNotification", "Error sending notification: " + e.getMessage());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+    void callApi(JSONObject jsonObject){
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://fcm.googleapis.com/fcm/send";
+        RequestBody body = RequestBody.create(jsonObject.toString(), JSON);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .header("Authorization","Bearer AAAAycOVJIU:APA91bGhJQOYm5KLWUi5G2B75tOLcN172hvPohzuS1CMVWLxr0pFOOH0EhVvX-OKPHFp7ZlFUD06ITrpdnmO6TJyv73-5kTZ4ANSOm_s-SwxLcf3O1hL1w5eM2w6-We4i1-FC13MbuwY")
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+
+            }
+        });
+    }
 }

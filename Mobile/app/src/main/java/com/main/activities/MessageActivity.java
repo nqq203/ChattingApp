@@ -27,9 +27,12 @@ import com.main.adapters.MessageAdapter;
 import com.main.adapters.StoryAdapter;
 import com.main.entities.MessageList;
 import com.main.entities.Story;
+import com.main.entities.User;
 import com.main.fragments.ColorPickerDialogFragment;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class MessageActivity  extends AppCompatActivity {
@@ -40,6 +43,7 @@ public class MessageActivity  extends AppCompatActivity {
     private String lastMessage = "";
     private MessageAdapter messageAdapter;
     private String chatKey = "";
+    private String myUserID;
     private boolean isFirstTime = true;
     private boolean dataSet = false;
     private int countIsFirstTime = 0;
@@ -50,6 +54,8 @@ public class MessageActivity  extends AppCompatActivity {
 
         setContentView(R.layout.message_activity);
         sessionManager = new UserSessionManager(getApplicationContext());
+        HashMap<String, String> userDetails = sessionManager.getUserDetails();
+        myUserID = userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
 
 //      Handle Recycler View of stories and messages
         RecyclerView storiesContainer = findViewById(R.id.stories_container);
@@ -114,17 +120,112 @@ public class MessageActivity  extends AppCompatActivity {
 
     private void populateStories(RecyclerView container) {
         container.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        List<Story> storiesList = new ArrayList<>();
-        Story item1 = new Story("Quynh Nga", "https://i.pinimg.com/originals/5e/67/fa/5e67fa0bcd0230fb933e9c7a6169e953.jpg", "1234", 3000L);
-        Story item2 = new Story("Quynh Ngan", "https://i.pinimg.com/originals/5e/67/fa/5e67fa0bcd0230fb933e9c7a6169e953.jpg", "1234", 4000L);
-        Story item3 = new Story("Quynh Nguyen", "https://i.pinimg.com/originals/5e/67/fa/5e67fa0bcd0230fb933e9c7a6169e953.jpg", "1234", 5000L);
+        List<User> usersList = new ArrayList<>();
 
-        storiesList.add(item1);
-        storiesList.add(item2);
-        storiesList.add(item3);
+        DatabaseReference myMatchesRef = databaseReference.child("Message").child(myUserID);
+        myMatchesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot matchSnapshot : dataSnapshot.getChildren()) {
+                        String matchedUserID = matchSnapshot.getKey();
+                        DatabaseReference theirMatchesRef = databaseReference.child("Message").child(matchedUserID);
+                        theirMatchesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+                                    for (DataSnapshot theirMatchSnapshot : dataSnapshot.getChildren()) {
+                                        String theirMatchedUserID = theirMatchSnapshot.getKey();
+                                        if (theirMatchedUserID.equals(myUserID)) {
+                                            DatabaseReference userStoriesRef = databaseReference.child("Story").child(matchedUserID);
+                                            userStoriesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    if (dataSnapshot.exists()) {
+                                                        boolean hasRecentStory = false;
+                                                        for (DataSnapshot storySnapshot : dataSnapshot.getChildren()) {
+                                                            long duration = storySnapshot.child("duration").getValue(long.class);
+                                                            String image = storySnapshot.child("imageUrl").getValue(String.class);
+                                                            Date date = storySnapshot.child("timeCreated").getValue(Date.class);
+                                                            String name = storySnapshot.child("fullname").getValue(String.class);
+                                                            Story story = new Story(duration, image, date, name);
+                                                            if (story != null){
+                                                                hasRecentStory = true;
+                                                                break;
+                                                            }
+                                                        }
+                                                        if (hasRecentStory) {
+                                                            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(matchedUserID);
+                                                            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                    if (dataSnapshot.exists()) {
+                                                                            // Cập nhật thông tin cho user
 
-        container.setAdapter(new StoryAdapter(storiesList, this));
+                                                                        String PhoneNumber = matchedUserID;
+                                                                        String fullname = dataSnapshot.child("fullname").getValue(String.class);
+                                                                        String imageUrl = dataSnapshot.child("imageUrl").getValue(String.class);
+                                                                        User user = new User(matchedUserID, fullname, imageUrl);
+                                                                        usersList.add(user);
+
+                                                                        // Đặt Adapter sau khi đã duyệt qua tất cả người dùng
+                                                                        if (!usersList.isEmpty()) {
+                                                                            container.setAdapter(new StoryAdapter(usersList, MessageActivity.this));
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                    // Xử lý lỗi
+                                                                }
+                                                            });
+                                                        }
+
+                                                    }
+                                                    else {
+                                                        container.setAdapter(new StoryAdapter(new ArrayList<User>(), MessageActivity.this));
+                                                    }
+
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                    // Xử lý lỗi
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                                else {
+                                    container.setAdapter(new StoryAdapter(new ArrayList<User>(), MessageActivity.this));
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                // Xử lý lỗi
+                            }
+                        });
+                    }
+                }
+                else {
+                    container.setAdapter(new StoryAdapter(new ArrayList<User>(), MessageActivity.this));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý lỗi
+            }
+        });
     }
+
+
+
+
+
+
 
 
     private void populateMessageList(RecyclerView container) {

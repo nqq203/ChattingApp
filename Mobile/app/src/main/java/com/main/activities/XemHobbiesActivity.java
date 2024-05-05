@@ -30,7 +30,7 @@ import java.util.HashMap;
 public class XemHobbiesActivity extends AppCompatActivity {
 
     private GridView gridView;
-
+    String userId="us1";
     FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class XemHobbiesActivity extends AppCompatActivity {
 
 
         TextView HobbiesText=(TextView) findViewById(R.id.HobbiesText);
-        final String userId=getIntent().getStringExtra("  ");
+
 
         DatabaseReference databaseReference1 = firebaseDatabase.getReference("Hobbies/"+userId);
         databaseReference1.addValueEventListener(new ValueEventListener() {

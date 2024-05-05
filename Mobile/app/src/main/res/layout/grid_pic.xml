@@ -38,10 +38,10 @@
             android:backgroundTint="@color/purple_3"
             android:drawableLeft="@drawable/delete_icon"
             />
-            <!--app:icon="@drawable/baseline_delete_24"
-            app:iconSize="28dp"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"-->
+        <!--app:icon="@drawable/baseline_delete_24"
+        app:iconSize="28dp"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"-->
 
 
         <Button
@@ -52,11 +52,11 @@
             android:layout_marginLeft="80dp"
             android:drawableLeft="@drawable/chat_icon"
             android:backgroundTint="@color/purple_3"/>
-            <!--
-            app:icon="@drawable/baseline_chat_bubble_24"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconSize="25dp"-->
+        <!--
+        app:icon="@drawable/baseline_chat_bubble_24"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="25dp"-->
 
     </FrameLayout>
 

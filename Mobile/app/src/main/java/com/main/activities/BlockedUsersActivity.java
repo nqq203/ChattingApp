@@ -75,28 +75,19 @@ public class BlockedUsersActivity extends AppCompatActivity implements BlockedUs
 
     @Override
     public void onUnblockClick(BlockedUser user) {
-        databaseReference.child("User").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("User").child(user.getUserId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String date = dataSnapshot.child(user.getUserId()).child("date").getValue(String.class);
-                String imageUrl = dataSnapshot.child(user.getUserId()).child("imageUrl").getValue(String.class);
-                String gender = dataSnapshot.child(user.getUserId()).child("gender").getValue(String.class);
-                HashMap<String, Object> newUser1 = new HashMap<>();
-                newUser1.put("date", date);
-                newUser1.put("imageUrl", imageUrl);
-                newUser1.put("gender", gender);
-                newUser1.put("fullname", user.getName());
-                String date2 = dataSnapshot.child(myPhone).child("date").getValue(String.class);
-                String imageUrl2 = dataSnapshot.child(myPhone).child("imageUrl").getValue(String.class);
-                String gender2 = dataSnapshot.child(myPhone).child("gender").getValue(String.class);
-                String fullname2 = dataSnapshot.child(myPhone).child("fullname").getValue(String.class);
-                HashMap<String, Object> newUser2 = new HashMap<>();
-                newUser2.put("date", date2);
-                newUser2.put("imageUrl", imageUrl2);
-                newUser2.put("gender", gender2);
-                newUser2.put("fullname", fullname2);
-                databaseReference.child("SuggestionList").child(myPhone).child(user.getUserId()).setValue(newUser1);
-                databaseReference.child("SuggestionList").child(user.getUserId()).child(myPhone).setValue(newUser2);
+                String date = dataSnapshot.child("date").getValue(String.class);
+                String imageUrl = dataSnapshot.child("imageUrl").getValue(String.class);
+                String gender = dataSnapshot.child("gender").getValue(String.class);
+                HashMap<String, Object> newUser = new HashMap<>();
+                newUser.put("date", date);
+                newUser.put("imageUrl", imageUrl);
+                newUser.put("gender", gender);
+                newUser.put("fullname", user.getName());
+                databaseReference.child("SuggestionList").child(myPhone).child(user.getUserId()).setValue(newUser);
+                databaseReference.child("SuggestionList").child(user.getUserId()).child(myPhone).setValue(newUser);
                 databaseReference.child("BlockList").child(myPhone).child(user.getUserId()).removeValue();
                 Intent intent = new Intent(BlockedUsersActivity.this, SwipeCardViewActivity.class);
                 startActivity(intent);

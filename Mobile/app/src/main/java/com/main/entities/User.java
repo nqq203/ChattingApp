@@ -12,11 +12,16 @@ public class User {
     private String location;
     private Boolean IsSetup;
     private int height;
+    private String token;
 
     public User() {
 
     }
-
+    public User( String phoneNumber, String fullname, String imageUrl) {
+        this.fullname = fullname;
+        this.phoneNumber = phoneNumber;
+        this.imageUrl = imageUrl;
+    }
     public User(String fullname, String gender, String date, String phoneNumber, String password) {
         this.fullname = fullname;
         this.gender = gender;
@@ -51,6 +56,10 @@ public class User {
         this.gender = gender;
         this.date = date;
         this.imageUrl = imageUrl;
+    }
+    public User(String fullname, String token){
+        this.fullname = fullname;
+        this.token = token;
     }
 
     public Boolean getSetup() {
@@ -104,5 +113,13 @@ public class User {
     }
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

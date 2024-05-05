@@ -3,9 +3,12 @@
     import android.content.Intent;
     import android.os.Bundle;
     import android.util.Log;
+    import android.view.View;
     import android.widget.Button;
     import android.widget.ImageButton;
+    import android.widget.ImageView;
     import android.widget.TextView;
+    import android.widget.Toast;
 
     import androidx.annotation.NonNull;
     import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +22,7 @@
     import com.google.firebase.database.ValueEventListener;
     import com.group4.matchmingle.R;
     import com.main.adapters.ProfileAdapter;
+    import com.squareup.picasso.Picasso;
 
     import java.util.ArrayList;
     import java.util.HashMap;
@@ -30,8 +34,11 @@
         private ProfileAdapter mAdapter;
         private TextView ProfileName;
         private ImageButton backBtn;
-        private Button postBtn;
+        private Button postBtn, messageProfileBtn, postProfileImgBtn;
+        private ImageView avtImg;
         List<String> imageUrls = new ArrayList<>();
+
+        String userID = "123";
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +48,9 @@
             mRecyclerView = findViewById(R.id.recyclerView);
             backBtn = findViewById(R.id.back_arrow);
             postBtn = findViewById(R.id.postProfileImgBtn);
-
+            messageProfileBtn = findViewById(R.id.messageProfileBtn);
+            postProfileImgBtn = findViewById(R.id.postProfileImgBtn);
+            avtImg = findViewById(R.id.avtImg);
             backBtn.setOnClickListener(v -> {
                 Intent intent = new Intent(ProfileView.this, ProfileMainActivity.class);
                 startActivity(intent);
@@ -56,16 +65,28 @@
             UserSessionManager sessionManager = new UserSessionManager(getBaseContext());
             HashMap<String, String> userDetails = sessionManager.getUserDetails();
             String phoneNumber = userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
-            String userId = phoneNumber; // Thay đổi thành ID của user1
-
-            databaseReference.child("User").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            String userIDS = phoneNumber; // Thay đổi thành ID của user1
+            Intent intentID = getIntent();
+            if(intentID.getStringExtra("userID") != null) {
+                userID = intentID.getStringExtra("userID");
+                postProfileImgBtn.setVisibility(View.GONE);
+            }
+            else{
+                userID = userIDS;
+                messageProfileBtn.setVisibility(View.GONE);
+            }
+            databaseReference.child("User").child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         // Lấy thông tin full name từ dataSnapshot
                         String fullName = dataSnapshot.child("fullname").getValue(String.class);
+                        String imageUrl = dataSnapshot.child("imageUrl").getValue(String.class);
                         // Gán full name vào TextView ProfileName
                         ProfileName.setText(fullName);
+                        avtImg.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        Picasso.get().load(imageUrl).into(avtImg);
+
                     } else {
                         Log.d("ProfileView", "Không tìm thấy dữ liệu trong mục user");
                     }
@@ -82,7 +103,7 @@
             mRecyclerView.setAdapter(mAdapter);
 
             // Lắng nghe sự thay đổi dữ liệu trên Firebase
-            databaseReference.child("Profiles").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            databaseReference.child("Profiles").child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
