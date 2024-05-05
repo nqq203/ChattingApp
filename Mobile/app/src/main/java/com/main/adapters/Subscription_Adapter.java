@@ -186,7 +186,7 @@ public class Subscription_Adapter extends ArrayAdapter<SubscriptionItem> {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-               
+
                 System.out.println("Error: " + databaseError.getMessage());
             }
         });
