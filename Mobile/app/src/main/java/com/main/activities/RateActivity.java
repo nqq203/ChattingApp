@@ -20,9 +20,4 @@ qweqweqwqwe
         qwe
 qwe
                 we
-qe
-                        we
-qwe
-                                qwe
-qweewe
 */
