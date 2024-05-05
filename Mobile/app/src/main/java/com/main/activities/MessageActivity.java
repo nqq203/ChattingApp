@@ -149,7 +149,6 @@ public class MessageActivity  extends AppCompatActivity {
                                                             Date date = storySnapshot.child("timeCreated").getValue(Date.class);
                                                             String name = storySnapshot.child("fullname").getValue(String.class);
                                                             Story story = new Story(duration, image, date, name);
-                                                            //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                                                             if (story != null){
                                                                 hasRecentStory = true;
                                                                 break;
