@@ -92,7 +92,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     String userId,profile_pic,fullname;
     FirebaseDatabase firebaseDatabase1=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
 
-    // creating a constructor class.
+    
     public NotificationAdapter(ArrayList<NotificationItem> recyclerDataArrayList, Context mcontext) {
         this.NotiDataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
@@ -140,9 +140,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
 
         holder.Description_Text.setText(recyclerData.getDescription());
-        //holder.ProfilePic.setImageResource(recyclerData.getProfile_pic());
-        //RequestOptions requestOptions = RequestOptions.circleCropTransform();
-        //Glide.with(mcontext).load(profile_pic).apply(requestOptions).into(holder.ProfilePic);
+
 
 
         if(!recyclerData.getStory_pic().isEmpty()) {

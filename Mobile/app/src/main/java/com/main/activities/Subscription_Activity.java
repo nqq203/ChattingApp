@@ -190,7 +190,7 @@ public class Subscription_Activity extends AppCompatActivity {
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                
+
                             }
                         });
             }
