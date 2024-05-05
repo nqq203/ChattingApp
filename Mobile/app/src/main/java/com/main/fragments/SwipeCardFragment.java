@@ -471,9 +471,3 @@ public class SwipeCardFragment extends Fragment {
         });
     }
 }
-
-/*
-asdas
-ds
-        d
- */
