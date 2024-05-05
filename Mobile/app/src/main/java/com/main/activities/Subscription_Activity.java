@@ -77,14 +77,10 @@ public class Subscription_Activity extends AppCompatActivity {
         mDialog=new Dialog(this);
 
         subscriptionItemList=new ArrayList<>();
-        /*
-        subscriptionItemList.add(new SubscriptionItem("First Date", "Free","12/04/2020","28/12/2022"));
-        subscriptionItemList.add(new SubscriptionItem("Love Date", "Free","12/04/2020","28/12/2022"));*/
+
         FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference databaseReference = firebaseDatabase.getReference("Subscription/"+userId);
-        //databaseReference.child("Test");
 
-        // Lấy dữ liệu từ nút "us1"
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -134,7 +130,7 @@ public class Subscription_Activity extends AppCompatActivity {
 
     }
     private void showCreateDialog() {
-        // Thiết lập layout cho Dialog
+
         mDialog.setContentView(R.layout.add_newsub);
         mDialog.show();
         Button btnSaveDialog = mDialog.findViewById(R.id.save_button);
@@ -173,28 +169,28 @@ public class Subscription_Activity extends AppCompatActivity {
                 Date currentDate = new Date();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("EEE hh:mm a MMM yyyy", Locale.getDefault());
                 String time=dateFormat.format(currentDate);
-                // Create a new subscription entry with the incremented key
+
                 DatabaseReference newSubscriptionRef = databaseReference.child(time);
 
-                // Set the values for the new subscription entry
+
                 Map<String, Object> newSubscriptionValues = new HashMap<>();
                 newSubscriptionValues.put("endDate", EndDate.getText().toString());
                 newSubscriptionValues.put("plan", Note.getText().toString());
                 newSubscriptionValues.put("startDate", StartDate.getText().toString());
                 newSubscriptionValues.put("title", title.getText().toString());
 
-                // Update the database with the new subscription entry
+
                 newSubscriptionRef.setValue(newSubscriptionValues)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                // Subscription successfully created
+
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                // Handle any errors
+                                
                             }
                         });
             }

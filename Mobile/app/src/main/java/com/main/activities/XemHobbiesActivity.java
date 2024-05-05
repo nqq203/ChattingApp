@@ -268,7 +268,7 @@ public class XemHobbiesActivity extends AppCompatActivity {
                 System.out.println("Error: " + databaseError.getMessage());
             }
         });
-        
+
     }
 
 }
