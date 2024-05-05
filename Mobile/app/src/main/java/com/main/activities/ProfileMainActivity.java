@@ -188,7 +188,6 @@ public class ProfileMainActivity  extends AppCompatActivity {
                         .load(profile_pic)
                         .into((ImageView) findViewById(R.id.Profile_Pic));
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -263,12 +262,13 @@ public class ProfileMainActivity  extends AppCompatActivity {
                             if (dataSnapshot.exists()) {
                                 String fullname = dataSnapshot.child("fullname").getValue(String.class);
                                 fullname_user = fullname;
+                                Log.d("name", fullname_user);
                                 String dob = dataSnapshot.child("date").getValue(String.class);
+                                dob_user = dob;
+                                Log.d("gender", dob);
                                 String gender = dataSnapshot.child("gender").getValue(String.class);
-                                String profile_pic=dataSnapshot.child("imageUrl").getValue(String.class);
-                                Glide.with(ProfileMainActivity.this)
-                                        .load(profile_pic)
-                                        .into((ImageView) findViewById(R.id.Profile_Pic));
+                                gender_user = gender;
+                                Log.d("gender", gender_user);
                                 // Once you have all the necessary data, update Information node
                                 DatabaseReference databaseReference_Info = firebaseDatabase.getReference("Information/" + userId);
                                 HashMap<String, Object> InforMap = new HashMap<>();

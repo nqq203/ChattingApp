@@ -80,16 +80,14 @@ public class GridHobbiesFragments extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewList= inflater.inflate(R.layout.frag_gridhobbies, container, false);
-        backBtn = (ImageView) viewList.findViewById(R.id.back_arrow);
+
 
         UserSessionManager sessionManager = new UserSessionManager(getContext());
         HashMap<String, String> userDetails = sessionManager.getUserDetails();
         userId = userDetails.get(UserSessionManager.KEY_PHONE_NUMBER);
 
 
-        backBtn.setOnClickListener(v -> {
-            getActivity().onBackPressed();
-        });
+
 
 
         gridView=(GridView) viewList.findViewById(R.id.grid_hobbies);

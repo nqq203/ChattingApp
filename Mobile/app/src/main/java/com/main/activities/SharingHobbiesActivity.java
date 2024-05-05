@@ -5,11 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.view.View;
 
@@ -28,11 +31,21 @@ public class SharingHobbiesActivity extends FragmentActivity implements MainCall
     FragmentTransaction ft;
     GridHobbiesFragments GridHobbies;
     TextViewHobbiesFragment TextViewHobbies;
+    ImageView backbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_sharing_hobbies);
+
+
+        backbtn=(ImageView) findViewById(R.id.back_arrow);
+        backbtn.setOnClickListener(v -> {
+            Intent intent = new Intent(SharingHobbiesActivity.this, ProfileMainActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
 
         ft = getSupportFragmentManager().beginTransaction();
         GridHobbies = GridHobbiesFragments.newInstance("first-list");

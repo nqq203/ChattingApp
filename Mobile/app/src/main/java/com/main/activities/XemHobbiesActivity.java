@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,11 +37,17 @@ public class XemHobbiesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.xem_hobbies);
 
-
+        ImageView backbtn=findViewById(R.id.back_arrow);
         Button iconHome = findViewById(R.id.icon_home);
         Button iconFavourite = findViewById(R.id.icon_favorite);
         Button iconChat = findViewById(R.id.icon_chat);
         Button iconProfile = findViewById(R.id.icon_profile);
+        backbtn.setOnClickListener(v -> {
+            Intent intent = new Intent(XemHobbiesActivity.this, MessageActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
 
         TextView HobbiesText=(TextView) findViewById(R.id.HobbiesText);
         final String userId=getIntent().getStringExtra("  ");
