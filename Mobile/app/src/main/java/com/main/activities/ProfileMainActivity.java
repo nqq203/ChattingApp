@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -177,6 +178,23 @@ public class ProfileMainActivity  extends AppCompatActivity {
             finish();
         });
 
+        DatabaseReference databaseReference_Info = firebaseDatabase.getReference("User/" + userId);
+        databaseReference_Info.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String profile_pic=snapshot.child("imageUrl").getValue(String.class);
+                Log.d("profile_pic",profile_pic);
+                Glide.with(ProfileMainActivity.this)
+                        .load(profile_pic)
+                        .into((ImageView) findViewById(R.id.Profile_Pic));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
         DatabaseReference databaseReference = firebaseDatabase.getReference("Information/"+userId);
         //databaseReference.child("Test");
@@ -235,6 +253,7 @@ public class ProfileMainActivity  extends AppCompatActivity {
                         agerange_View.setText(ageRange);
                         genderpre_View.setText(genderPre);
                         gender_View.setText(gender);
+
                 }
                 else {
                     DatabaseReference databaseReference1 = firebaseDatabase.getReference("User/" + userId);
@@ -246,6 +265,10 @@ public class ProfileMainActivity  extends AppCompatActivity {
                                 fullname_user = fullname;
                                 String dob = dataSnapshot.child("date").getValue(String.class);
                                 String gender = dataSnapshot.child("gender").getValue(String.class);
+                                String profile_pic=dataSnapshot.child("imageUrl").getValue(String.class);
+                                Glide.with(ProfileMainActivity.this)
+                                        .load(profile_pic)
+                                        .into((ImageView) findViewById(R.id.Profile_Pic));
                                 // Once you have all the necessary data, update Information node
                                 DatabaseReference databaseReference_Info = firebaseDatabase.getReference("Information/" + userId);
                                 HashMap<String, Object> InforMap = new HashMap<>();
