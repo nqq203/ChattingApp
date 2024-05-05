@@ -92,7 +92,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     String userId,profile_pic,fullname;
     FirebaseDatabase firebaseDatabase1=FirebaseDatabase.getInstance("https://matchmingle-3065c-default-rtdb.asia-southeast1.firebasedatabase.app/");
 
-    
+
     public NotificationAdapter(ArrayList<NotificationItem> recyclerDataArrayList, Context mcontext) {
         this.NotiDataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;

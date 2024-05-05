@@ -97,11 +97,9 @@ public class Subscription_Adapter extends ArrayAdapter<SubscriptionItem> {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //String value = dataSnapshot.getValue(String.class);
-                //System.out.println("Loading data: "+value);
-                //String key = dataSnapshot.getKey();
+
                 if (dataSnapshot.exists()) {
-                    //MatchesItem matchesItem = snap.getValue(MatchesItem.class);
+
                     String endDate = dataSnapshot.child("endDate").getValue(String.class);
                     String plan = dataSnapshot.child("plan").getValue(String.class);
                     String startDate = dataSnapshot.child("startDate").getValue(String.class);
@@ -152,7 +150,7 @@ public class Subscription_Adapter extends ArrayAdapter<SubscriptionItem> {
 
     }
     private void showDeleteDialog() {
-        // Thiết lập layout cho Dialog
+
         mDialog.setContentView(R.layout.deletesub);
 
 
@@ -188,7 +186,7 @@ public class Subscription_Adapter extends ArrayAdapter<SubscriptionItem> {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Xử lý khi có lỗi xảy ra
+               
                 System.out.println("Error: " + databaseError.getMessage());
             }
         });
