@@ -197,7 +197,6 @@ public class ProfileMainActivity  extends AppCompatActivity {
         DatabaseReference databaseReference = firebaseDatabase.getReference("Information/"+userId);
         //databaseReference.child("Test");
 
-        // Lấy dữ liệu từ nút "us1"
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
