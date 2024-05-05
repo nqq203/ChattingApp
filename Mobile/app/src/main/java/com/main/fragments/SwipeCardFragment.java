@@ -476,10 +476,4 @@ public class SwipeCardFragment extends Fragment {
 asdas
 ds
         d
-asd
-                asd
-sdsa
-                        d
-
-
  */
