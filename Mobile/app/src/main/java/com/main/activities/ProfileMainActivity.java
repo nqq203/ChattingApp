@@ -188,7 +188,6 @@ public class ProfileMainActivity  extends AppCompatActivity {
                         .load(profile_pic)
                         .into((ImageView) findViewById(R.id.Profile_Pic));
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -240,7 +239,6 @@ public class ProfileMainActivity  extends AppCompatActivity {
                     LocalDate birthDate = LocalDate.parse(dob, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                     LocalDate currentDate = LocalDate.now();
                     Period age = Period.between(birthDate, currentDate);
-<<<<<<< HEAD
                     Profile_Name_Age.setText(name+", "+age.getYears());
                     name_View.setText(name);
                     phone_View.setText(phoneNumber);
@@ -254,22 +252,7 @@ public class ProfileMainActivity  extends AppCompatActivity {
                     agerange_View.setText(ageRange);
                     genderpre_View.setText(genderPre);
                     gender_View.setText(gender);
-=======
-                        Profile_Name_Age.setText(name+", "+age.getYears());
-                        name_View.setText(name);
-                        phone_View.setText(phoneNumber);
-                        location_View.setText(location);
-                        dob_View.setText(dob);
-                        language_View.setText(language);
-                        heightrhange_View.setText(heightRange);
-                        height_View.setText(height);
-                        email_View.setText(email);
-                        curdatingplan_View.setText(dtingplan);
-                        agerange_View.setText(ageRange);
-                        genderpre_View.setText(genderPre);
-                        gender_View.setText(gender);
 
->>>>>>> afdafc3dbca01b16a6042d8cfe1fb9d94134285f
                 }
                 else {
                     DatabaseReference databaseReference1 = firebaseDatabase.getReference("User/" + userId);
@@ -279,12 +262,13 @@ public class ProfileMainActivity  extends AppCompatActivity {
                             if (dataSnapshot.exists()) {
                                 String fullname = dataSnapshot.child("fullname").getValue(String.class);
                                 fullname_user = fullname;
+                                Log.d("name", fullname_user);
                                 String dob = dataSnapshot.child("date").getValue(String.class);
+                                dob_user = dob;
+                                Log.d("gender", dob);
                                 String gender = dataSnapshot.child("gender").getValue(String.class);
-                                String profile_pic=dataSnapshot.child("imageUrl").getValue(String.class);
-                                Glide.with(ProfileMainActivity.this)
-                                        .load(profile_pic)
-                                        .into((ImageView) findViewById(R.id.Profile_Pic));
+                                gender_user = gender;
+                                Log.d("gender", gender_user);
                                 // Once you have all the necessary data, update Information node
                                 DatabaseReference databaseReference_Info = firebaseDatabase.getReference("Information/" + userId);
                                 HashMap<String, Object> InforMap = new HashMap<>();

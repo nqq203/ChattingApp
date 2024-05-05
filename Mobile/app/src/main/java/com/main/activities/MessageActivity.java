@@ -122,14 +122,14 @@ public class MessageActivity  extends AppCompatActivity {
         container.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         List<User> usersList = new ArrayList<>();
 
-        DatabaseReference myMatchesRef = databaseReference.child("Matches").child(myUserID);
+        DatabaseReference myMatchesRef = databaseReference.child("Message").child(myUserID);
         myMatchesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot matchSnapshot : dataSnapshot.getChildren()) {
                         String matchedUserID = matchSnapshot.getKey();
-                        DatabaseReference theirMatchesRef = databaseReference.child("Matches").child(matchedUserID);
+                        DatabaseReference theirMatchesRef = databaseReference.child("Message").child(matchedUserID);
                         theirMatchesRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

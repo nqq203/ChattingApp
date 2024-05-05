@@ -95,7 +95,8 @@
                         android:id="@+id/card_distance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/white"
+                        android:visibility="gone"/>
                 </LinearLayout>
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
