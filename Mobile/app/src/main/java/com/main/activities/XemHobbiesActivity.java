@@ -68,7 +68,6 @@ public class XemHobbiesActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Xử lý khi có lỗi xảy ra
                 System.out.println("Error: " + databaseError.getMessage());
             }
         });
@@ -108,9 +107,6 @@ public class XemHobbiesActivity extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //String value = dataSnapshot.getValue(String.class);
-
-                //System.out.println("Loading data: "+value);
                 if (dataSnapshot.exists()) {
                     HobbiesArrayList.clear();
                     for (DataSnapshot snap : dataSnapshot.getChildren()) {
@@ -272,16 +268,7 @@ public class XemHobbiesActivity extends AppCompatActivity {
                 System.out.println("Error: " + databaseError.getMessage());
             }
         });
-        /*
-        MatchesArrayList.add(new MatchesItem("Chi Sô","https://pm1.aminoapps.com/7979/d76f871ef7a8985cb3cc9dd8d117f9c1efc03888r1-720-806v2_uhq.jpg",21));
-        MatchesArrayList.add(new MatchesItem("Hoa Hồng","https://pm1.aminoapps.com/7979/d76f871ef7a8985cb3cc9dd8d117f9c1efc03888r1-720-806v2_uhq.jpg",19));
-        MatchesArrayList.add(new MatchesItem("Ren Ni","https://pm1.aminoapps.com/7979/d76f871ef7a8985cb3cc9dd8d117f9c1efc03888r1-720-806v2_uhq.jpg",20));
-        //MatchesArrayList.add(new MatchesItem("Li Xa",R.drawable.lisa,19));
-
-        MatchesAdapter adapter= new MatchesAdapter(this,MatchesArrayList);
-        gridView.setAdapter(adapter);
-
-         */
+        
     }
 
 }
