@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -150,6 +151,19 @@ public class SignUpActivity extends AppCompatActivity {
                     }
 
                 }
+            }
+            /*
+            wqeqwe
+            qwee
+                    qweqw
+            qweqwweq
+                            weqwe
+            qweqw
+                                    */
+
+            @Override
+            public boolean equals(@Nullable Object obj) {
+                return super.equals(obj);
             }
 
             @Override
