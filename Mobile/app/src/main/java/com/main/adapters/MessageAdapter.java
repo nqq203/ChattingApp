@@ -74,18 +74,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 if (listener != null) {
                     listener.onItemClick(item);
                 }
-//                Intent intent = new Intent(context, ChatActivity.class);
-//                Log.d(TAG, "mobile: " + item.getMobile());
-//                Log.d(TAG, "fullname: " + item.getName());
-//                Log.d(TAG, "imageUrl: " + item.getImageUrl());
-//                Log.d(TAG, "chatKey: " + item.getChatKey());
-//
-//                intent.putExtra("mobile", item.getMobile());
-//                intent.putExtra("fullname", item.getName());
-//                intent.putExtra("imageUrl", item.getImageUrl());
-//                intent.putExtra("chatKey", item.getChatKey());
-//
-//                context.startActivity(intent);
             }
         });
     }

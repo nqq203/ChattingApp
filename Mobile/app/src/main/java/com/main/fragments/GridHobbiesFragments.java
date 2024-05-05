@@ -262,22 +262,7 @@ public class GridHobbiesFragments extends Fragment{
                 System.out.println("Error: " + databaseError.getMessage());
             }
         });
-        /*
-        HobbiesArrayList.add(new HobbiesItem("GAME",R.drawable.game,true,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("MUSIC",R.drawable.music,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("FILM",R.drawable.movie,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("RUNNING",R.drawable.running,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("COFFE",R.drawable.coffe,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("CONNECT",R.drawable.connect,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("FRIENDS",R.drawable.friends,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("FOODS",R.drawable.food,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("DRAWING",R.drawable.draw,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("READING",R.drawable.reading,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("PHOTOGRAPHY",R.drawable.photography,false,R.drawable.border_hobbies));
-        HobbiesArrayList.add(new HobbiesItem("SPORT",R.drawable.border_sport,false,R.drawable.border_hobbies));
-
-        HobbiesAdapter adapter= new HobbiesAdapter(getContext(),HobbiesArrayList);
-        gridView.setAdapter(adapter);*/
+        
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
